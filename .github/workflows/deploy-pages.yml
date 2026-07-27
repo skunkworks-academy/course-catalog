@@ -31,21 +31,36 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Validate and build Docusaurus
-        run: npm run build
+      - name: Validate course content
+        run: npm run validate:content
+
+      - name: Build Docusaurus
+        shell: bash
+        run: |
+          set -o pipefail
+          npm exec docusaurus build 2>&1 | tee docusaurus-build.log
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docusaurus-build-log-${{ github.run_id }}
+          path: docusaurus-build.log
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: build
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
