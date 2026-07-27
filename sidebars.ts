@@ -6,7 +6,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Professional capability',
       collapsed: false,
-      items: ['professional-articulation'],
+      items: ['professional-articulation', 'professional-articulation-resources'],
     },
     {
       type: 'category',
