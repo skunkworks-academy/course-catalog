@@ -37,7 +37,7 @@ for (const course of courses) {
   if (!content.includes('<EnrollmentGate')) errors.push(`${course.file}: content is not wrapped in EnrollmentGate`);
   if (!content.includes('<EvidenceRecord')) errors.push(`${course.file}: evidence-of-capability record is missing`);
   if (!content.includes('<KnowledgeCheck')) errors.push(`${course.file}: interactive knowledge check is missing`);
-  if (!content.includes('## Assessment rubric')) errors.push(`${course.file}: assessment rubric is missing`);
+  if (!/^#{2,4} Assessment rubric$/m.test(content)) errors.push(`${course.file}: assessment rubric is missing`);
   if (!content.includes('## Official reference set')) errors.push(`${course.file}: official reference set is missing`);
   if (moduleCount < course.minimumModules) errors.push(`${course.file}: expected at least ${course.minimumModules} modules, found ${moduleCount}`);
   if (labCount < course.minimumLabs) errors.push(`${course.file}: expected at least ${course.minimumLabs} practical labs, found ${labCount}`);
