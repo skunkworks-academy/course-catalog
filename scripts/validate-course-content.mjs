@@ -6,6 +6,7 @@ const courses = [
   {file: 'docs/shopify-user-permissions.mdx', id: 'SHP-UPA-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/github-pages-setup.mdx', id: 'GHP-DOM-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/microsoft-365-licenses.mdx', id: 'M365-LIC-101', minimumModules: 8, minimumLabs: 4},
+  {file: 'docs/professional-articulation.mdx', id: 'ART-101', minimumModules: 12, minimumLabs: 8},
 ];
 
 const requiredFiles = [
@@ -16,6 +17,7 @@ const requiredFiles = [
   'src/components/EnrollmentGate.tsx',
   'src/components/EvidenceRecord.tsx',
   'src/components/KnowledgeCheck.tsx',
+  'src/components/PracticeStudio.tsx',
   'static/course-manifest.json',
   ...courses.map((course) => course.file),
 ];
@@ -41,6 +43,14 @@ for (const course of courses) {
   if (!content.includes('## Official reference set')) errors.push(`${course.file}: official reference set is missing`);
   if (moduleCount < course.minimumModules) errors.push(`${course.file}: expected at least ${course.minimumModules} modules, found ${moduleCount}`);
   if (labCount < course.minimumLabs) errors.push(`${course.file}: expected at least ${course.minimumLabs} practical labs, found ${labCount}`);
+}
+
+const articulationPath = join(root, 'docs/professional-articulation.mdx');
+if (existsSync(articulationPath)) {
+  const articulation = readFileSync(articulationPath, 'utf8');
+  for (const marker of ['<PracticeStudio', '## Capstone — Executive communication portfolio', '## Moderation checklist', '## Corporate deployment guide']) {
+    if (!articulation.includes(marker)) errors.push(`ART-101 is missing production marker: ${marker}`);
+  }
 }
 
 const gatePath = join(root, 'src/components/EnrollmentGate.tsx');
