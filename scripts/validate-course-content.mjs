@@ -19,6 +19,13 @@ const requiredFiles = [
   'src/components/KnowledgeCheck.tsx',
   'src/components/PracticeStudio.tsx',
   'static/course-manifest.json',
+  'docs/professional-articulation-resources.mdx',
+  'static/downloads/art-101/art-101-learner-workbook.md',
+  'static/downloads/art-101/art-101-presentation-planning-template.md',
+  'static/downloads/art-101/art-101-reviewer-scorecard.csv',
+  'static/downloads/art-101/art-101-90-day-development-plan.md',
+  'static/downloads/art-101/art-101-assessor-moderation-guide.md',
+  'static/downloads/art-101/art-101-corporate-implementation-checklist.md',
   ...courses.map((course) => course.file),
 ];
 
@@ -50,6 +57,14 @@ if (existsSync(articulationPath)) {
   const articulation = readFileSync(articulationPath, 'utf8');
   for (const marker of ['<PracticeStudio', '## Capstone — Executive communication portfolio', '## Moderation checklist', '## Corporate deployment guide']) {
     if (!articulation.includes(marker)) errors.push(`ART-101 is missing production marker: ${marker}`);
+  }
+}
+
+const resourcePath = join(root, 'docs/professional-articulation-resources.mdx');
+if (existsSync(resourcePath)) {
+  const resources = readFileSync(resourcePath, 'utf8');
+  for (const marker of ['art-101-learner-workbook.md', 'art-101-reviewer-scorecard.csv', 'art-101-assessor-moderation-guide.md']) {
+    if (!resources.includes(marker)) errors.push(`ART-101 resource page is missing link: ${marker}`);
   }
 }
 
