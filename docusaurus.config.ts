@@ -28,7 +28,7 @@ const config: Config = {
     },
   ],
   customFields: {
-    accessApi: 'https://portal.skunkworksacademy.com/api/course-access',
+    accessApi: 'https://skunkworks-instructor-portal-api-a5gxhyc2fvc7gmch.southafricanorth-01.azurewebsites.net/api/course-access',
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
   },
