@@ -1,0 +1,39 @@
+{
+  "schema": "skunkworks-academy/course-manifest/v1",
+  "generatedOn": "2026-07-27",
+  "catalogUrl": "https://skunkworks-academy.github.io/course-catalog/",
+  "accessPolicy": {
+    "overview": "public",
+    "courseContent": "authenticated-active-enrolment",
+    "defaultDecision": "deny"
+  },
+  "courses": [
+    {
+      "courseId": "SHP-UPA-101",
+      "title": "Shopify User Permissions",
+      "path": "/course-catalog/courses/shopify-user-permissions",
+      "category": "Commerce administration",
+      "durationHours": "4-6",
+      "level": "Beginner to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "GHP-DOM-101",
+      "title": "GitHub Pages Setup",
+      "path": "/course-catalog/courses/github-pages-setup",
+      "category": "Web deployment",
+      "durationHours": "5-7",
+      "level": "Beginner to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "M365-LIC-101",
+      "title": "Microsoft 365 Licenses",
+      "path": "/course-catalog/courses/microsoft-365-licenses",
+      "category": "Microsoft 365 administration",
+      "durationHours": "5-8",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    }
+  ]
+}
