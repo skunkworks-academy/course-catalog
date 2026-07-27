@@ -51,7 +51,7 @@ const config: Config = {
     ],
   ],
   themeConfig: {
-    image: 'img/skunkworks-academy-course-catalog.png',
+    image: 'img/skunkworks-academy-course-catalog.svg',
     metadata: [
       {name: 'author', content: 'Skunkworks Academy'},
       {name: 'robots', content: 'index,follow,max-image-preview:large'},
