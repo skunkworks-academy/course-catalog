@@ -9,6 +9,17 @@
   },
   "courses": [
     {
+      "courseId": "ART-101",
+      "title": "Professional Articulation and Executive Communication",
+      "path": "/course-catalog/courses/professional-articulation",
+      "category": "Professional capability",
+      "durationHours": "36-40",
+      "level": "Foundation to advanced",
+      "evidenceOfCapability": true,
+      "moderatedAssessment": true,
+      "practiceStudio": true
+    },
+    {
       "courseId": "SHP-UPA-101",
       "title": "Shopify User Permissions",
       "path": "/course-catalog/courses/shopify-user-permissions",
