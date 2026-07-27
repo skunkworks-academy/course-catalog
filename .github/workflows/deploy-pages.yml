@@ -26,7 +26,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -37,15 +37,28 @@ jobs:
       - name: Build Docusaurus
         shell: bash
         run: |
+          set +e
           set -o pipefail
           npm exec docusaurus build 2>&1 | tee docusaurus-build.log
+          build_status=${PIPESTATUS[0]}
+
+          server_bundle=$(find .docusaurus -type f -name 'server.bundle.js' -print -quit 2>/dev/null || true)
+          if [[ -n "$server_bundle" ]]; then
+            cp "$server_bundle" server.bundle.js
+            grep -n -C 2 'resolveWeak' "$server_bundle" > server-bundle-resolveweak-context.txt || true
+          fi
+
+          exit "$build_status"
 
       - name: Upload build diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: docusaurus-build-log-${{ github.run_id }}
-          path: docusaurus-build.log
+          name: docusaurus-build-diagnostics-${{ github.run_id }}
+          path: |
+            docusaurus-build.log
+            server.bundle.js
+            server-bundle-resolveweak-context.txt
           if-no-files-found: warn
           retention-days: 7
 
