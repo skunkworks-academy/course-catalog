@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Skunkworks Academy Course Catalog</title>
+  <desc id="desc">Practical self-paced courses with evidence of capability.</desc>
+  <rect width="1200" height="630" fill="#03033a"/>
+  <circle cx="1040" cy="80" r="260" fill="#1e6bd0" opacity="0.28"/>
+  <circle cx="120" cy="600" r="260" fill="#f24208" opacity="0.14"/>
+  <text x="84" y="138" fill="#71a7ef" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="5">SKUNKWORKS ACADEMY</text>
+  <text x="84" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="84" font-weight="800">Course Catalog</text>
+  <text x="84" y="350" fill="#d8dee8" font-family="Arial, sans-serif" font-size="34">Configure it. Validate it. Prove it.</text>
+  <rect x="84" y="430" width="1032" height="2" fill="#1e6bd0"/>
+  <text x="84" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="30">Shopify permissions · GitHub Pages · Microsoft 365 licensing</text>
+</svg>
