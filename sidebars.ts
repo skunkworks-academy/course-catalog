@@ -4,6 +4,12 @@ const sidebars: SidebarsConfig = {
   courseSidebar: [
     {
       type: 'category',
+      label: 'Professional capability',
+      collapsed: false,
+      items: ['professional-articulation'],
+    },
+    {
+      type: 'category',
       label: 'Commerce administration',
       collapsed: false,
       items: ['shopify-user-permissions'],
