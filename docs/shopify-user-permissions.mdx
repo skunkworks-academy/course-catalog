@@ -1,0 +1,350 @@
+---
+id: shopify-user-permissions
+title: Shopify User Permissions
+sidebar_label: Shopify User Permissions
+description: Configure least-privilege Shopify roles, staff access and auditable permission reviews.
+keywords: [Shopify, permissions, roles, least privilege, access governance]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="SHP-UPA-101" courseTitle="Shopify User Permissions">
+
+# Shopify User Permissions
+
+**Course ID:** SHP-UPA-101  
+**Estimated effort:** 4–6 hours  
+**Level:** Beginner to intermediate  
+**Assessment model:** Formative checks, three practical labs, capstone access review and evidence of capability record
+
+## Capability outcome
+
+By the end of this course, you will be able to design, implement, test and review a Shopify access model that supports operational work without granting unnecessary administrative, financial or customer-data privileges.
+
+## Before you begin
+
+You need one of the following:
+
+- access to a Shopify development store or an approved training store;
+- permission to view **Settings → Users** and the available role model;
+- a second test identity or an assessor who can validate assigned access;
+- an approved location for redacted screenshots and exported evidence.
+
+:::warning Production safety
+Do not experiment with owner transfers, billing changes, payment settings, live theme publication, app charges or destructive permissions in a production store. Use a development store, sandbox or formally approved change window.
+:::
+
+## Module 1 — Access governance fundamentals
+
+### 1.1 Identity, role, permission and scope
+
+A sound Shopify access model separates four concepts:
+
+1. **Identity** — the named person or managed account receiving access.
+2. **Role** — a reusable job profile containing permissions.
+3. **Permission** — an allowed operation or administrative area.
+4. **Scope** — the store, organization, location or channel where the role applies.
+
+A user can receive multiple roles. The effective permission set is therefore cumulative. Treat every additional role as an expansion of the attack surface and review the combined result rather than each role in isolation.
+
+### 1.2 Least privilege
+
+Least privilege means assigning only the permissions required to complete approved duties, for the shortest practical period, within the correct store or organization scope.
+
+Use this decision sequence:
+
+- What business task must be completed?
+- Which Shopify object or administrative area supports that task?
+- Which actions are necessary: view, create, edit, publish, delete, approve or manage?
+- Does the task expose customer, financial, billing or security-sensitive information?
+- Can the work be divided between two roles to reduce concentration of power?
+- When must access be reviewed or removed?
+
+### 1.3 Separation of duties
+
+Avoid one broad role for every administrator. Separate high-risk capabilities where practical:
+
+| Operational responsibility | Typical access boundary | Independent control |
+|---|---|---|
+| Product merchandising | Products, collections, content | No billing or user administration |
+| Order operations | Orders, fulfilment, refunds within policy | Finance approval threshold |
+| Theme development | Themes and approved code workflow | Separate production publish approval |
+| Finance operations | Reports and billing functions required by policy | Independent reconciliation |
+| User administration | Users and role assignment | Quarterly access certification |
+
+## Practical Lab 1 — Build a role-to-task matrix
+
+### Scenario
+
+A growing online retailer has five job functions: Merchandiser, Customer Support Agent, Fulfilment Operator, Theme Developer and Finance Reviewer. The store owner currently assigns administrator access to most staff.
+
+### Tasks
+
+1. Create a worksheet with the columns: `Role`, `Business task`, `Required resource`, `Required action`, `Sensitive data`, `Store scope`, `Approval owner`, `Review date`.
+2. Add at least three business tasks for each job function.
+3. Mark every task that touches customer data, finance, billing, applications, users or theme code.
+4. Propose a least-privilege role for each function.
+5. Identify at least three permissions that must not be combined without explicit approval.
+
+### Acceptance criteria
+
+- every requested permission maps to a documented task;
+- broad administrator access is justified only as an exception;
+- sensitive permissions are explicitly labelled;
+- role ownership and review dates are recorded.
+
+## Module 2 — Understand Shopify role categories
+
+The roles and permissions available depend on the store plan, organization structure, partner context and Point of Sale configuration. Inspect the tenant before designing the target state.
+
+### 2.1 Store roles
+
+Store roles apply to store-level work such as products, orders, content, analytics, themes and selected settings. Custom store roles may be plan-dependent. Record the plan and role category in your design evidence.
+
+### 2.2 Organization roles
+
+Organization roles control organization-level administration and may span multiple stores. Treat organization administrator access as privileged access. Restrict it to named, trusted personnel with documented accountability.
+
+### 2.3 Point of Sale roles
+
+POS roles are relevant when the Point of Sale channel and qualifying subscription are in use. Keep POS device setup, POS user administration and store administration separate where the operating model allows it.
+
+### 2.4 Managed and custom roles
+
+Some roles are managed by Shopify and cannot be modified. Custom roles should use a clear naming convention:
+
+```text
+<business-area>-<responsibility>-<scope>-<privilege-level>
+
+Examples:
+commerce-merchandiser-za-edit
+support-orders-global-view
+web-theme-dev-draft-edit
+finance-billing-review-view
+```
+
+## Module 3 — Design the permission baseline
+
+### 3.1 Permission classification
+
+Classify requested permissions as:
+
+- **Standard:** routine operational access with limited impact.
+- **Elevated:** can modify business-critical configuration or data.
+- **Sensitive:** exposes financial, billing, customer, security or identity information.
+- **Privileged:** can manage users, roles, ownership-adjacent functions or broad administration.
+
+### 3.2 Permission dependencies
+
+Some Shopify permissions require related permissions. Do not assume a single checkbox represents the complete effective access. Capture automatically selected dependencies and retest the final role.
+
+### 3.3 Access conditions
+
+Where the tenant supports conditions or scoped access, use them to reduce exposure. Examples include restricting access to assigned stores, locations or business contexts.
+
+## Practical Lab 2 — Configure and test a custom role
+
+### Scenario
+
+The Merchandiser must create and update products, collections and approved content, but must not access billing, users, payment settings or production theme code.
+
+### Tasks
+
+1. Open **Settings → Users → Roles** in the approved training store.
+2. Create or duplicate a suitable role named `Commerce Merchandiser - Training`.
+3. Add a description containing the role owner, business purpose and review frequency.
+4. Select only the permissions required for the scenario.
+5. Record any automatically selected dependencies.
+6. Assign the role to a test user and restrict store access to the training store.
+7. Sign in as the test user or use an assessor-assisted validation session.
+8. Confirm required tasks succeed and prohibited areas remain unavailable.
+9. Remove the test role assignment after validation unless the assessor instructs otherwise.
+
+### Test script
+
+| Test | Expected result |
+|---|---|
+| View and edit a training product | Allowed |
+| Create a draft collection | Allowed |
+| Open billing and payment methods | Denied |
+| Manage users or roles | Denied |
+| Edit production theme code | Denied |
+| Access another store in the organization | Denied |
+
+### Evidence
+
+Capture redacted screenshots of the role definition, test-user assignment and at least two positive and three negative test results. Never expose customer personal information, payment data, secrets or recovery information.
+
+## Module 4 — Staff, collaborators and lifecycle controls
+
+### 4.1 Named accounts
+
+Use named user accounts. Shared administrative credentials weaken accountability and complicate offboarding, investigation and access review.
+
+### 4.2 Collaborator access
+
+Partner collaborator accounts should be scoped to the approved engagement. Document:
+
+- the partner organization;
+- work order or change reference;
+- requested permissions;
+- approving owner;
+- start and expiry dates;
+- deliverables requiring access;
+- closure confirmation.
+
+### 4.3 Joiner, mover and leaver process
+
+**Joiner:** verify identity, manager, role, scope, start date and training completion.  
+**Mover:** compare old and new duties; remove obsolete access before adding elevated access.  
+**Leaver:** suspend or remove access promptly, rotate shared integration secrets where applicable, transfer operational ownership and preserve audit evidence.
+
+### 4.4 Strong authentication
+
+Require staff to use strong, unique authentication and enable two-step authentication. Administrator accounts should not rely on passwords reused elsewhere.
+
+## Module 5 — Sensitive and privileged permissions
+
+Escalate requests involving:
+
+- billing payment methods or invoice payment;
+- customer data export or privacy requests;
+- user and role administration;
+- app installation, app charges or custom app management;
+- theme code modification or production publication;
+- financial reports, payouts or payment settings;
+- organization-wide store administration.
+
+Use a two-person review for high-impact permission changes. The requester, approver and implementer should not automatically be the same person.
+
+## Practical Lab 3 — Conduct an access review
+
+### Tasks
+
+1. Export or transcribe the current user, assigned role and store-scope inventory.
+2. For each user, identify the accountable manager and current job function.
+3. Compare assigned roles with the role-to-task matrix from Lab 1.
+4. Mark access as `retain`, `modify`, `remove`, `suspend pending confirmation` or `exception`.
+5. Record inactive, duplicate, generic and collaborator accounts.
+6. Prioritize sensitive and privileged roles.
+7. Produce a remediation plan with owner and due date.
+8. Obtain owner or assessor sign-off.
+
+### Review questions
+
+- Does the person still require access?
+- Is the role appropriate for current duties?
+- Is the store scope correct?
+- Are multiple roles creating excessive cumulative access?
+- Is a temporary or collaborator assignment overdue for removal?
+- Is the account protected by required authentication controls?
+- Is there evidence of approval and periodic review?
+
+## Module 6 — Monitoring, evidence and operating rhythm
+
+Establish a repeatable control cycle:
+
+1. **Monthly:** review newly created, suspended and high-privilege accounts.
+2. **Quarterly:** certify all roles, store scopes and collaborator access.
+3. **After material change:** review access following plan changes, acquisitions, new stores, POS rollout or application changes.
+4. **After incidents:** preserve relevant access evidence and reassess affected roles.
+
+A minimum access-review record should contain:
+
+- review period and reviewer;
+- user inventory source;
+- role and scope snapshot;
+- decision and rationale;
+- remediation owner and deadline;
+- completion evidence;
+- exceptions and expiry dates.
+
+## Module 7 — Capstone: Secure the store operating model
+
+### Capstone scenario
+
+You are the access administrator for a retailer operating one production store, one development store and two POS locations. The business uses internal staff, a finance contractor and an external theme agency.
+
+### Deliverables
+
+1. Current-state risk summary.
+2. Role-to-task matrix for at least six job functions.
+3. Target role design with permission classification.
+4. Joiner, mover and leaver workflow.
+5. Collaborator access standard.
+6. Positive and negative role test results.
+7. Quarterly access-review register.
+8. Remediation plan for excessive access.
+9. Executive summary explaining residual risk and next review date.
+
+### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Least-privilege design | 25% | Every permission maps to a business task and scope |
+| Sensitive-access control | 20% | High-risk capabilities are separated, approved and monitored |
+| Practical implementation | 20% | Role configured and tested with positive and negative cases |
+| Lifecycle governance | 15% | Joiner, mover, leaver and collaborator controls are operational |
+| Evidence quality | 10% | Artefacts are complete, redacted, dated and traceable |
+| Communication | 10% | Decisions, risk and remediation are clearly explained |
+
+<KnowledgeCheck
+  title="Shopify access governance knowledge check"
+  questions={[
+    {
+      prompt: 'A merchandiser needs product editing but no billing access. What is the best starting point?',
+      options: ['Assign Administrator for convenience', 'Create or assign a task-aligned store role and test denied areas', 'Share the store owner account', 'Grant every role and remove them later'],
+      answer: 1,
+      explanation: 'A task-aligned role supports least privilege and must be validated with positive and negative tests.'
+    },
+    {
+      prompt: 'A user has two roles. How should effective access be reviewed?',
+      options: ['Review only the newest role', 'Assume the roles cancel each other', 'Review the cumulative permissions and scope of both roles', 'Ignore managed roles'],
+      answer: 2,
+      explanation: 'Multiple roles create cumulative access and can unintentionally broaden privilege.'
+    },
+    {
+      prompt: 'Which evidence is strongest for role validation?',
+      options: ['A verbal confirmation', 'A role name only', 'A redacted role definition plus positive and negative test results', 'An unredacted screenshot containing customer data'],
+      answer: 2,
+      explanation: 'Assessment evidence should show configuration and behaviour while protecting sensitive information.'
+    },
+    {
+      prompt: 'When should collaborator access be removed?',
+      options: ['Never', 'When the approved engagement or access period ends', 'Only when the collaborator asks', 'After the next annual audit'],
+      answer: 1,
+      explanation: 'Collaborator access should have an approved purpose, owner and expiry tied to the engagement.'
+    },
+    {
+      prompt: 'What is the safest response to an unconfirmed privileged account during a review?',
+      options: ['Automatically retain it', 'Document and suspend or escalate according to policy', 'Delete the audit trail', 'Add more privileges'],
+      answer: 1,
+      explanation: 'Unconfirmed privileged access requires controlled escalation and, where policy permits, suspension pending confirmation.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="SHP-UPA-101"
+  courseTitle="Shopify User Permissions"
+  tasks={[
+    'Role-to-task and sensitive-permission matrix',
+    'Configured custom role with documented dependencies',
+    'Positive and negative access test record',
+    'Joiner, mover, leaver and collaborator workflow',
+    'Completed access review and remediation register',
+    'Capstone executive summary and residual-risk statement'
+  ]}
+/>
+
+## Official reference set
+
+- [Shopify Help: Roles](https://help.shopify.com/en/manual/your-account/users/roles)
+- [Shopify Help: Managing roles](https://help.shopify.com/en/manual/your-account/users/roles/manage-roles)
+- [Shopify Help: Permissions](https://help.shopify.com/en/manual/your-account/staff-accounts/permission-examples)
+- [Shopify Help: Sensitive permissions](https://help.shopify.com/en/manual/your-account/users/roles/permissions/sensitive-permissions)
+- [Shopify Help: User-management role requirements](https://help.shopify.com/en/manual/your-account/users/user-management-roles)
+
+</EnrollmentGate>
