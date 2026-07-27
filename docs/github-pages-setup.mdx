@@ -1,0 +1,467 @@
+---
+id: github-pages-setup
+title: GitHub Pages Setup
+sidebar_label: GitHub Pages Setup
+description: Build, deploy, validate and secure a GitHub Pages site with custom-domain operations.
+keywords: [GitHub Pages, GitHub Actions, DNS, HTTPS, custom domain, deployment]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+# GitHub Pages Setup
+
+**Course ID:** GHP-DOM-101  
+**Estimated effort:** 5–7 hours  
+**Level:** Beginner to intermediate  
+**Assessment model:** Guided deployment, DNS validation, troubleshooting scenarios, capstone release and evidence of capability record
+
+## Capability outcome
+
+You will be able to take a static website from repository source to a reliable GitHub Pages deployment, configure a project or custom-domain URL, validate HTTPS and routing, troubleshoot failed builds, and maintain an auditable release process.
+
+## Required environment
+
+- a GitHub account with permission to create or administer a training repository;
+- Git installed locally or access to GitHub Codespaces;
+- Node.js 20 or later for the Docusaurus pathway;
+- a text editor;
+- optional access to a DNS zone for a training subdomain;
+- PowerShell, Bash or an online DNS lookup tool for validation.
+
+:::info Hosting boundary
+GitHub Pages is static hosting. It does not provide a general-purpose application server, private database or secure server-side session layer. Do not place secrets, API keys, private course content or confidential records in the published repository or build output.
+:::
+
+## Module 1 — Understand the GitHub Pages deployment model
+
+### 1.1 Site types
+
+GitHub Pages commonly publishes:
+
+- an organization or user site at `<owner>.github.io`;
+- a project site at `<owner>.github.io/<repository>`;
+- a verified custom domain such as `academy.example.com`.
+
+Project sites require the application to understand the repository base path. Static-site generators such as Docusaurus, Vite and React Router can produce broken assets or routes when the base path is omitted.
+
+### 1.2 Publishing sources
+
+Two operational models are common:
+
+1. **Branch or folder publishing** — GitHub publishes from a selected branch and root or `/docs` folder.
+2. **GitHub Actions publishing** — a workflow builds the application, uploads a Pages artefact and deploys it.
+
+Use Actions when the site requires a build step, validation, dependency installation or repeatable release controls.
+
+### 1.3 Deployment architecture
+
+```text
+Developer change
+      │
+      ▼
+Pull request ──► review and checks
+      │
+      ▼
+Main branch
+      │
+      ▼
+GitHub Actions build
+      │
+      ├── validate content and links
+      ├── generate static output
+      └── upload Pages artefact
+      │
+      ▼
+GitHub Pages deployment
+      │
+      ├── github.io project URL
+      └── optional verified custom domain + HTTPS
+```
+
+## Practical Lab 1 — Publish a minimal project site
+
+### Tasks
+
+1. Create a repository named `pages-training-site`.
+2. Add an `index.html` containing a meaningful title, heading, paragraph and navigation link.
+3. Add a `404.html` with a route-recovery link.
+4. Commit changes through a feature branch and pull request.
+5. Open **Settings → Pages**.
+6. Select the approved publishing source.
+7. Wait for the deployment to complete.
+8. Open the Pages URL in a private browser session.
+9. Validate the document title, visible content, CSS and 404 behaviour.
+
+### Suggested files
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pages Training Site</title>
+</head>
+<body>
+  <main>
+    <h1>Deployment verified</h1>
+    <p>This site was published through a controlled GitHub Pages workflow.</p>
+  </main>
+</body>
+</html>
+```
+
+### Acceptance criteria
+
+- the site is reachable from the Pages URL;
+- the deployed commit can be traced to the source branch;
+- no secret or environment-specific credential appears in source or build output;
+- a failed route returns a useful recovery page.
+
+## Module 2 — Build and deploy with GitHub Actions
+
+### 2.1 Minimum workflow permissions
+
+A Pages deployment workflow normally requires:
+
+- `contents: read` to read the repository;
+- `pages: write` to publish the artefact;
+- `id-token: write` for the deployment identity flow.
+
+Keep workflow permissions explicit and minimal.
+
+### 2.2 Reference workflow
+
+```yaml title=".github/workflows/deploy-pages.yml"
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Pin actions to approved major versions or immutable commit SHAs according to your supply-chain policy. Review action publishers before use.
+
+### 2.3 Build controls
+
+A production workflow should fail before deployment when any of these controls fail:
+
+- dependency installation;
+- unit or content validation;
+- static-site build;
+- broken internal links;
+- required files or metadata;
+- accessibility smoke checks;
+- secret scanning or policy checks.
+
+## Practical Lab 2 — Deploy a Docusaurus project site
+
+### Tasks
+
+1. Scaffold a Docusaurus site using the current stable release.
+2. Set the organization and repository values.
+3. Configure the project-site base path.
+4. Add at least two pages and one document.
+5. Add an Actions workflow that builds and deploys the `build` directory.
+6. Open a pull request and confirm validation runs without deploying production.
+7. Merge and verify the Pages deployment.
+8. Inspect browser developer tools for missing assets or incorrect route prefixes.
+
+### Project-site configuration pattern
+
+```ts title="docusaurus.config.ts"
+const config = {
+  url: 'https://YOUR-ORG.github.io',
+  baseUrl: '/YOUR-REPOSITORY/',
+  organizationName: 'YOUR-ORG',
+  projectName: 'YOUR-REPOSITORY',
+  trailingSlash: false,
+};
+```
+
+### Common base-path defects
+
+| Symptom | Likely cause | Corrective action |
+|---|---|---|
+| CSS and JavaScript return 404 | base path omitted or hard-coded root paths | configure generator base URL and use internal link helpers |
+| Home page works but deep link fails | single-page route not represented as static output | generate static routes or implement a controlled 404 fallback |
+| Images work locally but not on Pages | path or filename case mismatch | correct case and use base-aware asset paths |
+| Build works locally but fails in Actions | uncommitted dependency or platform difference | use lockfile, supported Node version and clean install |
+
+## Module 3 — Custom domains and DNS
+
+### 3.1 Verify before delegation
+
+Verify the domain in the owning GitHub account or organization before attaching it to a Pages repository. Domain verification reduces the risk that another repository can claim an immediate subdomain.
+
+### 3.2 Subdomain pattern
+
+For a subdomain such as `learn.example.com`:
+
+```text
+Record type: CNAME
+Name/host: learn
+Target/value: YOUR-ORG.github.io
+```
+
+Do not include the repository path in the CNAME target. Configure the custom domain in repository Pages settings and then validate DNS.
+
+### 3.3 Apex pattern
+
+Apex domains use records supported by the DNS provider, commonly `A`, `ALIAS` or `ANAME`. Use the current GitHub documentation for the required address set. Do not copy old address values from screenshots or third-party blogs.
+
+### 3.4 DNS validation commands
+
+```powershell title="PowerShell"
+Resolve-DnsName learn.example.com -Type CNAME
+Resolve-DnsName learn.example.com -Type A
+```
+
+```bash title="Bash"
+dig learn.example.com CNAME +short
+dig learn.example.com A +short
+```
+
+Record the response, authoritative nameserver and validation time. DNS caching means different resolvers may not update simultaneously.
+
+## Practical Lab 3 — Validate a training subdomain
+
+### Tasks
+
+1. Confirm organization ownership of the parent domain.
+2. Verify the domain in GitHub organization settings.
+3. Add the custom domain in repository Pages settings.
+4. Create the required DNS record.
+5. Validate the record from at least two independent resolvers.
+6. Confirm the custom hostname opens the intended site.
+7. Enable HTTPS when the certificate becomes available.
+8. Confirm HTTP redirects to HTTPS.
+9. Record rollback steps before closing the change.
+
+### Rollback plan
+
+- remove or revert the Pages custom-domain setting;
+- restore the previous DNS record and TTL;
+- confirm the former endpoint resolves;
+- preserve the failed-change evidence;
+- open a follow-up incident or problem record if required.
+
+## Module 4 — HTTPS, domain security and takeover prevention
+
+### 4.1 HTTPS enforcement
+
+After DNS is correct and the certificate has been issued, enable **Enforce HTTPS**. Validate:
+
+- certificate hostname coverage;
+- certificate chain and expiry;
+- HTTP-to-HTTPS redirect;
+- mixed-content warnings;
+- secure loading of fonts, images, scripts and styles.
+
+### 4.2 Avoid dangling DNS
+
+A DNS record that points to a Pages hostname after the repository or custom-domain association is removed can create takeover risk. Include DNS cleanup in repository retirement and domain migration procedures.
+
+### 4.3 Avoid wildcard records
+
+Do not use a wildcard record as a shortcut for Pages subdomains. Create explicit records for approved sites and maintain an ownership register.
+
+### 4.4 Protect the deployment path
+
+- protect `main` with pull-request review;
+- require successful status checks;
+- limit who can change workflow files;
+- review third-party Actions;
+- use environment protection for production where supported;
+- keep deployment tokens and secrets out of site source;
+- monitor Pages deployments and domain changes.
+
+## Module 5 — Troubleshooting and root-cause analysis
+
+### Diagnostic sequence
+
+1. **Source:** Is the expected commit on the deployment branch?
+2. **Trigger:** Did the workflow run for the correct event?
+3. **Build:** Did dependency installation and static generation succeed?
+4. **Artefact:** Does the uploaded artefact contain `index.html` at its root?
+5. **Deployment:** Did the Pages environment deployment succeed?
+6. **Routing:** Are base paths and trailing-slash assumptions correct?
+7. **DNS:** Does the hostname resolve to the intended Pages target?
+8. **TLS:** Is the certificate issued and HTTPS enforced?
+9. **Browser:** Is cache, service-worker state or mixed content masking the fix?
+
+### Failure scenarios
+
+#### Scenario A — Workflow succeeds, site returns 404
+
+Check the Pages source is set to **GitHub Actions**, the artefact root, `baseUrl`, case-sensitive file paths and deployment URL.
+
+#### Scenario B — Custom domain says “improperly configured”
+
+Check the repository custom-domain value, DNS record type, target value, duplicate records, proxy/CDN settings and resolver propagation.
+
+#### Scenario C — HTTPS option unavailable
+
+Confirm DNS is valid, the custom domain is attached, CAA records permit the certificate authority and sufficient issuance time has elapsed.
+
+#### Scenario D — Assets fail only on project URL
+
+Search for absolute paths beginning with `/`. Replace them with generator-aware paths that include the repository base path.
+
+## Module 6 — Operational readiness
+
+Create an operating standard containing:
+
+- repository owner and technical owner;
+- source branch and deployment workflow;
+- Node and framework versions;
+- custom domain and DNS owner;
+- change, review and rollback process;
+- deployment health checks;
+- dependency update cadence;
+- site retirement procedure;
+- evidence retention location.
+
+### Production release checklist
+
+- pull request approved;
+- validation and build checks passed;
+- Pages source is correct;
+- deployment artefact contains expected files;
+- public URL, deep link and 404 tested;
+- custom domain resolves correctly;
+- HTTPS is enforced;
+- no secrets or private data are exposed;
+- analytics and external scripts are approved;
+- rollback path is documented.
+
+## Module 7 — Capstone: Production-ready brand site
+
+### Scenario
+
+A business needs a Docusaurus-based brand-guidelines site deployed from GitHub, available at a custom subdomain, with a controlled release workflow and evidence that the site can be operated safely.
+
+### Deliverables
+
+1. Repository with branch protection recommendations.
+2. Docusaurus configuration for the deployment URL.
+3. Build-and-deploy GitHub Actions workflow.
+4. Public landing page and at least three content routes.
+5. Custom 404 or route-recovery method.
+6. DNS and domain-verification change plan.
+7. HTTPS validation record.
+8. Deployment test script and results.
+9. Root-cause analysis for one injected failure.
+10. Operations runbook and rollback procedure.
+
+### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Repository and build design | 20% | Reproducible source, supported runtime and valid static build |
+| Deployment automation | 20% | Least-privilege Actions workflow with clear artefact handling |
+| Domain and HTTPS | 20% | Correct DNS, verified domain, HTTPS and takeover controls |
+| Validation and troubleshooting | 20% | Positive tests plus structured root-cause analysis |
+| Security and governance | 10% | No secrets, protected release path and retirement controls |
+| Evidence quality | 10% | Traceable commits, screenshots, logs and signed checklist |
+
+<KnowledgeCheck
+  title="GitHub Pages deployment knowledge check"
+  questions={[
+    {
+      prompt: 'A Docusaurus project site loads HTML but no CSS. What should be checked first?',
+      options: ['The repository description', 'The configured base URL and asset paths', 'The issue template', 'The user avatar'],
+      answer: 1,
+      explanation: 'Project sites are hosted beneath the repository path, so incorrect base-path configuration commonly breaks assets.'
+    },
+    {
+      prompt: 'What should a CNAME for a Pages subdomain normally target?',
+      options: ['The repository clone URL', 'The organization github.io hostname', 'The workflow file path', 'The repository issues page'],
+      answer: 1,
+      explanation: 'The DNS CNAME targets the owner github.io hostname, not a repository path.'
+    },
+    {
+      prompt: 'Why verify a custom domain before attaching it to a repository?',
+      options: ['To change repository visibility', 'To reduce custom-domain takeover risk', 'To enable Issues', 'To avoid using HTTPS'],
+      answer: 1,
+      explanation: 'Verification establishes account or organization control over the domain and protects immediate subdomains.'
+    },
+    {
+      prompt: 'Which workflow permission set is aligned to a Pages deployment?',
+      options: ['contents: write only', 'contents: read, pages: write and id-token: write', 'admin: write', 'packages: delete'],
+      answer: 1,
+      explanation: 'The build reads source and the deployment requires Pages and identity-token permissions.'
+    },
+    {
+      prompt: 'What should happen when a Pages site is retired?',
+      options: ['Leave the DNS record indefinitely', 'Remove the custom-domain association and clean up dangling DNS', 'Publish secrets in the README', 'Disable HTTPS only'],
+      answer: 1,
+      explanation: 'Repository retirement must include domain and DNS cleanup to prevent dangling references and takeover risk.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="GHP-DOM-101"
+  courseTitle="GitHub Pages Setup"
+  tasks={[
+    'Repository and source-control setup with reviewed pull request',
+    'Successful static-site build and Pages deployment evidence',
+    'Base-path, deep-link and 404 validation results',
+    'Custom-domain verification and DNS change record',
+    'HTTPS and security-control validation record',
+    'Troubleshooting root-cause analysis and operations runbook'
+  ]}
+/>
+
+## Official reference set
+
+- [GitHub Docs: Getting started with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages)
+- [GitHub Docs: Using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- [GitHub Docs: Managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+- [GitHub Docs: Verifying a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages)
+- [GitHub Docs: Securing GitHub Pages with HTTPS](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https)
+- [Docusaurus installation](https://docusaurus.io/docs/installation)
+
+</EnrollmentGate>

@@ -1,0 +1,495 @@
+---
+id: microsoft-365-licenses
+title: Microsoft 365 Licenses
+sidebar_label: Microsoft 365 Licenses
+description: Govern Microsoft 365 subscriptions, licence assignment, reclamation, billing and evidence.
+keywords: [Microsoft 365, licensing, billing, Entra ID, group-based licensing, Microsoft Graph]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="M365-LIC-101" courseTitle="Microsoft 365 Licenses">
+
+# Microsoft 365 Licenses
+
+**Course ID:** M365-LIC-101  
+**Estimated effort:** 5–8 hours  
+**Level:** Intermediate  
+**Assessment model:** Licence inventory, allocation labs, group-based automation, billing reconciliation, capstone and evidence of capability record
+
+## Capability outcome
+
+You will be able to interpret Microsoft 365 subscription and licence data, assign services using least-privilege administration, implement group-based licensing, identify assignment failures, reclaim unused capacity, reconcile commercial records and produce an auditable licensing control pack.
+
+## Required environment
+
+Use a Microsoft 365 developer, demonstration or approved training tenant. You require:
+
+- a tenant account with the minimum administrator role required for the task;
+- access to the Microsoft 365 admin center;
+- optional Microsoft Graph PowerShell access;
+- an approved test user and licensing group;
+- a secure location for redacted screenshots, CSV exports and scripts.
+
+:::danger Production change control
+Licence removal can disable access to services and may affect mailbox, OneDrive, Teams, security or compliance capabilities. Never remove or change production licences without impact analysis, business approval, data-retention checks and a rollback plan.
+:::
+
+## Module 1 — Licensing architecture and terminology
+
+### 1.1 Commercial hierarchy
+
+Distinguish these objects:
+
+- **Tenant:** the Microsoft Entra identity and service boundary.
+- **Billing account and billing profile:** commercial structures used to manage purchases and invoices, depending on agreement type.
+- **Subscription:** the purchased recurring product or service offer.
+- **Licence quantity:** the number of assignable seats acquired under a subscription.
+- **SKU:** the technical product identifier exposed through Microsoft Graph.
+- **Service plan:** an individual service inside a SKU, such as Exchange Online, Teams or SharePoint.
+- **Assignment:** the direct or group-based relationship that grants a SKU and selected service plans to a user.
+
+Do not use marketing product names as your only technical identifier. Record the SKU part number and SKU ID when automating.
+
+### 1.2 Assigned, consumed and available capacity
+
+A basic control equation is:
+
+```text
+Available capacity = Enabled or purchased units - Consumed units
+```
+
+Investigate suspended, warning or locked-out units separately. Do not assume the commercial portal and tenant inventory always use identical labels.
+
+### 1.3 Direct and inherited assignment
+
+A user may receive a licence:
+
+- directly from an administrator;
+- through one or more groups;
+- through an automated provisioning process;
+- through a service-specific or self-service mechanism.
+
+Before removal, identify every assignment source. Removing a direct licence does not remove an equivalent group-based entitlement, and removing a user from one licensing group may still leave another source in place.
+
+## Practical Lab 1 — Build a tenant licence inventory
+
+### Tasks
+
+1. Open **Microsoft 365 admin center → Billing → Your products** and **Billing → Licences**.
+2. Record the billing-account context, subscription status, renewal model and seat quantities.
+3. Record assigned and available counts for each relevant product.
+4. Identify trials, add-ons, duplicate capabilities and subscriptions approaching renewal.
+5. Export or document users with direct assignments and users receiving group-based assignments.
+6. Record any errors shown under the product's **Errors & issues** view.
+7. Create a reconciliation table linking commercial product name, SKU part number, assigned count, available count, owner and review date.
+
+### Inventory template
+
+| Commercial product | SKU part number | Purchased/enabled | Consumed | Available | Assignment method | Owner | Renewal date |
+|---|---|---:|---:|---:|---|---|---|
+| Example product | `ENTERPRISEPACK` | 25 | 22 | 3 | Group-based | IT Operations | YYYY-MM-DD |
+
+### PowerShell discovery
+
+```powershell
+Connect-MgGraph -Scopes "Organization.Read.All"
+
+Get-MgSubscribedSku -All |
+  Select-Object SkuPartNumber, SkuId, ConsumedUnits,
+    @{Name='EnabledUnits';Expression={$_.PrepaidUnits.Enabled}},
+    @{Name='WarningUnits';Expression={$_.PrepaidUnits.Warning}},
+    @{Name='SuspendedUnits';Expression={$_.PrepaidUnits.Suspended}} |
+  Sort-Object SkuPartNumber
+```
+
+Export only to an approved secure location:
+
+```powershell
+Get-MgSubscribedSku -All |
+  Select-Object SkuPartNumber, SkuId, ConsumedUnits,
+    @{Name='EnabledUnits';Expression={$_.PrepaidUnits.Enabled}} |
+  Export-Csv -Path .\m365-licence-inventory.csv -NoTypeInformation
+```
+
+## Module 2 — Roles, permissions and administrative separation
+
+Use the lowest-privilege role that can complete the approved task.
+
+| Responsibility | Suitable role pattern | Boundary |
+|---|---|---|
+| Assign and remove user licences | License Administrator or permitted User Administrator workflow | Does not require routine Global Administrator use |
+| Manage licensing groups | Groups Administrator plus appropriate licensing permissions | Separate from billing purchase approval where possible |
+| Purchase or change quantities | Billing role required by the billing agreement | Does not automatically imply user licence assignment |
+| Review reports | Reports Reader or approved read-only process | No write access |
+
+Global Administrator is not a default licensing role. Reserve highly privileged roles for exceptional scenarios and emergency access procedures.
+
+### Control requirements
+
+- named administrator accounts;
+- multifactor authentication;
+- privileged-role activation where available;
+- ticket or change reference;
+- requester and approver identity;
+- before-and-after licence snapshot;
+- validation and rollback evidence.
+
+## Module 3 — User-based licence assignment
+
+### 3.1 Prerequisites
+
+Before assigning a licence:
+
+1. confirm the correct user identity;
+2. set a valid usage location;
+3. confirm available capacity;
+4. map job requirements to the product and service plans;
+5. check for conflicting or duplicate assignments;
+6. obtain approval.
+
+### 3.2 Service-plan decisions
+
+A SKU can contain multiple service plans. Disable a service only when the design is supported and dependencies are understood. Do not disable security, compliance or retention services merely to simplify the user interface.
+
+### 3.3 Graph PowerShell pattern
+
+```powershell
+Connect-MgGraph -Scopes "User.Read.All","LicenseAssignment.ReadWrite.All","Organization.Read.All"
+
+$user = Get-MgUser -UserId "learner@example.com" -Property Id,DisplayName,UserPrincipalName,UsageLocation
+$sku = Get-MgSubscribedSku -All | Where-Object SkuPartNumber -eq "ENTERPRISEPACK"
+
+if (-not $user.UsageLocation) {
+  throw "UsageLocation must be set before licence assignment."
+}
+
+if (-not $sku) {
+  throw "Requested SKU was not found in this tenant."
+}
+
+Set-MgUserLicense -UserId $user.Id `
+  -AddLicenses @(@{SkuId = $sku.SkuId}) `
+  -RemoveLicenses @()
+```
+
+The exact SKU must come from the tenant inventory. Never copy a SKU ID from another tenant or an outdated article without validation.
+
+## Practical Lab 2 — Assign and validate a test licence
+
+### Scenario
+
+A test user requires approved Microsoft 365 productivity services for a two-week training period.
+
+### Tasks
+
+1. Confirm user principal name, department, manager and usage location.
+2. Record current direct and inherited licences.
+3. Confirm available capacity.
+4. Assign the approved SKU through the admin center or Graph PowerShell.
+5. Validate that the expected service plans appear.
+6. Confirm the user can sign in to the approved service.
+7. Record the planned expiry date and removal owner.
+8. Remove the test assignment at the end of the lab unless instructed otherwise.
+9. Confirm the licence returns to available capacity.
+
+### Acceptance criteria
+
+- the user and SKU were identified unambiguously;
+- usage location was validated;
+- only approved services were enabled;
+- before-and-after snapshots reconcile;
+- removal and service-impact checks are documented.
+
+## Module 4 — Group-based licensing
+
+Group-based licensing automates assignment when users join or leave an approved group. It is appropriate for standardised personas such as frontline staff, instructors or developers.
+
+### 4.1 Design the licensing group
+
+Use a naming standard that communicates purpose and scope:
+
+```text
+LIC-M365-E3-Employees-ZA
+LIC-BUSINESS-PREMIUM-SMB
+LIC-POWERBI-PRO-Analysts
+```
+
+Record:
+
+- group owner;
+- membership source;
+- dynamic or assigned membership logic;
+- SKU and disabled service plans;
+- capacity threshold;
+- exception process;
+- review frequency.
+
+### 4.2 Important controls
+
+- nested groups do not provide transitive group-based licence assignment;
+- insufficient capacity creates assignment failures;
+- usage location must be correct;
+- conflicting products or disabled-plan dependencies can cause errors;
+- group membership changes may not process instantly;
+- direct assignments can coexist with group assignments and complicate reclamation.
+
+### 4.3 Graph PowerShell pattern
+
+```powershell
+Connect-MgGraph -Scopes "Group.ReadWrite.All","LicenseAssignment.ReadWrite.All","Organization.Read.All"
+
+$group = Get-MgGroup -Filter "displayName eq 'LIC-M365-E3-Employees-ZA'"
+$sku = Get-MgSubscribedSku -All | Where-Object SkuPartNumber -eq "ENTERPRISEPACK"
+
+if (-not $group -or -not $sku) {
+  throw "Licensing group or SKU could not be resolved."
+}
+
+Set-MgGroupLicense -GroupId $group.Id `
+  -AddLicenses @(@{SkuId = $sku.SkuId}) `
+  -RemoveLicenses @()
+```
+
+## Practical Lab 3 — Implement group-based licensing
+
+### Tasks
+
+1. Create or select an approved training security group.
+2. Assign an accountable group owner.
+3. Confirm test-user usage location.
+4. Assign the approved SKU to the group.
+5. Add the test user to the group.
+6. Monitor the assignment status and errors.
+7. Validate the user receives the expected licence and service plans.
+8. Remove the user from the group.
+9. Confirm the inherited licence is removed unless another assignment source remains.
+10. Document processing time and any remediation performed.
+
+### Negative tests
+
+Perform at least two controlled negative tests in a training tenant:
+
+- missing usage location;
+- no available licences;
+- conflicting service plan;
+- user already has an equivalent direct assignment;
+- nested-group assumption.
+
+Do not intentionally exhaust or disrupt production capacity.
+
+## Module 5 — Error investigation and remediation
+
+Use a structured root-cause model.
+
+| Error category | Evidence to collect | Typical corrective action |
+|---|---|---|
+| Insufficient licences | Enabled, consumed and available counts | Purchase capacity, reclaim unused seats or correct scope |
+| Invalid usage location | User location and tenant default | Set the approved user usage location |
+| Conflicting products | Direct and inherited licence sources | Redesign assignment and remove conflict under change control |
+| Disabled-plan dependency | Enabled and disabled service-plan list | Enable prerequisite or select a supported plan combination |
+| Group processing error | Group ownership, membership and error detail | Correct membership, capacity or configuration; reprocess |
+| Commercial restriction | Billing account, agreement and subscription status | Escalate to billing owner, CSP or Microsoft support |
+
+### Investigation sequence
+
+1. identify the affected user and licence source;
+2. capture the exact error and timestamp;
+3. validate SKU availability and subscription status;
+4. validate usage location;
+5. enumerate direct and group-based assignments;
+6. inspect disabled service plans and dependencies;
+7. apply the least disruptive correction;
+8. reprocess or wait for assignment processing;
+9. validate service access;
+10. record cause, resolution and prevention action.
+
+## Module 6 — Billing, utilisation and reclamation
+
+### 6.1 Billing account awareness
+
+Purchase and quantity-management permissions vary by billing agreement. Record whether the tenant uses a Microsoft Customer Agreement, Microsoft Online Subscription Agreement, Cloud Solution Provider arrangement or another channel. Escalate commercial changes to the appropriate billing owner or partner.
+
+### 6.2 Reconciliation cycle
+
+Run a monthly control:
+
+1. capture subscription quantities and status;
+2. capture assigned and available counts;
+3. identify disabled, departed, duplicate and inactive users;
+4. identify direct assignments outside the standard model;
+5. validate add-ons and trials;
+6. compare invoice quantities with approved demand;
+7. reclaim licences through approved offboarding and data-retention procedures;
+8. forecast 30-, 60- and 90-day requirements;
+9. document savings, risks and purchase actions.
+
+### 6.3 Safe reclamation
+
+Before removing a licence from a former employee or changed role:
+
+- block or manage sign-in according to the offboarding process;
+- preserve mailbox and OneDrive data according to retention policy;
+- transfer ownership of Teams, groups, Power BI assets and automation;
+- check litigation hold, retention and eDiscovery requirements;
+- confirm application dependencies;
+- document approval and rollback considerations.
+
+Licence reclamation is not a substitute for a complete identity-offboarding process.
+
+## Practical Lab 4 — Licence optimisation review
+
+### Scenario
+
+The tenant owns 100 productivity licences and 20 analytics add-ons. Finance reports rising monthly cost, while IT reports assignment errors for new starters.
+
+### Tasks
+
+1. Reconcile purchased, consumed and available counts.
+2. Identify at least five optimisation candidates using approved test data.
+3. Classify each candidate: reclaim, downgrade, retain, investigate or exception.
+4. Estimate the capacity impact without inventing prices.
+5. Identify users with direct licences that should be group-managed.
+6. Identify any upcoming shortage.
+7. Produce an action plan with owners and due dates.
+8. Prepare an executive summary covering cost, service risk and governance gaps.
+
+## Module 7 — Licence governance operating model
+
+Define these controls:
+
+### Request
+
+- business role and manager;
+- required application capability;
+- region and usage location;
+- duration and cost centre;
+- data, security and compliance requirements.
+
+### Approval
+
+- budget owner;
+- service owner;
+- security or compliance approval for elevated products;
+- exception expiry.
+
+### Provision
+
+- standard group where possible;
+- direct assignment only with documented reason;
+- automated validation and error monitoring;
+- user notification and acceptable-use conditions.
+
+### Review
+
+- monthly capacity and billing reconciliation;
+- quarterly direct-assignment and exception review;
+- joiner, mover and leaver integration;
+- renewal and true-up planning;
+- evidence retention.
+
+### Metrics
+
+- licence utilisation percentage;
+- available-seat threshold;
+- direct versus group-based assignment ratio;
+- assignment error count and age;
+- licences reclaimed;
+- exceptions past expiry;
+- forecast variance.
+
+## Module 8 — Capstone: Govern a multi-persona tenant
+
+### Scenario
+
+A 120-user organization has four personas: Office Employee, Frontline Employee, Analyst and Administrator. Licences are assigned manually, billing ownership is unclear and former employees remain licensed.
+
+### Deliverables
+
+1. Subscription and SKU inventory.
+2. Persona-to-capability and persona-to-SKU matrix.
+3. Administrative role and separation-of-duties model.
+4. Group-based licensing design for all standard personas.
+5. Direct-assignment exception register.
+6. Assignment-error investigation report.
+7. Offboarding and licence-reclamation procedure.
+8. Monthly billing and utilisation dashboard design.
+9. 90-day capacity forecast.
+10. Executive recommendation with risks, savings opportunities and implementation plan.
+
+### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Inventory accuracy | 15% | Commercial and technical records reconcile |
+| Persona and SKU design | 20% | Product assignments map to approved capability requirements |
+| Automation | 20% | Group-based licensing is controlled, tested and monitored |
+| Security and separation | 15% | Least-privilege admin roles and change controls are defined |
+| Billing and optimisation | 15% | Capacity, renewal and reclamation decisions are evidence-led |
+| Troubleshooting | 10% | Root cause and corrective action are traceable |
+| Evidence quality | 5% | Artefacts are complete, redacted and reproducible |
+
+<KnowledgeCheck
+  title="Microsoft 365 licensing knowledge check"
+  questions={[
+    {
+      prompt: 'What must be validated before assigning many Microsoft 365 licences?',
+      options: ['User avatar colour', 'Usage location, SKU capacity and assignment design', 'Browser bookmarks', 'Teams background'],
+      answer: 1,
+      explanation: 'Usage location, available capacity and the assignment model are core prerequisites.'
+    },
+    {
+      prompt: 'A user is removed from one licensing group but remains licensed. What is the next step?',
+      options: ['Delete the tenant', 'Enumerate all direct and group-based assignment sources', 'Purchase more licences', 'Disable audit logging'],
+      answer: 1,
+      explanation: 'Another group or direct assignment may still grant the same SKU.'
+    },
+    {
+      prompt: 'Which approach best supports standard employee personas?',
+      options: ['Shared Global Administrator account', 'Group-based licensing with owned groups and monitored errors', 'Random direct assignments', 'Manual billing changes by every helpdesk user'],
+      answer: 1,
+      explanation: 'Group-based licensing provides repeatability when group ownership, capacity and errors are governed.'
+    },
+    {
+      prompt: 'Why is licence removal part of a broader offboarding process?',
+      options: ['It changes the company logo', 'Service data, ownership, retention and legal requirements must be handled', 'It automatically closes invoices', 'It removes DNS records'],
+      answer: 1,
+      explanation: 'Removing a licence can affect service access and data, so identity, ownership and retention controls must be completed.'
+    },
+    {
+      prompt: 'Who should routinely use Global Administrator for licence allocation?',
+      options: ['Every service-desk analyst', 'No one when a lower-privilege licensing role is sufficient', 'All end users', 'External guests'],
+      answer: 1,
+      explanation: 'Use the least-privilege role that can perform the approved task.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="M365-LIC-101"
+  courseTitle="Microsoft 365 Licenses"
+  tasks={[
+    'Tenant subscription, SKU and capacity inventory',
+    'Persona-to-capability and persona-to-SKU matrix',
+    'Validated direct licence assignment and removal record',
+    'Group-based licensing design and positive/negative test results',
+    'Assignment-error root-cause analysis',
+    'Billing reconciliation, reclamation plan and 90-day forecast',
+    'Capstone governance pack and executive recommendation'
+  ]}
+/>
+
+## Official reference set
+
+- [Microsoft Learn: Understand subscriptions and licences](https://learn.microsoft.com/en-us/microsoft-365/commerce/licenses/subscriptions-and-licenses)
+- [Microsoft Learn: Assign or unassign licences for users](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/assign-licenses-to-users)
+- [Microsoft Learn: Assign or unassign licences to a group](https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-group-licenses)
+- [Microsoft Learn: Group-based licensing PowerShell examples](https://learn.microsoft.com/en-us/entra/identity/users/licensing-powershell-graph-examples)
+- [Microsoft Learn: Buy or remove licences](https://learn.microsoft.com/en-us/microsoft-365/commerce/licenses/buy-licenses)
+- [Microsoft Learn: Microsoft 365 administrator roles](https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/about-admin-roles)
+- [Microsoft Graph PowerShell: Get-MgSubscribedSku](https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgsubscribedsku)
+- [Microsoft Graph PowerShell: Set-MgUserLicense](https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.users.actions/set-mguserlicense)
+
+</EnrollmentGate>
