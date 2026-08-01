@@ -1,0 +1,8 @@
+.filters { background: var(--skw-panel); border: 1px solid var(--skw-line); border-radius: 1rem; display: grid; gap: .8rem; grid-template-columns: 2fr repeat(3,minmax(150px,1fr)); margin: 1.5rem 0; padding: 1rem; }
+.filters label { color: var(--skw-slate); font-size: .82rem; font-weight: 800; }
+.filters input, .filters select { background: var(--ifm-background-color); border: 1px solid var(--skw-line); border-radius: .65rem; color: var(--ifm-font-color-base); display: block; margin-top: .35rem; min-height: 44px; padding: .65rem .75rem; width: 100%; }
+.resultCount { color: var(--skw-slate); margin: 0 0 1.25rem; }
+.contentStatus { color: var(--skw-slate); font-size: .82rem; font-weight: 800; margin: .75rem 0; }
+.emptyState { background: var(--skw-panel); border: 1px dashed var(--skw-line); border-radius: 1rem; padding: 2rem; text-align: center; }
+@media (max-width:900px) { .filters { grid-template-columns: 1fr 1fr; } }
+@media (max-width:560px) { .filters { grid-template-columns: 1fr; } }

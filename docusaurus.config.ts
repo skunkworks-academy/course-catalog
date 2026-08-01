@@ -3,7 +3,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
-  tagline: 'Practical, evidence-led self-paced learning journeys',
+  tagline: 'Practical, evidence-led self-paced and instructor-led learning journeys',
   url: 'https://skunkworks-academy.github.io',
   baseUrl: '/course-catalog/',
   organizationName: 'skunkworks-academy',
@@ -11,83 +11,39 @@ const config: Config = {
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
   onBrokenLinks: 'throw',
-  markdown: {
-    hooks: {
-      onBrokenMarkdownLinks: 'throw',
-    },
-  },
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-  },
-  scripts: [
-    {
-      src: 'https://www.skunkworksacademy.com/assets/academy-navigation.js?v=2026.07.17.6',
-      defer: true,
-      'data-skunkworks-global-nav': 'v8',
-    },
-  ],
+  markdown: {hooks: {onBrokenMarkdownLinks: 'throw'}},
+  i18n: {defaultLocale: 'en', locales: ['en']},
+  scripts: [{src: 'https://www.skunkworksacademy.com/assets/academy-navigation.js?v=2026.07.17.6', defer: true, 'data-skunkworks-global-nav': 'v8'}],
   customFields: {
     accessApi: 'https://skunkworks-instructor-portal-api-a5gxhyc2fvc7gmch.southafricanorth-01.azurewebsites.net/api/course-access',
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
   },
-  presets: [
-    [
-      'classic',
-      {
-        docs: {
-          routeBasePath: 'courses',
-          sidebarPath: './sidebars.ts',
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true,
-          breadcrumbs: true,
-        },
-        blog: false,
-        theme: {
-          customCss: './src/css/custom.css',
-        },
-        sitemap: {
-          changefreq: 'weekly',
-          priority: 0.7,
-        },
-      } satisfies Preset.Options,
-    ],
-  ],
+  plugins: ['./plugins/generated-course-pages'],
+  presets: [['classic', {
+    docs: {routeBasePath: 'courses', sidebarPath: './sidebars.ts', showLastUpdateAuthor: true, showLastUpdateTime: true, breadcrumbs: true},
+    blog: false,
+    theme: {customCss: './src/css/custom.css'},
+    sitemap: {changefreq: 'weekly', priority: 0.7},
+  } satisfies Preset.Options]],
   themeConfig: {
     image: 'img/skunkworks-academy-course-catalog.svg',
-    metadata: [
-      {name: 'author', content: 'Skunkworks Academy'},
-      {name: 'robots', content: 'index,follow,max-image-preview:large'},
-    ],
-    navbar: {
-      title: 'Skunkworks Academy',
-      items: [],
-    },
+    metadata: [{name: 'author', content: 'Skunkworks Academy'}, {name: 'robots', content: 'index,follow,max-image-preview:large'}],
+    navbar: {title: 'Skunkworks Academy', items: []},
     footer: {
       style: 'dark',
       links: [
-        {
-          title: 'Learning',
-          items: [
-            {label: 'Self-paced catalogue', href: 'https://www.skunkworksacademy.com/self-paced/'},
-            {label: 'Learner portal', href: 'https://portal.skunkworksacademy.com/'},
-            {label: 'Labs', href: 'https://labs.skunkworksacademy.com/'},
-          ],
-        },
-        {
-          title: 'Support',
-          items: [
-            {label: 'Contact training', href: 'mailto:training@skunkworks.africa'},
-            {label: 'GitHub organisation', href: 'https://github.com/skunkworks-academy'},
-          ],
-        },
+        {title: 'Learning', items: [
+          {label: 'Self-paced catalogue', href: 'https://www.skunkworksacademy.com/self-paced/'},
+          {label: 'Instructor-led catalogue', href: 'https://www.skunkworksacademy.com/instructor-led/'},
+          {label: 'Learner portal', href: 'https://portal.skunkworksacademy.com/'},
+          {label: 'Labs', href: 'https://labs.skunkworksacademy.com/'},
+        ]},
+        {title: 'Support', items: [{label: 'Contact training', href: 'mailto:training@skunkworks.africa'}, {label: 'GitHub organisation', href: 'https://github.com/skunkworks-academy'}]},
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Skunkworks Academy. Dream. Design. Deliver.`,
     },
-    prism: {
-      additionalLanguages: ['bash', 'json', 'powershell'],
-    },
+    prism: {additionalLanguages: ['bash', 'json', 'powershell']},
   } satisfies Preset.ThemeConfig,
 };
 

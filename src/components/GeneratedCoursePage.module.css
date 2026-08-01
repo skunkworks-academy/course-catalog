@@ -1,0 +1,11 @@
+.main { padding: 3rem 0 6rem; }
+.meta { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1.4rem 0; }
+.meta span { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff; font-size: .86rem; font-weight: 800; padding: .45rem .75rem; }
+.publicOverview, .courseBody > section, .module, .lab, .capstone { background: var(--skw-panel); border: 1px solid var(--skw-line); border-radius: 1rem; box-shadow: 0 16px 45px rgba(3,3,58,.06); margin: 1.25rem 0; padding: clamp(1.1rem,3vw,1.7rem); }
+.statusNotice { background: color-mix(in srgb,var(--skw-blue) 10%,var(--skw-panel)); border-left: 4px solid var(--skw-blue); border-radius: .6rem; margin: 1.25rem 0; padding: .9rem 1rem; }
+.module { border-left: 5px solid var(--skw-blue); }
+.lab { border-left: 5px solid var(--skw-orange); }
+.capstone { border: 2px solid var(--skw-blue); }
+.tableWrap { overflow-x: auto; }
+.tableWrap table { min-width: 720px; width: 100%; }
+.sourceNote { color: var(--skw-slate); font-size: .9rem; }
