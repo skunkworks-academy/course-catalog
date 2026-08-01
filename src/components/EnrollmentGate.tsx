@@ -4,9 +4,10 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 interface EnrollmentGateProps { courseId: string; courseTitle: string; children: ReactNode; catalogUrl?: string }
 type AccessState = 'checking' | 'allowed' | 'locked' | 'unavailable';
 
-export default function EnrollmentGate({courseId, courseTitle, children, catalogUrl = 'https://www.skunkworksacademy.com/self-paced/'}: EnrollmentGateProps) {
+export default function EnrollmentGate({courseId, courseTitle, children, catalogUrl}: EnrollmentGateProps) {
   const {siteConfig} = useDocusaurusContext();
   const fields = siteConfig.customFields as Record<string, string>;
+  const resolvedCatalogUrl = catalogUrl || fields.catalogUrl || 'https://catalog.skunkworksacademy.com/';
   const [state, setState] = useState<AccessState>('checking');
   const [detail, setDetail] = useState('Confirming your learner account and course enrolment.');
   const returnUrl = useMemo(() => typeof window === 'undefined' ? '' : window.location.href, []);
@@ -50,7 +51,7 @@ export default function EnrollmentGate({courseId, courseTitle, children, catalog
     {state !== 'checking' && <div className="accessGateActions">
       <a className="cardButton cardButtonPrimary" href={signInUrl}>Sign in to continue</a>
       <a className="cardButton" href={enrollUrl}>Register or enrol</a>
-      <a className="cardButton" href={catalogUrl}>Return to catalogue</a>
+      <a className="cardButton" href={resolvedCatalogUrl}>Return to catalogue</a>
     </div>}
   </section>;
 }
