@@ -1,0 +1,387 @@
+---
+id: data-outlier-analysis
+title: Understanding Outliers in Data Files
+sidebar_label: Understanding Outliers
+sidebar_position: 3
+description: Find, investigate, explain and govern potential outliers in CSV and spreadsheet files using robust statistics, visual analysis and reproducible evidence.
+keywords: [data analysis, outliers, csv, excel, statistics, data quality, python]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="DAT-OUT-101" courseTitle="Understanding Outliers in Data Files">
+
+# Understanding Outliers in Data Files
+
+**Course ID:** DAT-OUT-101  
+**Estimated effort:** 24-30 hours  
+**Level:** Foundation to intermediate data analysis  
+**Audience:** Analysts, finance and operations teams, researchers, managers, data stewards and professionals who receive data files and need defensible conclusions  
+**Assessment model:** Eight modules, five practical labs, a reproducible analysis capstone, governance review and evidence of capability record
+
+## Capability outcome
+
+By the end of the course, you will be able to inspect a data file, identify observations that merit investigation, select methods consistent with the data and decision context, distinguish a detection flag from a conclusion, and communicate a transparent recommendation. You will build a reproducible analysis trail rather than deleting inconvenient data values.
+
+## Critical principle: a potential outlier is a question
+
+An outlier is an observation that appears unusually distant relative to a specified reference group, model or process. It may be a data-entry error, unit error, duplicated row, rare but valid event, fraud indicator, customer opportunity, equipment failure or a signal that the chosen comparison group is wrong. A detection method identifies candidates for investigation; it does not authorise deletion or prove misconduct.
+
+## What competence looks like
+
+A competent learner can:
+
+- profile a CSV or spreadsheet before calculating a score;
+- explain the business meaning, unit, time window and population of a field;
+- identify missing values, duplicates, impossible values and category inconsistencies;
+- compare mean/standard deviation methods with median/IQR and robust alternatives;
+- use a chart and a numeric rule together instead of relying on one threshold;
+- investigate a flagged record with lineage, context and a documented decision;
+- avoid privacy, bias and false-positive harms when reporting an unusual record;
+- package code, assumptions, outputs and reviewer notes for reproducibility.
+
+## Before you begin
+
+- Use only authorised files. Remove or mask personal, client, payment, health and credential data before submitting evidence.
+- Keep an untouched source copy. Work from a controlled copy and record file name, received date, source, hash where approved, and access restrictions.
+- Choose an analysis tool: spreadsheet, Python with pandas, SQL, BI tool or a combination. This course includes generic method and optional Python examples.
+- Never connect a learning notebook to a production database without written approval and an appropriate least-privilege account.
+
+---
+
+## Module 1 - Define the decision before the method
+
+### 1.1 “Unusual” depends on the question
+
+The same value can be unusual in one population and expected in another. A high invoice may be unusual for retail purchases but normal for annual enterprise subscriptions. Before calculating anything, write a decision statement:
+
+> For the stated period and population, identify records whose value or pattern merits review, explain why, and recommend an appropriate next action without automatically changing the source data.
+
+Define the unit of analysis. Is one row a transaction, customer, device, month, invoice, learner attempt or aggregated total? A monthly total and a single transaction should not be compared as though they are equivalent observations.
+
+### 1.2 Frame the analysis
+
+| Question | Example |
+|---|---|
+| What decision will use this analysis? | Prioritise invoice review, not automatic rejection |
+| Who is affected? | Customers, suppliers and finance operations |
+| What is the reference population? | Completed invoices in one region and currency for Q2 |
+| What does the measure mean? | Net invoice value excluding VAT and reversals |
+| What action is permitted? | Flag, investigate, correct source error with approval, retain valid extreme |
+| What harm can a false positive cause? | Delayed payment, unfair customer treatment, reputational harm |
+
+### 1.3 Segment before comparing
+
+Mixed populations manufacture false outliers. Segment by meaningful drivers such as currency, product family, region, customer tier, day of week, season, equipment type or transaction channel before comparing values. Use a segment only when it is large enough and meaningful enough for the method; otherwise report the limitation.
+
+## Practical Lab 1 - File intake and analysis charter
+
+Choose an authorised sample CSV or workbook with at least 100 rows, or create a synthetic file. Produce a one-page analysis charter containing the decision, stakeholders, source, row definition, field glossary, time period, permitted action, privacy classification, segmentation plan and no-go conditions. Include a data-handling note explaining where the original, working copy and evidence will be stored.
+
+---
+
+## Module 2 - Profile the file before detecting outliers
+
+### 2.1 Data quality and statistical unusualness are related but different
+
+First inspect structural quality. A data-entry error is not necessarily a statistical outlier, and a valid extreme can be statistically unusual. Profile both.
+
+Minimum checks:
+
+- row count, column count and file encoding;
+- declared versus observed data types;
+- null, blank and sentinel values such as `N/A`, `-`, `0` or `unknown`;
+- duplicate rows and duplicate business keys;
+- minimum, maximum, distinct values and percentiles;
+- impossible ranges and inconsistent units;
+- category spelling, casing and whitespace variants;
+- date parsing, future dates and time-zone assumptions.
+
+### 2.2 Build a data dictionary
+
+| Field | Meaning | Expected type | Valid range/category | Known caveat |
+|---|---|---|---|---|
+| `invoice_amount` | Net invoice value | Decimal | Greater than or equal to zero | Currency required |
+| `invoice_date` | Posting date | Date | In analysis period | Late posting possible |
+| `customer_segment` | Contract tier | Categorical | SMB, Mid-market, Enterprise | May be missing |
+
+An outlier rule applied to a field with unknown unit, scale or missing-value convention is not defensible.
+
+### 2.3 Reproducible file profile in Python
+
+```python
+import pandas as pd
+
+df = pd.read_csv("working/invoices_sanitized.csv")
+print(df.shape)
+print(df.dtypes)
+print(df.isna().sum().sort_values(ascending=False))
+print(df["invoice_amount"].describe(percentiles=[0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99]))
+print(df.duplicated().sum())
+```
+
+This code is a starting point, not a completed analysis. It does not tell you whether duplicate rows are true duplicates, whether a zero is valid, or whether the file contains multiple currencies.
+
+## Module 3 - Visual exploration and distribution shape
+
+### 3.1 Look before you threshold
+
+Use at least two visual views. Histograms reveal distribution shape, box plots reveal spread and potential tail points, scatter plots reveal relationships, and time-series plots reveal regime changes or batch effects. A chart can show that a method's assumptions are implausible before a score leads you to a misleading conclusion.
+
+### 3.2 Mean and median describe different centres
+
+The mean is sensitive to extreme values. The median is the middle ordered value and is more robust to a small number of extreme observations. For strongly skewed amounts, a median/IQR view is often more informative than a mean/standard-deviation rule. Neither statistic makes a business decision for you.
+
+### 3.3 Transform with a reason
+
+Positive, right-skewed values may become easier to explore on a log scale. Record the transformation, explain why it was appropriate, retain the original value for decisions and never apply a log transform to zero or negative values without a defined handling rule.
+
+## Practical Lab 2 - Produce a visual profile
+
+Create a profile pack for one numeric measure and one categorical grouping. Include a histogram, box plot and either a time-series or scatter plot. Add a narrative for each chart:
+
+1. What population and field does it show?
+2. What visible pattern or anomaly appears?
+3. What could explain the pattern?
+4. What cannot be concluded from the chart?
+5. What additional field or validation would reduce uncertainty?
+
+Do not use a chart containing direct identifiers in a presentation or public evidence pack.
+
+---
+
+## Module 4 - Univariate detection methods
+
+### 4.1 IQR fences
+
+The interquartile range is `IQR = Q3 - Q1`. A common exploratory rule flags values below `Q1 - 1.5 * IQR` or above `Q3 + 1.5 * IQR` as potential outliers. A wider `3 * IQR` fence is often described as an extreme-outlier threshold. These are investigation rules, not deletion rules.
+
+```python
+q1 = df["invoice_amount"].quantile(0.25)
+q3 = df["invoice_amount"].quantile(0.75)
+iqr = q3 - q1
+lower = q1 - 1.5 * iqr
+upper = q3 + 1.5 * iqr
+df["iqr_flag"] = (df["invoice_amount"] < lower) | (df["invoice_amount"] > upper)
+```
+
+IQR is generally more robust than standard deviation when the distribution is skewed or already contains extremes. It still depends on the population and cannot infer cause.
+
+### 4.2 Z-scores and their assumptions
+
+A z-score expresses distance from the mean in standard deviations. A rule such as absolute z-score greater than three is sometimes used for initial screening, but it is most interpretable for approximately normal, single-population data without problematic contamination. Mean and standard deviation can be distorted by the very values you want to examine.
+
+### 4.3 Median absolute deviation
+
+Median absolute deviation (MAD) uses distance from the median and is robust for some univariate situations. State the formula and scaling convention used by your tool. Do not report a “modified z-score” without explaining it to the reviewer.
+
+### 4.4 Percentile thresholds are business rules, not universal statistics
+
+Flagging the top 1% can be useful when review capacity is fixed, but it guarantees that some records will be selected even during normal periods. Declare it as a prioritisation threshold and assess whether the segment and volume make it sensible.
+
+## Module 5 - Contextual, multivariate and time-based anomalies
+
+### 5.1 Context changes interpretation
+
+An amount may be normal for an enterprise customer but unusual for a micro business. Compare each record against an appropriate peer group. Create a “reason for comparison” column in your analysis so that a reviewer can see why a baseline was selected.
+
+### 5.2 Residuals identify deviation from an expected relationship
+
+When value should relate to quantity, usage or customer size, model the expected relationship and inspect residuals. A high absolute value is not necessarily anomalous; a large deviation from the expected value for similar inputs may be more meaningful. Check model appropriateness, leverage, missing drivers and fairness risks.
+
+### 5.3 Time matters
+
+Time series often have trends, seasonality, release events, month-end effects and data-ingestion changes. Do not compare a December peak to a quiet January baseline without accounting for the cycle. Annotate known events and separate a genuine service change from a data pipeline failure.
+
+### 5.4 Multivariate methods require additional care
+
+Distance-based and isolation methods can flag unusual combinations, but outputs are model scores, not explanations. They require scale choices, training-period governance, review of missing values, monitoring for drift and human investigation. Start with transparent rules where the decision is high impact and the data maturity is low.
+
+## Practical Lab 3 - Compare two methods responsibly
+
+Apply IQR and one other method (z-score, MAD or percentile rule) to the same, well-defined segment. Build a comparison table containing the record key, original value, each score/flag, comparison group and result. Investigate at least five records across these categories:
+
+- flagged by both methods;
+- flagged only by method A;
+- flagged only by method B;
+- not flagged but operationally important;
+- a known data-quality defect if present.
+
+Explain why methods disagree. A disagreement is evidence about assumptions, not an excuse to choose the result you prefer.
+
+---
+
+## Module 6 - Investigation, root cause and disposition
+
+### 6.1 Preserve the source and its lineage
+
+Keep original values, source row identifiers, extraction date, transformation steps and code version. A reviewer should be able to reproduce why a record was flagged and see whether a correction occurred later in the source system.
+
+### 6.2 Investigation protocol
+
+1. Confirm the row identity and source system.
+2. Validate type, unit, currency, date and aggregation level.
+3. Check duplicates, joins, extracts and transformations.
+4. Compare against the right peer group and time window.
+5. Seek contextual evidence from the responsible business owner.
+6. Classify the finding and record who approved the disposition.
+7. Retain the original value and evidence even if a source correction is authorised.
+
+### 6.3 Disposition categories
+
+| Disposition | Meaning | Typical next action |
+|---|---|---|
+| Confirmed source defect | The recorded value is wrong | Correct at source under data-governance process |
+| Valid exceptional event | Rare but accurate | Retain, explain and consider a separate process rule |
+| Requires investigation | Evidence is incomplete | Assign owner and due date; do not auto-delete |
+| Method limitation | Baseline/model is inappropriate | Revise segmentation or method |
+| Potential risk signal | May require control review | Escalate through authorised risk/fraud process |
+
+### 6.4 Never erase auditability
+
+Correcting a source error can be necessary. Deleting a row or overwriting an analysis file without lineage destroys the ability to learn, defend a decision or repair a control. Use approved data-quality correction processes and record the rationale.
+
+## Module 7 - Privacy, bias and safe communication
+
+### 7.1 High-impact decisions need more care
+
+When an outlier flag affects access, pricing, payment, employment, education, healthcare, benefits or enforcement, it can create real harm. Do not automate adverse action from a single flag. Review data quality, segment choice, false-positive cost, protected characteristics and appeal/escalation processes with the appropriate governance owners.
+
+### 7.2 Minimise data in reports
+
+Use pseudonymous keys or aggregated views when direct identification is not required. Limit access to the working file, redact screenshots, and store evidence only in approved systems. Small groups and extreme observations can increase re-identification risk even when names are removed.
+
+### 7.3 Communicate calibrated conclusions
+
+Use language such as “flagged for review under the stated IQR rule” or “requires source validation.” Avoid “fraudulent,” “invalid,” or “wrong” unless an authorised investigation has established that conclusion. State the method, population, period, threshold, limitations and next action.
+
+## Practical Lab 4 - Investigate and present five findings
+
+Create five anonymised case records from your dataset. For each, include the record key, context, methods that flagged it, quality checks, evidence sought, disposition, owner and next action. Present a one-page executive summary that separates:
+
+- confirmed data-quality issues;
+- valid exceptional values;
+- unresolved investigations;
+- method limitations;
+- recommended control or process improvements.
+
+---
+
+## Module 8 - Reproducibility, review and operationalisation
+
+### 8.1 An analysis should be replayable
+
+At minimum, retain an analysis README, source description, field glossary, cleaning rules, code or formulas, environment/dependency notes, output date, row counts before/after each step, thresholds, limitations and review decisions. A spreadsheet can be reproducible if formulas, tabs, filters and source links are controlled; a notebook is not reproducible merely because it ran once.
+
+### 8.2 Separate detection from workflow
+
+Operationalise the workflow, not just the calculation. Define who receives a flag, how priority is assigned, what evidence is required, expected response time, escalation path, false-positive feedback loop and how the method is reviewed for drift.
+
+### 8.3 Review cadence
+
+Review the method whenever the source system, units, business process, volume, customer mix or decision policy changes. Also review on a planned cadence. A threshold learned from last year's data may be unhelpful or harmful after a product, price or platform change.
+
+## Practical Lab 5 - Reproducible analysis package
+
+Build a controlled package with this structure:
+
+```text
+outlier-analysis/
+  README.md
+  data/README.md
+  working/
+  src/ or notebook/
+  outputs/
+  evidence/
+  decision-log.md
+```
+
+The `README.md` must allow a reviewer to reproduce the profile, flags and final table using a sanitised sample or an approved access procedure. Add a peer-review checklist that asks whether the population, method, threshold, lineage, limitations, privacy treatment and dispositions are all visible.
+
+## Capstone - Defensible outlier investigation from a data file
+
+Complete an end-to-end analysis of an authorised or synthetic data file. Your goal is not to find the largest number of outliers; it is to produce a reliable, transparent recommendation.
+
+### Required deliverables
+
+1. Analysis charter and data dictionary.
+2. Reproducible file-profile output and data-quality log.
+3. At least three visualisations with narrative interpretation.
+4. Two appropriate detection methods and an explanation of agreement/disagreement.
+5. An investigation table for at least ten candidate records.
+6. A disposition and governance decision for each investigated record.
+7. Executive summary with limitations, false-positive risk and recommended next actions.
+8. Reproducible package and peer-review checklist.
+
+#### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Problem framing and data understanding | 15% | Decision, unit, population, fields and segmentation are explicit |
+| Data quality and lineage | 15% | Source handling, profiling and correction controls are traceable |
+| Method selection | 20% | Assumptions and thresholds suit the distribution and question |
+| Investigation quality | 20% | Flags are researched with context, not treated as automatic conclusions |
+| Communication and governance | 15% | Clear limitations, privacy treatment and risk-aware recommendations |
+| Reproducibility | 15% | Another reviewer can replay the analysis and review decisions |
+
+<KnowledgeCheck
+  title="Outlier-analysis readiness check"
+  questions={[
+    {
+      prompt: 'What is the correct first interpretation of an IQR flag?',
+      options: ['The row must be deleted', 'The row merits investigation under the stated reference population and rule', 'The row proves fraud', 'The file is automatically invalid'],
+      answer: 1,
+      explanation: 'A statistical flag identifies a candidate for investigation; it does not establish cause or authorise deletion.'
+    },
+    {
+      prompt: 'Why can the mean and standard deviation be misleading for a skewed amount field with extremes?',
+      options: ['They cannot be calculated', 'They may be pulled by the values under investigation', 'They always equal the median', 'They only work on text fields'],
+      answer: 1,
+      explanation: 'Both statistics are sensitive to extreme values, so robust alternatives and visual checks may be more appropriate.'
+    },
+    {
+      prompt: 'What should you do when two reasonable detection methods disagree?',
+      options: ['Choose the method that finds more flags', 'Delete all disagreement rows', 'Investigate assumptions, population choice and context', 'Hide one method from the report'],
+      answer: 2,
+      explanation: 'Disagreement is information about the methods and the data; it should be explained and investigated.'
+    },
+    {
+      prompt: 'What is a key protection when a flag could affect a person or customer?',
+      options: ['Automatic adverse action from one score', 'Human review, data-quality checks and an appropriate escalation process', 'Publishing the row to all staff', 'Removing context from the report'],
+      answer: 1,
+      explanation: 'High-impact uses require calibrated, reviewable decisions and attention to false-positive harm.'
+    },
+    {
+      prompt: 'Which item best supports reproducibility?',
+      options: ['A chart without source information', 'A record of source, transformations, code/formulas, thresholds and output versions', 'A verbal description from memory', 'An overwritten source file'],
+      answer: 1,
+      explanation: 'Reproducibility requires enough controlled evidence for another reviewer to replay the analysis.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="DAT-OUT-101"
+  courseTitle="Understanding Outliers in Data Files"
+  tasks={[
+    'Analysis charter, source-handling note and data dictionary',
+    'Reproducible file profile and data-quality assessment',
+    'Visual profile with distribution and segmentation interpretation',
+    'Two-method comparison table and disagreement analysis',
+    'Five anonymised investigation cases with documented dispositions',
+    'Capstone package, executive summary and peer-review checklist'
+  ]}
+/>
+
+## Official reference set
+
+- [NIST/SEMATECH e-Handbook: Detection of Outliers](https://www.itl.nist.gov/div898/handbook/eda/section3/eda35h.htm)
+- [NIST/SEMATECH e-Handbook: What are outliers in the data?](https://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm)
+- [NIST: Statistical Detection of Outliers in Certification Data](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=957454)
+- [pandas documentation: getting started](https://pandas.pydata.org/docs/getting_started/index.html)
+- [pandas documentation: descriptive statistics](https://pandas.pydata.org/docs/user_guide/basics.html#descriptive-statistics)
+- [OWASP: Data validation guidance](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
+
+</EnrollmentGate>
