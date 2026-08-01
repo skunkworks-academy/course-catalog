@@ -4,8 +4,11 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
   tagline: 'Practical, evidence-led self-paced and instructor-led learning journeys',
-  url: 'https://skunkworks-academy.github.io',
-  baseUrl: '/course-catalog/',
+  // The catalogue is served from the root of its verified custom domain.
+  // A project-path base URL causes Docusaurus to reject the client bundle when
+  // a learner opens https://catalog.skunkworksacademy.com/.
+  url: 'https://catalog.skunkworksacademy.com',
+  baseUrl: '/',
   organizationName: 'skunkworks-academy',
   projectName: 'course-catalog',
   deploymentBranch: 'gh-pages',
@@ -15,10 +18,23 @@ const config: Config = {
   i18n: {defaultLocale: 'en', locales: ['en']},
   scripts: [{src: 'https://www.skunkworksacademy.com/assets/academy-navigation.js?v=2026.07.17.6', defer: true, 'data-skunkworks-global-nav': 'v8'}],
   customFields: {
+    catalogUrl: 'https://catalog.skunkworksacademy.com/',
     accessApi: 'https://skunkworks-instructor-portal-api-a5gxhyc2fvc7gmch.southafricanorth-01.azurewebsites.net/api/course-access',
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
   },
+  headTags: [{
+    tagName: 'script',
+    attributes: {},
+    innerHTML: `(function () {
+      if (window.location.hostname !== 'skunkworks-academy.github.io') return;
+      var prefix = '/course-catalog';
+      var path = window.location.pathname.indexOf(prefix) === 0
+        ? window.location.pathname.slice(prefix.length) || '/'
+        : window.location.pathname;
+      window.location.replace('https://catalog.skunkworksacademy.com' + path + window.location.search + window.location.hash);
+    }());`,
+  }],
   plugins: ['./plugins/generated-course-pages'],
   presets: [['classic', {
     docs: {routeBasePath: 'courses', sidebarPath: './sidebars.ts', showLastUpdateAuthor: true, showLastUpdateTime: true, breadcrumbs: true},
