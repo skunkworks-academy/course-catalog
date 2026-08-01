@@ -1,7 +1,10 @@
 # Skunkworks Academy Course Catalog
 
-Docusaurus-based self-paced course catalogue containing four evidence-led learning journeys:
+Docusaurus-based self-paced course catalogue containing seven evidence-led learning journeys:
 
+- `PYE-101` — Python Certification Preparation
+- `EFL-DOM-101` — EasyFile Domain Setup and Production Launch
+- `DAT-OUT-101` — Understanding Outliers in Data Files
 - `ART-101` — Professional Articulation and Executive Communication
 - `SHP-UPA-101` — Shopify User Permissions
 - `GHP-DOM-101` — GitHub Pages Setup

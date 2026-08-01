@@ -1,0 +1,470 @@
+---
+id: python-certification-prep
+title: Python Certification Preparation
+sidebar_label: Python Certification Prep
+sidebar_position: 1
+description: Build entry-level Python capability through concept-led study, deliberate coding practice, debugging, timed mock tasks and a portfolio capstone.
+keywords: [python, certification, pcep, python essentials, programming, coding]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="PYE-101" courseTitle="Python Certification Preparation">
+
+# Python Certification Preparation
+
+**Course ID:** PYE-101  
+**Estimated effort:** 30-36 hours  
+**Level:** Beginner to entry-level programmer  
+**Audience:** New programmers, graduates, support technicians, analysts and professionals preparing for Python Essentials 1 or an entry-level Python certification  
+**Assessment model:** Eight modules, five practical labs, formative checks, timed mock tasks and an evidence-backed capstone
+
+## Purpose and certification boundary
+
+This is an independent preparation course. It develops transferable Python capability and maps to common entry-level topic areas such as syntax, values, control flow, collections and functions. It is not an exam-dump course, is not affiliated with a certification owner, and does not reproduce protected examination questions. Confirm the current exam objectives, version, registration rules and delivery requirements directly with the certification provider before booking an assessment.
+
+## Capability outcome
+
+By the end of the course you will be able to translate a small problem into a Python program, explain the program's behaviour, test normal and boundary cases, correct defects and submit clear evidence of your work. You will be prepared to answer entry-level certification questions by reasoning from Python semantics rather than memorising patterns.
+
+## What competence looks like
+
+A competent learner can:
+
+- create and run a Python script in a reproducible environment;
+- distinguish source code, expressions, statements, values, variables and types;
+- use numeric, Boolean and string operations predictably;
+- write conditionals and loops that terminate and handle boundaries;
+- choose and use lists, tuples and dictionaries appropriately;
+- design small functions with clear inputs, outputs and contracts;
+- diagnose syntax, runtime and logic errors using evidence;
+- complete a timed practical task without copying unverified code.
+
+## Learning system
+
+Use the same loop in every module:
+
+1. Read the concept and predict the result before running code.
+2. Type the example yourself; do not paste it blindly.
+3. Change one input, one operator and one boundary condition.
+4. Explain the observed result in a short note.
+5. Commit or save the working artefact and capture a sanitized screenshot or terminal output.
+
+## Before you begin
+
+- Install a current CPython release from the official Python site, or use an approved browser-based learning environment.
+- Use a plain-text editor or IDE with Python syntax support.
+- Create a workspace containing `src/`, `tests/`, `notes/` and `evidence/` folders.
+- Do not put passwords, API keys, personal information or production data in learning files.
+- Keep a learning log that records errors, corrections and what changed your understanding.
+
+---
+
+## Module 1 - How Python programs execute
+
+### 1.1 Programs are precise instructions
+
+Python source is text. The interpreter reads that text, applies Python grammar and semantics, and either executes a valid program or reports an error. A program can be syntactically valid and still produce a wrong outcome, so separate three questions:
+
+| Question | Meaning | Example symptom |
+|---|---|---|
+| Is it valid Python? | Grammar and indentation are correct | `SyntaxError` |
+| Does it run? | Required objects and operations exist | `NameError`, `TypeError` |
+| Is the result correct? | The logic meets the intended rule | Wrong total, missing case |
+
+### 1.2 The read-evaluate-store sequence
+
+For `total = price * quantity`, Python evaluates the right side first and then binds the resulting value to `total`. The variable is a name, not a labelled box with a permanent type. Rebinding changes what a name refers to:
+
+```python
+status = "draft"
+status = "approved"
+```
+
+The first value is no longer reachable through `status`. This is why clear, current names matter.
+
+### 1.3 Interactive mode and scripts
+
+Use the interactive interpreter for a tiny experiment and a `.py` file for a repeatable program. A certification scenario may ask what an expression produces; your professional practice should also ask whether the result is meaningful, reproducible and tested.
+
+```bash
+python --version
+python src/hello.py
+python -m py_compile src/hello.py
+```
+
+### 1.4 Reading tracebacks
+
+Read a traceback from the bottom upward. The final line names the error type and message; the preceding lines identify the call path and source line. Do not fix only the visible symptom. Reproduce the error with the smallest input that still fails, then inspect the assumptions in that code path.
+
+## Practical Lab 1 - Build and diagnose a first script
+
+### Scenario
+
+A training coordinator needs a small script that prints a learner greeting and computes the total study minutes from daily minutes and number of days.
+
+### Tasks
+
+1. Create `src/study_plan.py` with named variables for learner name, minutes per day and days.
+2. Print a readable sentence with the calculated total.
+3. Run the script from a terminal.
+4. Deliberately introduce one syntax error, one `NameError` and one logic error.
+5. Record the exact error message or incorrect output, the cause and the correction in `notes/lab-01.md`.
+6. Run `python -m py_compile src/study_plan.py` after correction.
+
+### Acceptance criteria
+
+- the program runs from a clean terminal command;
+- variable names describe their purpose;
+- the total is calculated rather than hard-coded;
+- each defect record distinguishes syntax, runtime or logic failure;
+- evidence contains no personal or organisationally sensitive data.
+
+---
+
+## Module 2 - Values, types, operators and expressions
+
+### 2.1 Core value types
+
+Entry-level programs frequently use `int`, `float`, `str`, `bool` and `None`. Start with the value and the operation you need; do not choose a type only because it looks familiar.
+
+| Type | Typical purpose | Caution |
+|---|---|---|
+| `int` | Counts, indexes, whole units | Division may produce a `float` |
+| `float` | Measurements and approximate quantities | Do not use binary floats for exact money rules |
+| `str` | Text and formatted output | Input from `input()` is text |
+| `bool` | Decisions and flags | `True` and `False` are capitalised literals |
+| `None` | Intentional absence of a value | Test with `is None` |
+
+### 2.2 Operators and precedence
+
+Use parentheses when a reader could reasonably misread order. The arithmetic operators include `+`, `-`, `*`, `/`, `//`, `%` and `**`. `//` performs floor division and `%` gives the remainder. Both are useful in grouping, schedules and repeated cycles.
+
+```python
+minutes = 155
+hours = minutes // 60
+remaining_minutes = minutes % 60
+```
+
+Do not assume `-3 // 2` truncates toward zero; floor division rounds toward negative infinity. Test unfamiliar cases in the interpreter.
+
+### 2.3 Comparisons and Boolean logic
+
+Comparisons produce Boolean values. `and` requires both expressions to be true, `or` requires at least one, and `not` reverses truth. Prefer readable conditions over compact but opaque expressions.
+
+```python
+eligible = has_completed_basics and score >= 70
+needs_review = not eligible or evidence_missing
+```
+
+### 2.4 Conversion is a contract decision
+
+`input()` returns a string. Convert only after deciding what valid input means and how invalid input will be handled. `int("12")` works; `int("12.5")` does not. Avoid silently discarding meaning through a conversion merely to make an error disappear.
+
+## Module 3 - Text, input and output
+
+### 3.1 Strings are ordered sequences
+
+Strings support indexing, slicing, length checks and methods. Indexing starts at zero. Slicing uses an exclusive upper bound, so `text[0:4]` produces four characters when available.
+
+```python
+course_code = "PYE-101"
+prefix = course_code[:3]
+last_character = course_code[-1]
+```
+
+### 3.2 Format output for humans
+
+Use f-strings for concise, readable messages. Separate calculation from presentation so you can test each independently.
+
+```python
+completion_rate = completed / total
+message = f"Progress: {completion_rate:.0%} ({completed}/{total})"
+print(message)
+```
+
+### 3.3 Validate input before relying on it
+
+For a beginner exercise, validate the simplest credible rule first: empty text, expected range, known options or numeric form. In production, validation is broader and must include security, business rules and error handling.
+
+## Practical Lab 2 - Study planner input validator
+
+Build a command-line study planner that asks for a weekly target, number of available days and completed minutes. Convert valid entries, calculate the required daily minutes and print a status message. Test at least these cases:
+
+- a normal valid case;
+- zero completed minutes;
+- completed minutes greater than target;
+- zero available days;
+- non-numeric input.
+
+For this lab, it is acceptable to stop with a clear message for invalid input. In Module 7 you will add structured error handling.
+
+---
+
+## Module 4 - Decisions and program paths
+
+### 4.1 Indentation is structure
+
+Python uses indentation to define a block. Use a consistent four spaces per level. A colon starts a suite after `if`, `elif`, `else`, `for`, `while`, `def` and similar statements.
+
+```python
+if score >= 80:
+    result = "distinction"
+elif score >= 50:
+    result = "competent"
+else:
+    result = "not yet competent"
+```
+
+### 4.2 Design conditions from a decision table
+
+Before coding a rule with multiple branches, write the inputs and expected result. Decision tables expose gaps such as an exact boundary that belongs to neither branch.
+
+| Score | Evidence complete | Outcome |
+|---:|---|---|
+| 80-100 | Yes | Distinction |
+| 50-79 | Yes | Competent |
+| 0-49 | Any | Not yet competent |
+| Any | No | Evidence incomplete |
+
+Order conditions so the most specific or exceptional path is considered before a broad path that would catch it.
+
+### 4.3 Equality and identity
+
+Use `==` to compare values. Use `is` primarily for singletons such as `None`. `is` asks whether two references identify the same object, which is not the same question as whether their values match.
+
+## Module 5 - Iteration and controlled repetition
+
+### 5.1 `for` loops traverse a sequence or iterable
+
+Use a `for` loop when you can state what you are iterating over. `range(start, stop, step)` includes the start but excludes the stop.
+
+```python
+for attempt in range(1, 4):
+    print(f"Attempt {attempt}")
+```
+
+### 5.2 `while` loops depend on a changing condition
+
+Use `while` when repetition ends because a state changes or user input reaches a sentinel. Make the state change visible and reason about termination before running it.
+
+```python
+attempts_remaining = 3
+while attempts_remaining > 0:
+    attempts_remaining -= 1
+```
+
+### 5.3 `break`, `continue` and loop `else`
+
+`break` exits the nearest loop; `continue` starts its next iteration. Use both sparingly and only when they make the control path clearer. A loop `else` runs if the loop finishes without `break`, which can be useful for a search but should be tested carefully.
+
+## Practical Lab 3 - Gradebook decision engine
+
+Create a program that processes a fixed list of assessment scores. It must calculate the number of passes, the highest score, the average and the first score below a specified threshold. Include tests for an empty list, all-pass list, all-fail list and a list containing the exact pass boundary.
+
+Use a written trace table for at least one run. For each iteration show the current score, changing counters and the decision path. This is a strong debugging habit and an effective way to answer trace-based questions under exam conditions.
+
+---
+
+## Module 6 - Collections and data modelling
+
+### 6.1 Choose a collection by its guarantees
+
+| Collection | Ordered | Mutable | Best entry-level use |
+|---|---|---|---|
+| List | Yes | Yes | A sequence that will change |
+| Tuple | Yes | No | Fixed related values |
+| Dictionary | Insertion ordered | Yes | Values accessed by meaningful key |
+
+Avoid turning every problem into a list. A dictionary makes a learner record more explicit than remembering that index 0 is a name and index 1 is a score.
+
+```python
+learner = {"name": "Sam", "score": 82, "evidence_complete": True}
+```
+
+### 6.2 Mutation and aliasing
+
+When two variables refer to the same list, modifying through one name changes what the other sees. Copy deliberately when independence is required.
+
+```python
+original = ["plan", "practise"]
+working_copy = original.copy()
+```
+
+### 6.3 Iterate with intention
+
+Use `for item in items` when you need each value, `enumerate(items, start=1)` when you need position and `mapping.items()` when you need key/value pairs. Avoid changing a collection while iterating over it unless you fully understand the result.
+
+## Module 7 - Functions, scope and error handling
+
+### 7.1 A function is a contract
+
+A function name should state its outcome. Its parameters describe required inputs, and its return value should make the result available to the caller. Printing is not the same as returning.
+
+```python
+def calculate_completion_rate(completed: int, total: int) -> float:
+    if total <= 0:
+        raise ValueError("total must be greater than zero")
+    return completed / total
+```
+
+### 7.2 Local scope protects clarity
+
+Names created inside a function are local by default. Pass values in and return values out rather than relying on mutable global state. This makes functions easier to test and reuse.
+
+### 7.3 Handle expected errors narrowly
+
+Use `try` and `except` for failures you expect and can handle. Catch a specific exception, explain the corrective action and avoid a bare `except:` that hides programming errors.
+
+```python
+try:
+    weekly_target = int(raw_target)
+except ValueError:
+    print("Enter whole minutes, for example 300.")
+```
+
+## Practical Lab 4 - Refactor the planner into functions
+
+Refactor the Module 3 planner into at least four functions: read a whole number, calculate remaining minutes, calculate daily target and format a progress message. Include a docstring for each function and test normal, zero and invalid cases.
+
+Your evidence must show that one function can be imported and called without running the entire command-line interaction. This confirms you separated program logic from input/output behaviour.
+
+---
+
+## Module 8 - Certification strategy, debugging and professional practice
+
+### 8.1 Reason before you select an answer
+
+For a code-tracing question, identify values, types, operation order, branch condition and loop iterations. Write a tiny trace table. Do not guess based on familiar-looking syntax.
+
+### 8.2 Time-boxed practice cycle
+
+Use a 45-minute cycle:
+
+1. 5 minutes: review one objective and two common misconceptions.
+2. 20 minutes: solve five trace or short-build tasks without notes.
+3. 10 minutes: run and test every answer.
+4. 10 minutes: log errors by concept, not by question number.
+
+Repeat weak concepts until you can explain the rule and demonstrate it in a different task.
+
+### 8.3 Debugging protocol
+
+1. Reproduce the defect with the smallest input.
+2. Read the exact message and line context.
+3. State the expected result and actual result.
+4. Inspect types, values and branch conditions.
+5. Make one change at a time.
+6. Re-test the original failure and nearby boundaries.
+7. Record the root cause and prevention rule.
+
+### 8.4 Ethical preparation
+
+Do your own work. Do not seek, share or memorise protected test content. Use official objectives and legitimate practice resources. A certification should validate capability you can apply safely after the exam.
+
+## Practical Lab 5 - Timed mock build and review
+
+### Scenario
+
+Build a small command-line progress tracker in 75 minutes. It accepts a learner name and a list of completed lesson minutes, calculates total minutes and completion percentage against a goal, assigns a status, and presents a numbered summary.
+
+### Constraints
+
+- use at least one list, one dictionary, one loop, one conditional and two functions;
+- validate a zero goal and non-numeric minutes;
+- include five self-authored tests, including two boundaries;
+- do not use external code during the timed build;
+- complete a 15-minute review after the timer ends.
+
+### Review prompts
+
+- Which requirement created the greatest uncertainty?
+- Where did you inspect program state rather than guessing?
+- What would you change if the tracker supported multiple learners?
+- Which topic needs another study cycle before booking an exam?
+
+## Capstone - Evidence-led learning tracker
+
+Create a small, maintainable Python learning tracker for a fictional study cohort. It must import or define learner records, calculate individual and cohort progress, flag incomplete evidence, handle invalid numeric values cleanly, and output a readable report.
+
+### Required deliverables
+
+1. `README.md` explaining setup, run commands, assumptions and limitations.
+2. At least three functions with clear contracts and return values.
+3. A sample dataset containing at least five fictional learners.
+4. A test or manual test record with normal, boundary and invalid cases.
+5. A short debugging report for one intentional defect.
+6. A 300-500 word reflection mapping your work to the certification objectives you will revise next.
+
+#### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Python fundamentals | 20% | Correct values, types, expressions and output |
+| Control flow | 15% | Decisions and loops cover normal and boundary paths |
+| Collections | 15% | Appropriate list/dictionary use without index confusion |
+| Functions and validation | 20% | Reusable functions, clear contracts and targeted error handling |
+| Testing and debugging | 15% | Traceable tests and a root-cause correction |
+| Code quality and reflection | 15% | Readable naming, instructions and honest learning reflection |
+
+<KnowledgeCheck
+  title="Python entry-level readiness check"
+  questions={[
+    {
+      prompt: 'What is the result of 17 // 5 and 17 % 5?',
+      options: ['3 and 2', '3.4 and 2', '2 and 3', '4 and 1'],
+      answer: 0,
+      explanation: 'Floor division gives the quotient rounded down and modulo gives the remaining value.'
+    },
+    {
+      prompt: 'Which statement best describes input from input()?',
+      options: ['It is always an integer', 'It is always a Boolean', 'It is text until you deliberately convert it', 'It is a list'],
+      answer: 2,
+      explanation: 'input() returns a string, so numeric use requires conversion and validation.'
+    },
+    {
+      prompt: 'Which comparison is appropriate when testing whether a value intentionally has no result?',
+      options: ['value == None', 'value is None', 'value = None', 'None in value'],
+      answer: 1,
+      explanation: 'Identity comparison is the conventional and reliable way to test for None.'
+    },
+    {
+      prompt: 'Why should a function return a calculated value instead of only printing it?',
+      options: ['Returned values can be tested and reused by callers', 'print is illegal in Python', 'It always makes code shorter', 'Functions cannot print'],
+      answer: 0,
+      explanation: 'Returning separates program logic from presentation and lets other code use the result.'
+    },
+    {
+      prompt: 'A loop never stops. What should you inspect first?',
+      options: ['The screen brightness', 'The loop condition and the state that should change it', 'The Python logo', 'The file extension only'],
+      answer: 1,
+      explanation: 'A while loop terminates only when its condition becomes false, so inspect its changing state.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="PYE-101"
+  courseTitle="Python Certification Preparation"
+  tasks={[
+    'Lab 1 script, compile result and defect log',
+    'Study planner tests covering valid, zero and invalid input',
+    'Gradebook trace table and collection rationale',
+    'Function refactor with docstrings and importable logic',
+    'Timed mock build, self-review and concept-gap plan',
+    'Capstone repository, test record and certification-readiness reflection'
+  ]}
+/>
+
+## Official reference set
+
+- [Python tutorial](https://docs.python.org/3/tutorial/)
+- [Python language reference](https://docs.python.org/3/reference/)
+- [Python standard library: built-in functions](https://docs.python.org/3/library/functions.html)
+- [Python Institute: Python Essentials 1](https://pythoninstitute.org/python-essentials-1)
+- [Python Institute: PCEP certification information](https://pythoninstitute.org/pcep)
+- [Python Institute: study resources](https://pythoninstitute.org/study-resources)
+
+</EnrollmentGate>
