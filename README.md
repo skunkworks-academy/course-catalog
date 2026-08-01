@@ -62,4 +62,4 @@ Any `401`, `403`, `404`, network failure or malformed response keeps content loc
 
 Every pull request executes the production-course validator, generated-catalogue validator and complete Docusaurus build. Only `main` deploys the generated site to GitHub Pages.
 
-Catalogue: <https://skunkworks-academy.github.io/course-catalog/>
+Catalogue: <https://catalog.skunkworksacademy.com/>
