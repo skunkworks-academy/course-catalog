@@ -1,4 +1,5 @@
 import React from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import EnrollmentGate from './EnrollmentGate';
 import EvidenceRecord from './EvidenceRecord';
@@ -105,10 +106,10 @@ function questions(course: CourseMetadata): KnowledgeQuestion[] {
 }
 
 export default function GeneratedCoursePage({course}: GeneratedCoursePageProps): React.JSX.Element {
+  const {siteConfig} = useDocusaurusContext();
+  const fields = siteConfig.customFields as Record<string, string>;
   const modules = buildModules(course);
-  const catalogueUrl = course.deliveryMode === 'Self-Paced'
-    ? 'https://www.skunkworksacademy.com/self-paced/'
-    : 'https://www.skunkworksacademy.com/instructor-led/';
+  const catalogueUrl = fields.catalogUrl || 'https://catalog.skunkworksacademy.com/';
   const deliveryGuidance = course.deliveryMode === 'Self-Paced'
     ? 'Work through the modules sequentially, complete each practical activity and retain evidence before proceeding to the capstone.'
     : 'The facilitator should demonstrate each capability, supervise practical work, conduct debriefs and verify evidence during the scheduled delivery.';
