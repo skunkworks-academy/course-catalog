@@ -4,6 +4,30 @@ import Link from '@docusaurus/Link';
 
 const courses = [
   {
+    id: 'PYE-101',
+    title: 'Python Certification Preparation',
+    duration: '30-36 hours · Beginner to entry-level',
+    description: 'Build Python fundamentals through deliberate coding practice, debugging, timed mock tasks and an evidence-led capstone.',
+    outcomes: ['Trace and write correct Python fundamentals', 'Debug syntax, runtime and logic defects', 'Prepare ethically for entry-level certification'],
+    path: '/courses/python-certification-prep',
+  },
+  {
+    id: 'EFL-DOM-101',
+    title: 'EasyFile Domain Setup and Production Launch',
+    duration: '22-28 hours · Intermediate web operations',
+    description: 'Plan, verify, secure and operate an EasyFile launch with DNS, TLS, email, user-journey, monitoring and rollback controls.',
+    outcomes: ['Design safe domain and DNS cutovers', 'Validate TLS, portal, email and API journeys', 'Deliver a production launch and handover dossier'],
+    path: '/courses/easyfile-domain-setup',
+  },
+  {
+    id: 'DAT-OUT-101',
+    title: 'Understanding Outliers in Data Files',
+    duration: '24-30 hours · Foundation to intermediate',
+    description: 'Find, investigate and explain potential outliers in data files using robust statistics, visual analysis and governed evidence.',
+    outcomes: ['Profile data quality before detecting anomalies', 'Compare robust detection methods responsibly', 'Deliver a reproducible investigation package'],
+    path: '/courses/data-outlier-analysis',
+  },
+  {
     id: 'ART-101',
     title: 'Professional Articulation and Executive Communication',
     duration: '36–40 hours · Foundation to advanced',
@@ -39,12 +63,12 @@ const courses = [
 
 export default function Home(): React.JSX.Element {
   return (
-    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for professional communication, Shopify, GitHub Pages and Microsoft 365 administration.">
+    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for programming, data analysis, EasyFile operations, professional communication, Shopify, GitHub Pages and Microsoft 365 administration.">
       <header className="heroBanner">
         <div className="container">
           <p className="eyebrow">Self-paced capability journeys</p>
           <h1>Learn it. Practise it. Prove it.</h1>
-          <p>Four practical courses built around real implementation tasks, recorded practice, formative assessment and exportable evidence of capability records.</p>
+          <p>Seven practical courses built around real implementation tasks, recorded practice, formative assessment and exportable evidence of capability records.</p>
           <div className="heroActions">
             <a className="heroButton heroButtonPrimary" href="#courses">Explore courses</a>
             <a className="heroButton" href="https://portal.skunkworksacademy.com/">Learner sign in</a>
