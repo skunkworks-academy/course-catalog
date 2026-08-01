@@ -5,7 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "npm run validate:content && npm run validate:catalog && docusaurus build",
+    "build": "npm run validate:content && npm run validate:catalog && npm run validate:deployment && docusaurus build",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "deploy": "docusaurus deploy",
@@ -13,7 +13,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "validate:content": "node scripts/validate-course-content.mjs",
-    "validate:catalog": "node scripts/validate-generated-catalog.mjs"
+    "validate:catalog": "node scripts/validate-generated-catalog.mjs",
+    "validate:deployment": "node scripts/validate-deployment-config.mjs"
   },
   "dependencies": {"@docusaurus/core":"3.10.2","@docusaurus/preset-classic":"3.10.2","@mdx-js/react":"^3.1.1","clsx":"^2.1.1","prism-react-renderer":"^2.4.1","react":"19.2.8","react-dom":"19.2.8"},
   "devDependencies": {"@docusaurus/module-type-aliases":"3.10.2","@docusaurus/tsconfig":"3.10.2","@docusaurus/types":"3.10.2","typescript":"^6.0.2"},
