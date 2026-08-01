@@ -1,6 +1,6 @@
 {
   "schema": "skunkworks-academy/course-manifest/v1",
-  "generatedOn": "2026-07-27",
+  "generatedOn": "2026-08-01",
   "catalogUrl": "https://skunkworks-academy.github.io/course-catalog/",
   "accessPolicy": {
     "overview": "public",
@@ -8,6 +8,36 @@
     "defaultDecision": "deny"
   },
   "courses": [
+    {
+      "courseId": "PYE-101",
+      "title": "Python Certification Preparation",
+      "path": "/course-catalog/courses/python-certification-prep",
+      "category": "Programming and data",
+      "durationHours": "30-36",
+      "level": "Beginner to entry-level programmer",
+      "evidenceOfCapability": true,
+      "certificationPreparation": true
+    },
+    {
+      "courseId": "EFL-DOM-101",
+      "title": "EasyFile Domain Setup and Production Launch",
+      "path": "/course-catalog/courses/easyfile-domain-setup",
+      "category": "EasyFile operations",
+      "durationHours": "22-28",
+      "level": "Intermediate web operations",
+      "evidenceOfCapability": true,
+      "operationalHandover": true
+    },
+    {
+      "courseId": "DAT-OUT-101",
+      "title": "Understanding Outliers in Data Files",
+      "path": "/course-catalog/courses/data-outlier-analysis",
+      "category": "Programming and data",
+      "durationHours": "24-30",
+      "level": "Foundation to intermediate",
+      "evidenceOfCapability": true,
+      "reproducibleAnalysis": true
+    },
     {
       "courseId": "ART-101",
       "title": "Professional Articulation and Executive Communication",
