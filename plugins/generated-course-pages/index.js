@@ -39,7 +39,7 @@ function normaliseCourse(fields, row) {
   const descriptionLead = source.deliveryMode === 'Self-Paced' ? 'A structured self-paced learning journey' : 'A facilitator-led practical course';
   return {
     ...source,
-    path: `/course-catalog/courses/catalog/${source.slug}`,
+    path: `/courses/catalog/${source.slug}`,
     route: `/courses/catalog/${source.slug}`,
     description: `${descriptionLead} that develops applied capability in ${source.title}, with guided theory, scenario work, practical labs, formative assessment and an Evidence of Capability Record.`,
     audience: audienceFor(source.category, source.level),
