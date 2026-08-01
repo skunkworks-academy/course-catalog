@@ -3,6 +3,9 @@ import {join} from 'node:path';
 
 const root = process.cwd();
 const courses = [
+  {file: 'docs/python-certification-prep.mdx', id: 'PYE-101', minimumModules: 8, minimumLabs: 5},
+  {file: 'docs/easyfile-domain-setup.mdx', id: 'EFL-DOM-101', minimumModules: 8, minimumLabs: 5},
+  {file: 'docs/data-outlier-analysis.mdx', id: 'DAT-OUT-101', minimumModules: 8, minimumLabs: 5},
   {file: 'docs/shopify-user-permissions.mdx', id: 'SHP-UPA-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/github-pages-setup.mdx', id: 'GHP-DOM-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/microsoft-365-licenses.mdx', id: 'M365-LIC-101', minimumModules: 8, minimumLabs: 4},

@@ -1,6 +1,6 @@
 {
-  "schema": "skunkworks-academy/course-manifest/v2",
-  "generatedOn": "2026-07-27",
+  "schema": "skunkworks-academy/course-manifest/v1",
+  "generatedOn": "2026-08-01",
   "catalogUrl": "https://skunkworks-academy.github.io/course-catalog/",
   "courseCount": 180,
   "establishedCourseCount": 4,
@@ -8,9 +8,73 @@
   "accessPolicy": {"overview":"public","courseContent":"authenticated-active-enrolment","defaultDecision":"deny"},
   "generatedCatalogSource": "data/generated-courses.cjs",
   "courses": [
-    {"courseId":"ART-101","title":"Professional Articulation and Executive Communication","path":"/course-catalog/courses/professional-articulation","deliveryMode":"Self-Paced","category":"Professional & Business Skills","durationHours":"36-40","level":"Foundation to advanced","evidenceOfCapability":true,"moderatedAssessment":true,"contentStatus":"production"},
-    {"courseId":"SHP-UPA-101","title":"Shopify User Permissions","path":"/course-catalog/courses/shopify-user-permissions","deliveryMode":"Self-Paced","category":"Commerce Administration","durationHours":"4-6","level":"Beginner to intermediate","evidenceOfCapability":true,"contentStatus":"production"},
-    {"courseId":"GHP-DOM-101","title":"GitHub Pages Setup","path":"/course-catalog/courses/github-pages-setup","deliveryMode":"Self-Paced","category":"Web Deployment","durationHours":"5-7","level":"Beginner to intermediate","evidenceOfCapability":true,"contentStatus":"production"},
-    {"courseId":"M365-LIC-101","title":"Microsoft 365 Licenses","path":"/course-catalog/courses/microsoft-365-licenses","deliveryMode":"Self-Paced","category":"Microsoft Technologies","durationHours":"5-8","level":"Intermediate","evidenceOfCapability":true,"contentStatus":"production"}
+    {
+      "courseId": "PYE-101",
+      "title": "Python Certification Preparation",
+      "path": "/course-catalog/courses/python-certification-prep",
+      "category": "Programming and data",
+      "durationHours": "30-36",
+      "level": "Beginner to entry-level programmer",
+      "evidenceOfCapability": true,
+      "certificationPreparation": true
+    },
+    {
+      "courseId": "EFL-DOM-101",
+      "title": "EasyFile Domain Setup and Production Launch",
+      "path": "/course-catalog/courses/easyfile-domain-setup",
+      "category": "EasyFile operations",
+      "durationHours": "22-28",
+      "level": "Intermediate web operations",
+      "evidenceOfCapability": true,
+      "operationalHandover": true
+    },
+    {
+      "courseId": "DAT-OUT-101",
+      "title": "Understanding Outliers in Data Files",
+      "path": "/course-catalog/courses/data-outlier-analysis",
+      "category": "Programming and data",
+      "durationHours": "24-30",
+      "level": "Foundation to intermediate",
+      "evidenceOfCapability": true,
+      "reproducibleAnalysis": true
+    },
+    {
+      "courseId": "ART-101",
+      "title": "Professional Articulation and Executive Communication",
+      "path": "/course-catalog/courses/professional-articulation",
+      "category": "Professional capability",
+      "durationHours": "36-40",
+      "level": "Foundation to advanced",
+      "evidenceOfCapability": true,
+      "moderatedAssessment": true,
+      "practiceStudio": true
+    },
+    {
+      "courseId": "SHP-UPA-101",
+      "title": "Shopify User Permissions",
+      "path": "/course-catalog/courses/shopify-user-permissions",
+      "category": "Commerce administration",
+      "durationHours": "4-6",
+      "level": "Beginner to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "GHP-DOM-101",
+      "title": "GitHub Pages Setup",
+      "path": "/course-catalog/courses/github-pages-setup",
+      "category": "Web deployment",
+      "durationHours": "5-7",
+      "level": "Beginner to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "M365-LIC-101",
+      "title": "Microsoft 365 Licenses",
+      "path": "/course-catalog/courses/microsoft-365-licenses",
+      "category": "Microsoft 365 administration",
+      "durationHours": "5-8",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    }
   ]
 }

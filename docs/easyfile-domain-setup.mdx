@@ -1,0 +1,379 @@
+---
+id: easyfile-domain-setup
+title: EasyFile Domain Setup and Production Launch
+sidebar_label: EasyFile Domain Setup
+sidebar_position: 2
+description: Plan, verify, secure and operate an EasyFile production domain with safe DNS, TLS, email, release and rollback controls.
+keywords: [easyfile, domain, dns, tls, deployment, launch, web operations]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="EFL-DOM-101" courseTitle="EasyFile Domain Setup and Production Launch">
+
+# EasyFile Domain Setup and Production Launch
+
+**Course ID:** EFL-DOM-101  
+**Estimated effort:** 22-28 hours  
+**Level:** Intermediate web operations  
+**Audience:** Product owners, web administrators, developers, operations teams and managed-service staff responsible for an EasyFile launch  
+**Assessment model:** Eight modules, five hands-on labs, a controlled go-live simulation, security validation and an evidence-backed operational handover
+
+## Capability outcome
+
+By the end of this course, you will be able to take an EasyFile web property from domain ownership confirmation to controlled production launch. You will make DNS and TLS changes safely, protect email and user journeys, validate application and edge behaviour, document rollback, and hand over an operable service without exposing secrets or relying on undocumented manual steps.
+
+## Scope and safety boundary
+
+This course teaches a production method, not a single vendor click-path. The exact Azure, registrar, DNS provider, CDN, transactional-mail and portal settings depend on the approved EasyFile architecture. Make changes only in an authorised tenant and change window. Never place portal tokens, password-reset links, database strings, API keys, private certificates, personally identifiable information, or live customer records in course evidence.
+
+## What competence looks like
+
+A competent learner can:
+
+- establish who owns a domain, registrar account, DNS zone and production application;
+- design a record set that maps each hostname to the intended service;
+- verify domain control without creating dangling records or conflicting destinations;
+- issue and enforce TLS without mixed content or insecure redirect gaps;
+- configure transactional email authentication and verify sender alignment;
+- separate pre-production from production with documented change and rollback controls;
+- validate end-to-end user journeys, observability, resilience and security headers;
+- leave an evidence pack that another authorised operator can understand and use.
+
+## Launch principle
+
+Treat a domain change as an application release, not a cosmetic DNS task. A successful lookup does not prove that authentication, referral links, forms, browser security, email, monitoring, privacy notices and rollback are working. The launch gate therefore requires technical validation, service-owner approval and a recoverable response if a check fails.
+
+## Before you begin
+
+- Approved EasyFile target architecture and hostname register.
+- Named domain owner, DNS operator, application owner and release approver.
+- Access through individual, MFA-protected accounts; no shared passwords.
+- A non-production environment or dry-run domain for labs.
+- A change ticket with planned window, impact, rollback owner and communications plan.
+- Approved tools for DNS lookup, browser developer tools, certificate inspection and availability monitoring.
+
+---
+
+## Module 1 - Domain ownership, governance and launch design
+
+### 1.1 Map the accountable parties
+
+Write down the relationships that must be true before a change:
+
+| Control | Accountable role | Evidence |
+|---|---|---|
+| Registrant and renewal | Company-appointed domain owner | Registrar account and renewal contact |
+| DNS authority | DNS operator | Zone provider, role assignment and change history |
+| Application destination | Platform owner | Approved production endpoint and health check |
+| Security policy | Security owner | TLS, header, WAF and incident requirements |
+| Release decision | Product/service owner | Go/no-go approval and customer communications |
+
+The individual who can edit a DNS zone is not automatically authorised to redirect customer traffic. Use least privilege, MFA, individual accounts and a reviewed approval path.
+
+### 1.2 Build a hostname register
+
+Avoid an informal collection of DNS records. Maintain a hostname register with purpose, target service, owner, environment, authentication dependency, TTL, change ticket and retirement condition.
+
+| Hostname | Purpose | Target | Owner | Retirement trigger |
+|---|---|---|---|---|
+| `www.example` | Public site | Edge/static web service | Web team | Site migration complete |
+| `portal.example` | Authenticated portal | Application gateway/app service | Portal team | Replacement portal live |
+| `api.example` | Public API edge | API gateway | API team | Version decommissioned |
+| `mail.example` | Email tracking/bounce domain | Email provider | Communications | Provider migration complete |
+
+Do not publish the actual production register in a public repository if it reveals internal topology. Store sensitive operational details in an approved controlled location.
+
+### 1.3 Change design and TTL
+
+DNS caching is distributed. A TTL is a caching instruction, not a guarantee that all clients will change at one exact moment. Lower an existing TTL well before a planned change where policy permits, record the original value, and restore a sensible steady-state TTL after validation. Do not use a low TTL permanently as a substitute for release discipline.
+
+## Practical Lab 1 - Create the EasyFile launch control pack
+
+Create a sanitized launch control pack for a fictional `easyfile-demo.example` domain. It must include:
+
+1. RACI for registrant, DNS, application, security, service owner and communications.
+2. Hostname register for public site, portal, API, status and transactional email.
+3. Change plan with pre-change backups, planned TTLs, validation steps and rollback owner.
+4. A risk register containing at least domain expiry, wrong endpoint, stale cache, broken TLS, email spoofing and referral-link failure.
+5. A decision log that states what needs approval before traffic is changed.
+
+---
+
+## Module 2 - DNS concepts and authoritative change control
+
+### 2.1 DNS records answer different questions
+
+An `A` record maps a name to an IPv4 address and `AAAA` maps to IPv6. A `CNAME` aliases one hostname to another hostname. `TXT` stores text used for verification and policy. `MX` directs mail delivery. `CAA` limits which certificate authorities may issue certificates. `NS` identifies authoritative name servers.
+
+Do not make an A/AAAA/CNAME choice based on what a web console happens to accept. Use the target platform's documented requirement and account for the DNS provider's rules. In particular, a traditional DNS zone does not normally allow a CNAME at the same name as other records.
+
+### 2.2 Authoritative answer versus local observation
+
+A lookup can show a stale recursive-cache answer. Diagnose in layers:
+
+1. Confirm the intended record in the authoritative zone.
+2. Query the authoritative nameserver where practical.
+3. Query at least two independent public resolvers.
+4. Confirm the application request reaches the expected service.
+5. Record timestamp, resolver and observed answer.
+
+`nslookup`, `dig`, PowerShell `Resolve-DnsName`, and browser network tools each answer a different part of the diagnosis. A positive DNS answer alone does not prove that HTTPS, routing or the application works.
+
+### 2.3 Avoid dangerous shortcuts
+
+- Do not use wildcards to avoid managing explicit production hostnames.
+- Do not leave old CNAMEs after removing a custom-domain binding; they can create takeover risk.
+- Do not publish temporary verification records without an expiry and owner.
+- Do not point a production hostname at an endpoint you have not validated for tenancy and certificate ownership.
+- Do not put private internal addresses or secrets in public DNS.
+
+## Module 3 - Domain verification and safe cutover
+
+### 3.1 Verification proves control, not readiness
+
+Platform verification usually requests a TXT or CNAME record. Verify in the right account and scope, capture the successful confirmation, and remove or document temporary records according to the platform's guidance. Verification does not replace application health checks or a traffic cutover plan.
+
+### 3.2 Sequence a cutover
+
+Use a staged runbook:
+
+1. Freeze unrelated application and DNS changes.
+2. Confirm current record values and capture a rollback snapshot.
+3. Validate the target service using its platform-assigned hostname.
+4. Complete platform domain verification.
+5. Create the production record exactly as documented.
+6. Validate authoritative and recursive DNS resolution.
+7. Confirm TLS issuance and correct hostname coverage.
+8. Run synthetic and manual user-journey tests.
+9. Monitor errors, latency, availability and user reports through the agreed observation period.
+10. Restore the planned TTL and close only after approval.
+
+### 3.3 Rollback must be executable
+
+A valid rollback contains an exact previous DNS value, the order of restoration, a clearly named operator, a decision threshold and communications wording. “Revert if it breaks” is not a rollback plan. Test the rollback steps in a non-production or low-risk environment before relying on them.
+
+## Practical Lab 2 - DNS verification and cutover simulation
+
+For the fictional target `portal.easyfile-demo.example`, prepare a dry-run cutover record. Include the old and new target, record type, original and planned TTL, verification record, commands used to query DNS, expected TLS name, success criteria, timeout, rollback threshold and all evidence fields. Then perform the simulation against a lab domain or a documented mock output; do not modify a real production zone for learning purposes.
+
+---
+
+## Module 4 - TLS, browser security and edge controls
+
+### 4.1 HTTPS is an end-to-end property
+
+The browser must receive a trusted certificate for the hostname, negotiate secure transport and load every required resource safely. Enable HTTPS enforcement only after domain validation and certificate issuance are healthy. Then test the redirect from HTTP, certificate hostname, expiry and chain, mixed-content warnings, deep links and API calls.
+
+### 4.2 Security headers support but do not replace application controls
+
+At the edge or application layer, review a proportionate baseline:
+
+| Header/control | Intent | Validation approach |
+|---|---|---|
+| HSTS | Prefer future HTTPS requests | Confirm only after HTTPS is stable |
+| Content-Security-Policy | Limit allowed content sources | Test portal, analytics and payment flows |
+| X-Content-Type-Options | Reduce MIME-type guessing | Check response headers |
+| Referrer-Policy | Limit unnecessary URL leakage | Test referral and reset journeys |
+| Frame protection | Reduce unwanted embedding | Test intended embeds explicitly |
+
+Headers must fit the application. A restrictive policy that breaks authentication, payments or support widgets is not a completed security control. Make changes in report-only or staged mode where the platform supports it, then validate with the actual journeys.
+
+### 4.3 CORS is not an access-control system
+
+CORS tells browsers which front-end origins may read a response. It does not authorise a caller, protect a leaked API endpoint or replace server-side authentication and rate limits. Specify exact allowed origins, methods and headers; avoid wildcard origins on credentialed endpoints; and validate preflight and failure behaviour.
+
+## Practical Lab 3 - Browser and API launch validation
+
+Create a test sheet for the EasyFile public site, portal and referral/API journey. It must include:
+
+- HTTP to HTTPS redirect;
+- certificate hostname and expiry check;
+- public landing page and a deep-link route;
+- sign-in and sign-out flow;
+- unauthenticated API rejection;
+- authenticated request from the approved origin;
+- request from an unapproved origin;
+- referral link acknowledgement without exposing a referral token in page content;
+- CSP, mixed-content and console-error review.
+
+Record expected result, actual result, evidence location, severity, owner and disposition for every test.
+
+---
+
+## Module 5 - Transactional email, sender identity and user trust
+
+### 5.1 Email is part of the application perimeter
+
+EasyFile verification, referral, invoice and password-related messages influence account safety and customer trust. Use a controlled sending identity, make the sender address recognisable, limit email content to what the recipient needs, and avoid sending credentials or sensitive data by email.
+
+### 5.2 Authentication alignment
+
+Work with the approved mail provider to configure the required sender authentication records, commonly SPF, DKIM and DMARC. The technical record values are provider- and domain-specific. Record the policy intent and validation result rather than copying production values into course evidence.
+
+- **SPF:** identifies authorised sending infrastructure for a domain.
+- **DKIM:** adds a cryptographic signature that a recipient can validate.
+- **DMARC:** states alignment and handling policy using SPF/DKIM results and provides reporting addresses.
+
+Roll out DMARC deliberately. A strict policy before all legitimate sources are aligned can interrupt critical mail. Monitor reports and maintain an authorised-sender inventory.
+
+### 5.3 Safe verification links and messages
+
+Use single-use, time-limited tokens issued server-side and transmitted only over HTTPS. The landing page should confirm the action in privacy-conscious language, not display a full token or reveal whether a third party owns a particular email address. Rate-limit token requests and verification attempts, log security-relevant events, and provide a support path for expired or failed links.
+
+## Module 6 - Release engineering and configuration safety
+
+### 6.1 Separate configuration from code
+
+Use environment-specific configuration for public base URLs, API origins, telemetry endpoints and feature flags. Keep secrets in the approved secret manager or platform settings, not in HTML, JavaScript bundles, Git history, client-side variables or screenshots. Treat an exposed secret as an incident: revoke, rotate, investigate and document.
+
+### 6.2 Build once, promote with evidence
+
+Prefer a pipeline that builds a versioned artefact, validates it in a controlled environment and promotes the same artefact to production after approval. Capture the commit SHA, build ID, deployment timestamp, approver and configuration version. This makes rollback and incident investigation possible.
+
+### 6.3 Health checks are meaningful only when they check something
+
+A liveness check confirms the process can respond. A readiness or dependency check can confirm that required services are usable. Do not expose internal dependency details publicly. Define which endpoint is safe for external monitoring and which deeper checks remain private.
+
+## Practical Lab 4 - Create a production release runbook
+
+Create a release runbook for a fictional EasyFile deployment. It must include branch and pull-request checks, build artefact identification, environment configuration review, secret-scanning result, deployment approval, health-check URL, user-journey smoke tests, monitoring dashboard, communications plan and rollback instructions. Add an explicit no-go condition for a failed access-control, payment, referral or email-verification test.
+
+---
+
+## Module 7 - Observability, incident readiness and support
+
+### 7.1 Observe the service from the user's path
+
+Monitor availability, response time, error rate and key business events separately. A green server metric does not mean a learner can enrol, an EasyFile user can complete a form, or an emailed verification link works.
+
+Define a small launch dashboard:
+
+| Signal | Why it matters | Threshold owner |
+|---|---|---|
+| Public page availability | Discoverability and trust | Web operations |
+| Portal sign-in success | Access to service | Identity/portal owner |
+| API 4xx/5xx rate | Authentication and application health | API owner |
+| Verification-email delivery and click failure | Account activation flow | Communications owner |
+| Referral acknowledgement completion | Growth journey integrity | Product owner |
+
+### 7.2 Log safely
+
+Use correlation IDs and structured events. Redact tokens, passwords, personal data and full payment details. Set a retention period and access model that aligns to applicable privacy and contractual requirements. Design incident evidence before the incident occurs.
+
+### 7.3 Incident response at launch
+
+Agree who can declare rollback, who communicates to users, where status updates appear and what evidence must be preserved. A fast rollback can be safer than a prolonged live diagnosis when the issue affects authentication, data integrity, customer trust or security.
+
+## Module 8 - Operational acceptance and handover
+
+### 8.1 Acceptance is a risk decision
+
+Close a launch only when the documented acceptance tests passed or every exception has a named owner, risk rating, mitigation and due date. Do not close a high-risk control failure as a cosmetic defect.
+
+### 8.2 Handover package
+
+The final handover should enable a new authorised operator to answer:
+
+- What hostnames exist and what does each one do?
+- Who owns renewal, DNS, application and security decisions?
+- Where are approved runbooks, dashboards and support contacts?
+- How is an authorised change made and reversed?
+- How are certificates, domain renewal, dependencies and access reviewed?
+- How is a hostname safely retired?
+
+### 8.3 Continuous operations
+
+Set recurring reviews for domain expiry, certificate expiry, DNS changes, sender authentication, external dependencies, alert quality, access assignments and recovery exercises. A domain launch becomes secure and reliable through continued governance, not through the initial checklist alone.
+
+## Practical Lab 5 - Go/no-go simulation and tabletop incident
+
+Run a 30-minute launch decision meeting for a fictional EasyFile release. Present the launch pack, DNS proof, TLS proof, user-journey test record, email authentication status, monitoring readiness and rollback plan. Then inject one scenario: a portal hostname resolves correctly but sign-in redirects to an unexpected origin. Decide whether to hold, remediate or roll back; document the reasoning, owner, communication and verification that would permit a new go decision.
+
+## Capstone - EasyFile production launch dossier
+
+Produce a complete but sanitized dossier for an EasyFile-like production launch.
+
+### Required deliverables
+
+1. Ownership/RACI model and hostname register.
+2. Approved DNS and domain-verification change plan with rollback.
+3. TLS, redirect, header, CORS and browser-validation evidence.
+4. Transactional-email sender and verification-flow validation record.
+5. Versioned release runbook with configuration and secret-handling controls.
+6. Launch dashboard, alert ownership and incident communication procedure.
+7. Go/no-go record plus a 30-day operations review schedule.
+
+#### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Ownership and DNS design | 15% | Clear accountable roles and correct, maintainable hostname register |
+| Cutover and rollback | 20% | Staged runbook with observed DNS and executable recovery path |
+| HTTPS and application security | 20% | TLS, redirect, browser, CORS and header checks linked to user journeys |
+| Email and user trust | 10% | Sender authentication plan and privacy-safe verification design |
+| Release and observability | 20% | Reproducible release, health tests, dashboards and safe logs |
+| Handover and judgement | 15% | Risk-based acceptance decision and sustainable operating model |
+
+<KnowledgeCheck
+  title="Domain-launch readiness check"
+  questions={[
+    {
+      prompt: 'Why is a successful DNS lookup not enough to approve a production launch?',
+      options: ['DNS never matters', 'It does not prove TLS, routing, authentication or critical user journeys work', 'A browser does not use DNS', 'It automatically rotates secrets'],
+      answer: 1,
+      explanation: 'DNS is one dependency. Launch approval must test the service a user actually experiences.'
+    },
+    {
+      prompt: 'What is the most useful rollback detail for a DNS cutover?',
+      options: ['A vague instruction to undo changes', 'The exact prior value, owner, threshold and verification steps', 'A screenshot of the home page only', 'A new wildcard record'],
+      answer: 1,
+      explanation: 'Rollback must be specific and executable under pressure.'
+    },
+    {
+      prompt: 'Which statement about CORS is correct?',
+      options: ['It replaces API authentication', 'It controls which browsers may read a response, not whether a caller is authorised', 'It encrypts DNS records', 'It issues TLS certificates'],
+      answer: 1,
+      explanation: 'Server-side authentication and authorisation remain required even when CORS is configured.'
+    },
+    {
+      prompt: 'What should be avoided in public application logs?',
+      options: ['Correlation IDs', 'Timestamps', 'Verification tokens, passwords and unnecessary personal data', 'HTTP status codes'],
+      answer: 2,
+      explanation: 'Sensitive data in logs creates unnecessary exposure and complicates incident response.'
+    },
+    {
+      prompt: 'When should HSTS be enabled?',
+      options: ['Before a valid HTTPS service exists', 'Only after HTTPS and its certificate are stable and validated', 'Instead of TLS certificates', 'Only on a local development machine'],
+      answer: 1,
+      explanation: 'HSTS can make recovery harder if enabled before a host is reliably HTTPS-capable.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="EFL-DOM-101"
+  courseTitle="EasyFile Domain Setup and Production Launch"
+  tasks={[
+    'Domain ownership model, hostname register and launch risk register',
+    'DNS verification and cutover simulation with rollback record',
+    'TLS, browser, CORS and critical-user-journey test sheet',
+    'Transactional-email and privacy-safe verification-flow validation',
+    'Versioned production release runbook and secret-handling review',
+    'Launch dashboard, go/no-go record and operational handover dossier'
+  ]}
+/>
+
+## Official reference set
+
+- [ICANN: the Domain Name System](https://www.icann.org/resources/pages/dns-2022-09-13-en)
+- [ICANN: information for domain registrants](https://www.icann.org/registrants)
+- [ICANN: DNSSEC - what it is and why it matters](https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en)
+- [Mozilla Observatory HTTP header guidance](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+- [OWASP: Transport Layer Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html)
+- [OWASP: Cross-Origin Resource Sharing Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Origin_Resource_Sharing_Cheat_Sheet.html)
+- [DMARC overview](https://dmarc.org/overview/)
+
+</EnrollmentGate>

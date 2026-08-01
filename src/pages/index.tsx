@@ -4,40 +4,80 @@ import Link from '@docusaurus/Link';
 import {usePluginData} from '@docusaurus/useGlobalData';
 import styles from './index.module.css';
 
-interface CatalogCourse {
-  courseId: string;
-  title: string;
-  deliveryMode: 'Self-Paced' | 'Instructor-led';
-  category: string;
-  level: string;
-  estimatedEffort: string;
-  description: string;
-  route: string;
-}
-
-const establishedCourses: CatalogCourse[] = [
-  {courseId: 'ART-101', title: 'Professional Articulation and Executive Communication', deliveryMode: 'Self-Paced', category: 'Professional & Business Skills', level: 'Foundation to advanced', estimatedEffort: '36–40 hours', description: 'Build clear speech, executive presence, business storytelling, interview, meeting and presentation capability through recorded practice and moderated evidence.', route: '/courses/professional-articulation'},
-  {courseId: 'SHP-UPA-101', title: 'Shopify User Permissions', deliveryMode: 'Self-Paced', category: 'Commerce Administration', level: 'Beginner to intermediate', estimatedEffort: '4–6 hours', description: 'Design least-privilege Shopify staff roles, separate duties, review access and produce an auditable permission baseline.', route: '/courses/shopify-user-permissions'},
-  {courseId: 'GHP-DOM-101', title: 'GitHub Pages Setup', deliveryMode: 'Self-Paced', category: 'Web Deployment', level: 'Beginner to intermediate', estimatedEffort: '5–7 hours', description: 'Publish a production-ready GitHub Pages site with Actions, custom-domain verification, HTTPS and deployment validation.', route: '/courses/github-pages-setup'},
-  {courseId: 'M365-LIC-101', title: 'Microsoft 365 Licenses', deliveryMode: 'Self-Paced', category: 'Microsoft Technologies', level: 'Intermediate', estimatedEffort: '5–8 hours', description: 'Administer Microsoft 365 licence allocation, group-based assignment, billing controls and governance evidence.', route: '/courses/microsoft-365-licenses'},
+const courses = [
+  {
+    id: 'PYE-101',
+    title: 'Python Certification Preparation',
+    duration: '30-36 hours · Beginner to entry-level',
+    description: 'Build Python fundamentals through deliberate coding practice, debugging, timed mock tasks and an evidence-led capstone.',
+    outcomes: ['Trace and write correct Python fundamentals', 'Debug syntax, runtime and logic defects', 'Prepare ethically for entry-level certification'],
+    path: '/courses/python-certification-prep',
+  },
+  {
+    id: 'EFL-DOM-101',
+    title: 'EasyFile Domain Setup and Production Launch',
+    duration: '22-28 hours · Intermediate web operations',
+    description: 'Plan, verify, secure and operate an EasyFile launch with DNS, TLS, email, user-journey, monitoring and rollback controls.',
+    outcomes: ['Design safe domain and DNS cutovers', 'Validate TLS, portal, email and API journeys', 'Deliver a production launch and handover dossier'],
+    path: '/courses/easyfile-domain-setup',
+  },
+  {
+    id: 'DAT-OUT-101',
+    title: 'Understanding Outliers in Data Files',
+    duration: '24-30 hours · Foundation to intermediate',
+    description: 'Find, investigate and explain potential outliers in data files using robust statistics, visual analysis and governed evidence.',
+    outcomes: ['Profile data quality before detecting anomalies', 'Compare robust detection methods responsibly', 'Deliver a reproducible investigation package'],
+    path: '/courses/data-outlier-analysis',
+  },
+  {
+    id: 'ART-101',
+    title: 'Professional Articulation and Executive Communication',
+    duration: '36–40 hours · Foundation to advanced',
+    description: 'Build clear speech, executive presence, business storytelling, interview, meeting and presentation capability through recorded practice and moderated evidence.',
+    outcomes: ['Deliver clear professional and executive messages', 'Handle meetings, interviews, questions and difficult conversations', 'Complete a moderated communication capability portfolio'],
+    path: '/courses/professional-articulation',
+  },
+  {
+    id: 'SHP-UPA-101',
+    title: 'Shopify User Permissions',
+    duration: '4–6 hours · Beginner to intermediate',
+    description: 'Design least-privilege Shopify staff roles, separate duties, review access and produce an auditable permission baseline.',
+    outcomes: ['Map operational roles to Shopify permissions', 'Harden staff and collaborator access', 'Complete an access review and evidence pack'],
+    path: '/courses/shopify-user-permissions',
+  },
+  {
+    id: 'GHP-DOM-101',
+    title: 'GitHub Pages Setup',
+    duration: '5–7 hours · Beginner to intermediate',
+    description: 'Publish a production-ready GitHub Pages site with Actions, custom-domain verification, HTTPS and deployment validation.',
+    outcomes: ['Configure Pages deployment', 'Verify DNS and custom domains', 'Troubleshoot builds, routing and HTTPS'],
+    path: '/courses/github-pages-setup',
+  },
+  {
+    id: 'M365-LIC-101',
+    title: 'Microsoft 365 Licenses',
+    duration: '5–8 hours · Intermediate',
+    description: 'Administer Microsoft 365 licence allocation, group-based assignment, billing controls and governance evidence.',
+    outcomes: ['Map requirements to licence plans', 'Allocate and reclaim licences safely', 'Reconcile billing, utilisation and compliance'],
+    path: '/courses/microsoft-365-licenses',
+  },
 ];
 
 export default function Home(): React.JSX.Element {
-  const pluginData = usePluginData('skunkworks-academy-generated-course-pages') as {courses: CatalogCourse[]};
-  const courses = useMemo(() => [...establishedCourses, ...(pluginData.courses || [])], [pluginData.courses]);
-  const [query, setQuery] = useState('');
-  const [deliveryMode, setDeliveryMode] = useState('All');
-  const [category, setCategory] = useState('All');
-  const [level, setLevel] = useState('All');
-  const categories = useMemo(() => [...new Set(courses.map((course) => course.category))].sort(), [courses]);
-  const levels = useMemo(() => [...new Set(courses.map((course) => course.level))].sort(), [courses]);
-  const visibleCourses = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return courses.filter((course) => {
-      const matchesQuery = !needle || `${course.courseId} ${course.title} ${course.category} ${course.description}`.toLowerCase().includes(needle);
-      return matchesQuery && (deliveryMode === 'All' || course.deliveryMode === deliveryMode) && (category === 'All' || course.category === category) && (level === 'All' || course.level === level);
-    });
-  }, [courses, query, deliveryMode, category, level]);
+  return (
+    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for programming, data analysis, EasyFile operations, professional communication, Shopify, GitHub Pages and Microsoft 365 administration.">
+      <header className="heroBanner">
+        <div className="container">
+          <p className="eyebrow">Self-paced capability journeys</p>
+          <h1>Learn it. Practise it. Prove it.</h1>
+          <p>Seven practical courses built around real implementation tasks, recorded practice, formative assessment and exportable evidence of capability records.</p>
+          <div className="heroActions">
+            <a className="heroButton heroButtonPrimary" href="#courses">Explore courses</a>
+            <a className="heroButton" href="https://portal.skunkworksacademy.com/">Learner sign in</a>
+            <a className="heroButton" href="https://www.skunkworksacademy.com/self-paced/">Academy self-paced catalogue</a>
+          </div>
+        </div>
+      </header>
 
   return (
     <Layout title="Course catalogue" description="Evidence-led self-paced and instructor-led Skunkworks Academy courses with controlled learner access.">
