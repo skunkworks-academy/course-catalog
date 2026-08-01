@@ -34,6 +34,11 @@ jobs:
       - name: Validate course content
         run: npm run validate:content
 
+      - name: Validate generated catalogue
+        run: npm run validate:catalog
+
+      - name: Validate custom-domain deployment configuration
+        run: npm run validate:deployment
       - name: Build Docusaurus
         shell: bash
         run: |
