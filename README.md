@@ -12,13 +12,21 @@ Docusaurus-based, evidence-led catalogue for self-paced and instructor-led deliv
 
 The generated curricula are clearly marked for subject-matter review before formal accreditation, certification alignment or customer-delivery claims are made. Existing Academy course destinations retain their own course-route access rules.
 
-## Framework baseline
+- **180 course routes**: 4 established production courses and 176 generated foundation curricula
+- **34 self-paced offerings** including the four established courses
+- **146 instructor-led offerings**
+- 15 normalized subject categories
+- public overviews with default-deny enrolment gating for modules, labs, assessments and evidence tools
+
+The generated curricula are explicitly marked for subject-matter review before formal accreditation, certification alignment or customer-delivery claims are made.
+
+## Framework
 
 - Docusaurus `3.10.2`
 - React `19.2`
 - Node.js `20+`
 - GitHub Actions build and GitHub Pages deployment
-- Central Skunkworks Academy global navigation loader
+- build-time route generation through the Docusaurus plugin lifecycle
 
 ## Local development
 
