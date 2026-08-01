@@ -1,14 +1,16 @@
 # Skunkworks Academy Course Catalog
 
-Docusaurus-based self-paced course catalogue containing seven evidence-led learning journeys:
+Docusaurus-based, evidence-led catalogue for self-paced and instructor-led delivery.
 
-- `PYE-101` — Python Certification Preparation
-- `EFL-DOM-101` — EasyFile Domain Setup and Production Launch
-- `DAT-OUT-101` — Understanding Outliers in Data Files
-- `ART-101` — Professional Articulation and Executive Communication
-- `SHP-UPA-101` — Shopify User Permissions
-- `GHP-DOM-101` — GitHub Pages Setup
-- `M365-LIC-101` — Microsoft 365 Licenses
+## Catalogue scope
+
+- **185 unique course titles**: 7 production-authored courses, 176 generated foundation curricula and 2 additional Academy course destinations.
+- **34 self-paced source-derived offerings** plus the production and legacy self-paced journeys.
+- **146 instructor-led source-derived offerings**.
+- **15 normalised subject categories**.
+- Public overviews with default-deny enrolment gating for modules, labs, assessments and evidence tools.
+
+The generated curricula are clearly marked for subject-matter review before formal accreditation, certification alignment or customer-delivery claims are made. Existing Academy course destinations retain their own course-route access rules.
 
 - **180 course routes**: 4 established production courses and 176 generated foundation curricula
 - **34 self-paced offerings** including the four established courses
@@ -42,36 +44,22 @@ npm run build
 npm run serve
 ```
 
-## Data-driven course architecture
+## Course design standard
 
-The four established courses remain authored in MDX under `docs/`. The additional 176 courses are generated from:
+Production-authored courses include capability outcomes, theory modules, practical labs, formative assessment, capstone work, a weighted rubric, an Evidence of Capability Record and official references. The 176 source-inventory records use a shared foundation curriculum and remain marked for subject-matter review.
+
+## Learner access control
+
+Public catalogue information is rendered on the landing page. Docusaurus course routes are wrapped in `EnrollmentGate`, which uses a default-deny decision and calls:
 
 ```text
-data/generated-courses.cjs
-        |
-        v
-plugins/generated-course-pages/index.js
-        |
-        v
-src/components/GeneratedCoursePage.tsx
-        |
-        v
-/courses/catalog/<course-slug>
+GET https://skunkworks-instructor-portal-api-a5gxhyc2fvc7gmch.southafricanorth-01.azurewebsites.net/api/course-access?courseId=<COURSE_ID>
 ```
 
-Each generated route provides public metadata, six to eight enrolment-gated modules, three practical labs, an interactive knowledge check, capstone assessment, weighted rubric, official-reference guidance and a browser-based Evidence of Capability Record.
+Any `401`, `403`, `404`, network failure or malformed response keeps content locked. GitHub Pages is public static hosting: this gate controls normal navigation, not source confidentiality. Strictly private course materials must be served from a protected API or identity-aware host.
 
-## Access control
+## Continuous validation and deployment
 
-`EnrollmentGate` calls the Academy course-access API and renders learning content only when it receives `allowed: true`. Any `401`, `403`, `404`, malformed response or network failure keeps content locked.
+Every pull request executes the production-course validator, generated-catalogue validator and complete Docusaurus build. Only `main` deploys the generated site to GitHub Pages.
 
-GitHub Pages is static hosting and this repository is public. Client-side gating controls the normal learner journey but is not a confidentiality boundary for source code. Strictly confidential lesson bodies should be served from a protected content API or identity-aware hosting platform.
-
-## Validation
-
-`npm run build` validates the four established courses, validates schema and uniqueness for all 176 generated courses, and executes a complete Docusaurus production build.
-
-## Public listings
-
-- `https://www.skunkworksacademy.com/self-paced/`
-- `https://www.skunkworksacademy.com/instructor-led/`
+Catalogue: <https://skunkworks-academy.github.io/course-catalog/>

@@ -60,7 +60,7 @@ module.exports = function generatedCoursePagesPlugin(context) {
     },
     async contentLoaded({content, actions}) {
       const {createData, addRoute, setGlobalData} = actions;
-      setGlobalData({courses: content.map((course) => ({courseId: course.courseId, title: course.title, deliveryMode: course.deliveryMode, category: course.category, level: course.level, estimatedEffort: course.estimatedEffort, description: course.description, route: course.route}))});
+      setGlobalData({courses: content.map((course) => ({courseId: course.courseId, title: course.title, deliveryMode: course.deliveryMode, category: course.category, level: course.level, estimatedEffort: course.estimatedEffort, description: course.description, route: course.route, contentStatus: 'Generated foundation curriculum'}))});
       for (const course of content) {
         const dataPath = await createData(`generated-course-${course.slug}.json`, JSON.stringify(course));
         addRoute({
