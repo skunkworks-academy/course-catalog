@@ -1,11 +1,22 @@
 {
-  "schema": "skunkworks-academy/course-manifest/v1",
-  "generatedOn": "2026-07-27",
-  "catalogUrl": "https://skunkworks-academy.github.io/course-catalog/",
+  "schema": "skunkworks-academy/course-manifest/v2",
+  "generatedOn": "2026-08-01",
+  "catalogUrl": "https://catalog.skunkworksacademy.com/",
+  "courseCount": 185,
+  "productionCourseCount": 7,
+  "generatedFoundationCourseCount": 176,
+  "legacyAcademyCourseCount": 2,
   "accessPolicy": {
     "overview": "public",
     "courseContent": "authenticated-active-enrolment",
     "defaultDecision": "deny"
+  },
+  "generatedCatalogSource": "data/generated-courses.cjs",
+  "catalogueComposition": {
+    "production": ["PYE-101", "EFL-DOM-101", "DAT-OUT-101", "ART-101", "SHP-UPA-101", "GHP-DOM-101", "M365-LIC-101"],
+    "legacyAcademyDestinations": ["JSON-UI-101", "MDB-SP-101"],
+    "sourceDerivedGeneratedCourses": 176,
+    "deduplicatedLegacyVariants": ["SEC-OWASP-201", "EXO-BMM-201"]
   },
   "courses": [
     {

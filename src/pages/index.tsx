@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import {usePluginData} from '@docusaurus/useGlobalData';
+import styles from './index.module.css';
 
 const courses = [
   {
