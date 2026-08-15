@@ -18,7 +18,6 @@ const config: Config = {
   i18n: {defaultLocale: 'en', locales: ['en']},
   scripts: [{src: 'https://www.skunkworksacademy.com/assets/academy-navigation.js?v=2026.07.17.6', defer: true, 'data-skunkworks-global-nav': 'v8'}],
   customFields: {
-    catalogUrl: 'https://catalog.skunkworksacademy.com/',
     accessApi: 'https://skunkworks-instructor-portal-api-a5gxhyc2fvc7gmch.southafricanorth-01.azurewebsites.net/api/course-access',
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
