@@ -27,10 +27,10 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 24
-          check-latest: true
+          package-manager-cache: false
 
-      # Do not enable setup-node's npm cache until a package-lock.json,
-      # npm-shrinkwrap.json or yarn.lock is committed at the configured path.
+      # This repository currently has no committed npm/yarn lockfile.
+      # Keep setup-node caching disabled until a lockfile is committed.
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
