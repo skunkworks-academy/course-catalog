@@ -76,6 +76,10 @@ For strict content confidentiality, use one of these production patterns:
 
 The required API contract and control requirements are documented in `architecture/course-access-api.md`.
 
+## Continuous validation
+
+Every pull request executes the course-content validator and a complete Docusaurus production build. Only the `main` branch deploys the generated `build` artefact to the GitHub Pages environment.
+
 ## Deployment
 
 The workflow `.github/workflows/deploy-pages.yml` validates every pull request and deploys the `build` artefact after changes reach `main`.
