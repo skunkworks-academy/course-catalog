@@ -58,6 +58,56 @@ jobs:
 
           exit "$build_status"
 
+      - name: Enforce centrally hosted Academy shell on every published HTML page
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          loader = 'https://www.skunkworksacademy.com/assets/academy-navigation.js'
+          marker = 'data-skunkworks-global-shell="central"'
+          script = f'<script defer src="{loader}" {marker}></script>'
+          pages = sorted(Path('build').rglob('*.html'))
+          if not pages:
+              raise SystemExit('No published HTML pages found in build')
+
+          old_nav = re.compile(
+              r'<script\b[^>]*\bsrc=["\'][^"\']*academy-navigation\.js[^"\']*["\'][^>]*>\s*</script>',
+              re.IGNORECASE | re.DOTALL,
+          )
+          old_loader = re.compile(
+              r'<script\b[^>]*\bsrc=["\'][^"\']*academy-navigation-loader\.js[^"\']*["\'][^>]*>\s*</script>',
+              re.IGNORECASE | re.DOTALL,
+          )
+
+          for path in pages:
+              html = path.read_text(encoding='utf-8', errors='ignore')
+              html = old_loader.sub('', old_nav.sub('', html))
+              if '</head>' not in html:
+                  raise SystemExit(f'Cannot inject Academy shell loader into {path}')
+              html = html.replace('</head>', f'  {script}\n</head>', 1)
+              path.write_text(html, encoding='utf-8')
+
+          failures = []
+          for path in pages:
+              html = path.read_text(encoding='utf-8', errors='ignore')
+              if html.count(loader) != 1 or html.count(marker) != 1:
+                  failures.append(str(path))
+          if failures:
+              raise SystemExit('Central Academy shell verification failed for: ' + ', '.join(failures))
+
+          print(f'Central Academy shell loader verified on {len(pages)} published HTML page(s).')
+          PY
+
+      - name: Verify global-shell-only chrome
+        run: |
+          test -f build/index.html
+          grep -q 'https://www.skunkworksacademy.com/assets/academy-navigation.js' build/index.html
+          if grep -q 'navbar__inner\|navbar__brand\|footer__links\|footer__bottom' build/index.html; then
+            echo 'Native Docusaurus navbar/footer markup must not be rendered on the Course Catalog landing page.'
+            exit 1
+          fi
+
       - name: Upload build diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -91,3 +141,31 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-production:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Course Catalog production and central Academy shell source
+        run: |
+          loader_url='https://www.skunkworksacademy.com/assets/academy-navigation.js'
+          shell_url='https://www.skunkworksacademy.com/assets/skunkworks-shell.js'
+
+          for attempt in {1..30}; do
+            home="$(curl --location --fail --silent --show-error --max-time 20 https://catalog.skunkworksacademy.com/ || true)"
+            loader="$(curl --location --fail --silent --show-error --max-time 20 "$loader_url" || true)"
+            shell="$(curl --location --fail --silent --show-error --max-time 20 "$shell_url" || true)"
+
+            if printf '%s' "$home" | grep -q "$loader_url" \
+              && ! printf '%s' "$home" | grep -Eq 'navbar__inner|navbar__brand|footer__links|footer__bottom' \
+              && printf '%s' "$loader" | grep -q 'skunkworks-shell.js' \
+              && printf '%s' "$shell" | grep -q 'swa-global-shell-nav' \
+              && printf '%s' "$shell" | grep -q 'swa-global-shell-footer'; then
+              echo 'Course Catalog production verification succeeded with centrally sourced Academy navigation and footer.'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Course Catalog production verification failed.'
+          exit 1
