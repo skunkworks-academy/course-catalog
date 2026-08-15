@@ -1,18 +1,8 @@
-import React, {useMemo, useState} from 'react';
+import React from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
-import {usePluginData} from '@docusaurus/useGlobalData';
-import styles from './index.module.css';
 
 const courses = [
-  {
-    id: 'ART-101',
-    title: 'Professional Articulation and Executive Communication',
-    duration: '36–40 hours · Foundation to advanced',
-    description: 'Build clear speech, executive presence, business storytelling, interview, meeting and presentation capability through recorded practice and moderated evidence.',
-    outcomes: ['Deliver clear professional and executive messages', 'Handle meetings, interviews, questions and difficult conversations', 'Complete a moderated communication capability portfolio'],
-    path: '/courses/professional-articulation',
-  },
   {
     id: 'SHP-UPA-101',
     title: 'Shopify User Permissions',
@@ -41,12 +31,12 @@ const courses = [
 
 export default function Home(): React.JSX.Element {
   return (
-    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for professional communication, Shopify, GitHub Pages and Microsoft 365 administration.">
+    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for Shopify, GitHub Pages and Microsoft 365 administration.">
       <header className="heroBanner">
         <div className="container">
           <p className="eyebrow">Self-paced capability journeys</p>
-          <h1>Learn it. Practise it. Prove it.</h1>
-          <p>Four practical courses built around real implementation tasks, recorded practice, formative assessment and exportable evidence of capability records.</p>
+          <h1>Configure it. Validate it. Prove it.</h1>
+          <p>Three practical administration courses built around real implementation tasks, formative assessment and exportable evidence of capability records.</p>
           <div className="heroActions">
             <a className="heroButton heroButtonPrimary" href="#courses">Explore courses</a>
             <a className="heroButton" href="https://portal.skunkworksacademy.com/">Learner sign in</a>
@@ -60,7 +50,7 @@ export default function Home(): React.JSX.Element {
           <div className="catalogHeader">
             <p className="eyebrow">Published learning journeys</p>
             <h2>Practical courses with controlled learner access</h2>
-            <p>Course summaries are public. Lessons, assessments, practice studios and evidence tools are released only after the portal confirms an authenticated learner and active enrolment.</p>
+            <p>Course summaries are public. Lessons, assessments and evidence tools are released only after the portal confirms an authenticated learner and active enrolment.</p>
           </div>
 
           <div className="courseGrid">

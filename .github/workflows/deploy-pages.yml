@@ -27,98 +27,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Validate course content
-        run: npm run validate:content
-
-      - name: Validate generated catalogue
-        run: npm run validate:catalog
-
-      - name: Validate custom-domain deployment configuration
-        run: npm run validate:deployment
-
-      - name: Build Docusaurus
-        shell: bash
-        run: |
-          set +e
-          set -o pipefail
-          npm exec docusaurus build 2>&1 | tee docusaurus-build.log
-          build_status=${PIPESTATUS[0]}
-
-          server_bundle=$(find .docusaurus -type f -name 'server.bundle.js' -print -quit 2>/dev/null || true)
-          if [[ -n "$server_bundle" ]]; then
-            cp "$server_bundle" server.bundle.js
-            grep -n -C 2 'resolveWeak' "$server_bundle" > server-bundle-resolveweak-context.txt || true
-          fi
-
-          exit "$build_status"
-
-      - name: Enforce Academy global shell on every generated HTML page
-        if: success()
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          current = 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.08.15.2'
-          loader = f'<script defer src="{current}" data-skunkworks-global-shell="2026.08.15.2"></script>'
-          script_pattern = re.compile(
-              r'<script\b[^>]*\bsrc=["\'][^"\']*academy-navigation\.js[^"\']*["\'][^>]*>\s*</script>',
-              re.IGNORECASE,
-          )
-
-          pages = list(Path('build').rglob('*.html'))
-          if not pages:
-              raise SystemExit('Course catalogue build produced no HTML pages.')
-
-          for path in pages:
-              html = path.read_text(encoding='utf-8', errors='ignore')
-              html = script_pattern.sub('', html)
-              if '</head>' in html:
-                  html = html.replace('</head>', f'{loader}</head>', 1)
-              elif '</body>' in html:
-                  html = html.replace('</body>', f'{loader}</body>', 1)
-              else:
-                  raise SystemExit(f'Cannot inject Academy shell into {path}')
-              path.write_text(html, encoding='utf-8')
-
-          missing = [
-              str(path)
-              for path in pages
-              if current not in path.read_text(encoding='utf-8', errors='ignore')
-          ]
-          if missing:
-              raise SystemExit('Global shell missing from: ' + ', '.join(missing))
-          print(f'Verified Academy global shell on {len(pages)} Course Catalogue page(s).')
-          PY
-
-      - name: Upload build diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: docusaurus-build-diagnostics-${{ github.run_id }}
-          path: |
-            docusaurus-build.log
-            server.bundle.js
-            server-bundle-resolveweak-context.txt
-          if-no-files-found: warn
-          retention-days: 7
+      - name: Validate and build Docusaurus
+        run: npm run build
 
       - name: Configure GitHub Pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: build
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
