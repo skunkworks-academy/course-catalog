@@ -1,0 +1,963 @@
+---
+id: open-source-intelligence-gathering
+title: Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
+sidebar_label: OSINT Gathering with Recon-ng & Shodan
+sidebar_position: 1
+description: Build a disciplined, lawful and evidence-led OSINT workflow using search engines, Recon-ng, Shodan and structured reporting without crossing into unauthorised access.
+keywords: [osint, recon-ng, shodan, cybersecurity, reconnaissance, threat intelligence, passive reconnaissance]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+
+<EnrollmentGate courseId="SEC-OSINT-201" courseTitle="Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan">
+
+# Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
+
+**Course ID:** SEC-OSINT-201  
+**Estimated effort:** 24-30 hours  
+**Level:** Intermediate  
+**Audience:** Security analysts, SOC staff, penetration testers working under written authorisation, threat-intelligence practitioners, incident responders, auditors and defensive engineers  
+**Assessment model:** Ten theory modules, six practical labs, formative checks, a final knowledge check, an evidence portfolio and a capstone intelligence brief  
+**Companion practical:** [LAB-OSINT-201 - OSINT Reconnaissance Workbench](https://labs.skunkworksacademy.com/labs/osint-recon-201/)
+
+## Course purpose
+
+Open-source intelligence (OSINT) is the disciplined collection, validation, analysis and reporting of information that is lawfully available from public sources. It can support attack-surface management, due diligence, threat intelligence, incident response, brand protection, security testing and defensive architecture reviews.
+
+The defining characteristic is not that the information is easy to find. It is that the collection method does not require bypassing access controls, exploiting a weakness, impersonating a trusted party or obtaining information through covert intrusion.
+
+This course expands a classic OSINT reconnaissance workflow into a modern, defensible operating method. It uses **Recon-ng** as a modular reconnaissance framework and **Shodan** as a search engine and API for internet-exposed service observations. The emphasis is on methodology, provenance, repeatability, data minimisation and reporting rather than simply running tools.
+
+## Safety and authorisation boundary
+
+This course is designed for lawful defensive and authorised security work.
+
+You must not use the exercises to:
+
+- investigate a private individual without a legitimate and lawful purpose;
+- target systems you do not own or do not have explicit permission to assess;
+- bypass authentication, scrape restricted areas, defeat rate limits or evade technical controls;
+- collect credentials, private messages, non-public personal data or secrets;
+- move from public information gathering into active exploitation;
+- use discovered information to harass, stalk, intimidate, impersonate or facilitate fraud.
+
+The course distinguishes **passive collection** from **active interaction**. A source being reachable from the public internet does not automatically mean you are authorised to probe it. Where a task could create traffic against a third-party service, use the synthetic fixtures, IANA documentation domains, RFC documentation address ranges, a sandbox supplied by Skunkworks Academy, or assets that you own and have explicitly placed in scope.
+
+## Capability outcome
+
+By the end of this course you will be able to:
+
+- define an OSINT collection objective, legal basis, scope and stop condition;
+- build a source plan that separates public search, passive data services and active validation;
+- create and manage Recon-ng workspaces and module workflows;
+- inspect the Recon-ng marketplace, dependencies and API-key requirements before running a module;
+- use Shodan search concepts, filters, host records and facets to interpret exposed-service observations;
+- correlate search-engine, DNS, certificate, repository and internet-service evidence without overclaiming;
+- separate observation, inference, confidence and recommended action;
+- minimise collection of personal and sensitive data;
+- preserve reproducible evidence and source provenance;
+- deliver an executive-ready OSINT intelligence brief and a technical evidence appendix.
+
+## Learning method
+
+Use the same operating loop throughout the course:
+
+1. **Define the question.** Write the business or security question before opening a tool.
+2. **Confirm authority.** State what is in scope, what is out of scope and when collection must stop.
+3. **Plan sources.** Decide which public sources can answer the question with the least intrusive method.
+4. **Collect minimally.** Gather only information needed to answer the question.
+5. **Validate.** Corroborate important observations with a second independent source where practical.
+6. **Classify confidence.** Distinguish verified fact, strong inference, weak inference and unknown.
+7. **Record provenance.** Preserve query, timestamp, source, output and analyst note.
+8. **Report impact.** Explain why the observation matters and what defensive action is appropriate.
+9. **Dispose responsibly.** Remove unnecessary personal or sensitive data from the working set.
+
+---
+
+## Module 1 - OSINT as an intelligence discipline
+
+### 1.1 OSINT is more than search
+
+A web search is a collection mechanism. Intelligence is the result of converting collected information into a defensible answer to a defined question.
+
+A useful OSINT workflow therefore has four layers:
+
+| Layer | Question | Example output |
+|---|---|---|
+| Requirement | What decision are we supporting? | “Which internet-facing services are attributable to our organisation?” |
+| Collection | Which public sources can answer it? | Search engine, CT logs, DNS, Shodan |
+| Analysis | What does the evidence support? | “Three hosts are consistently associated with the approved domain.” |
+| Reporting | What should happen next? | “Validate ownership and apply the external-service baseline.” |
+
+### 1.2 Public does not mean unrestricted
+
+Publicly accessible information can still be personal, sensitive, licensed, rate-limited or subject to platform terms. Professional OSINT therefore requires governance even when no exploit is involved.
+
+Use a collection record containing:
+
+- requestor and purpose;
+- scope and authority;
+- collection date and analyst;
+- sources used;
+- retention rule;
+- escalation contact;
+- stop conditions.
+
+### 1.3 Observation versus inference
+
+Do not write “the company runs this server” when your evidence only shows that a certificate, hostname or search index contains a matching name. A stronger record looks like this:
+
+- **Observation:** A Shodan host record contains `portal.example.com` in an observed TLS certificate name.
+- **Corroboration:** Public DNS for the approved domain resolves to the same address.
+- **Inference:** The service is likely associated with the scoped organisation.
+- **Confidence:** Medium until ownership is confirmed internally.
+- **Action:** Validate asset ownership with the infrastructure team.
+
+### 1.4 The OSINT evidence triangle
+
+Treat important findings as stronger when three dimensions agree:
+
+1. **Identity evidence** - domain, certificate, repository organisation, service banner or ASN ownership.
+2. **Time evidence** - current and historical observations line up.
+3. **Independent-source evidence** - two unrelated sources support the same conclusion.
+
+---
+
+## Practical Lab 1 - Build an OSINT collection plan
+
+### Scenario
+
+You are supporting an external attack-surface review for a fictional organisation, **Northwind Learning Services**. The authorised scope contains only:
+
+- `northwind-learning.example`;
+- synthetic host records supplied by the lab;
+- RFC documentation IP ranges such as `192.0.2.0/24`;
+- public product documentation needed to understand the tools.
+
+### Tasks
+
+1. Write a one-sentence intelligence requirement.
+2. Define in-scope and out-of-scope identifiers.
+3. Classify each planned source as search/index, passive data service, repository metadata, DNS/certificate source or internal validation.
+4. Write a stop condition for accidental discovery of personal data or credentials.
+5. Create an evidence-log template with fields for timestamp, query, source, result, confidence and analyst note.
+6. Add a data-minimisation rule describing what you will not retain.
+
+### Acceptance criteria
+
+- scope contains only authorised or synthetic assets;
+- the requirement can be answered without active exploitation;
+- stop conditions are explicit;
+- evidence provenance is reproducible;
+- personal data is excluded unless strictly necessary and lawfully justified.
+
+---
+
+## Module 2 - Search-engine reconnaissance and source planning
+
+### 2.1 Start broad, then narrow
+
+Search engines are useful for discovering public pages, indexed documents, exposed references and naming conventions. Use them to create leads, not final conclusions.
+
+A disciplined sequence is:
+
+1. organisation or domain name;
+2. exact phrase searches;
+3. `site:` restriction;
+4. file-type or path hints;
+5. known project or product names;
+6. corroboration against authoritative sources.
+
+### 2.2 Search operators as filters
+
+Common operators include:
+
+```text
+site:example.com
+site:example.com "security"
+site:example.com filetype:pdf
+site:example.com inurl:docs
+"Example Corporation" "privacy"
+```
+
+Search syntax changes over time and engines do not guarantee identical results. Record the engine, query and date so another analyst can reproduce the attempt.
+
+### 2.3 Avoid the “dorking equals proof” trap
+
+A search result can be stale, cached, mirrored or misattributed. Before treating a result as evidence:
+
+- open the source only if doing so is within policy;
+- confirm the current canonical URL;
+- capture the retrieval date;
+- distinguish cached text from current content;
+- validate ownership through a second source.
+
+### 2.4 Useful source categories
+
+| Source category | Typical value | Main caution |
+|---|---|---|
+| Search engines | Discovery of pages and documents | Stale indexes and cached copies |
+| DNS and RDAP | Domain and network registration context | Privacy redaction and registrar proxies |
+| Certificate transparency | Hostname and certificate discovery | Names can outlive services |
+| Public code hosting | Repositories, project names, public configuration | Never harvest exposed secrets for reuse |
+| Vendor documentation | Product/version interpretation | Confirm version and support status |
+| Internet search engines | Observed internet service banners | Observation time may be historical |
+
+---
+
+## Module 3 - Recon-ng architecture and workspaces
+
+### 3.1 What Recon-ng is
+
+Recon-ng is a full-featured reconnaissance framework built around modular collection, a persistent workspace database, a module marketplace and analysis/reporting capabilities. Its console model is familiar to analysts who have used modular security frameworks.
+
+The framework itself does not ship every module as part of the core. Modules are installed from the **Recon-ng Marketplace**, and individual modules can have separate dependency or API-key requirements.
+
+### 3.2 Installation options
+
+On Kali Linux, the packaged version can be installed through the package manager. The upstream project also documents source installation and Docker-based workflows.
+
+For an upstream source installation:
+
+```bash
+git clone https://github.com/lanmaster53/recon-ng.git
+cd recon-ng
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r REQUIREMENTS
+./recon-ng
+```
+
+Always review the upstream repository and package status before deploying into a managed environment. Do not run third-party modules in a high-trust workstation without reviewing their source and dependencies.
+
+### 3.3 Start with a named workspace
+
+A workspace keeps collected entities and module results separated by engagement or purpose.
+
+```bash
+./recon-ng -w northwind-osint
+```
+
+Inside the console, use built-in help rather than relying on memorised syntax:
+
+```text
+help
+workspaces list
+marketplace help
+modules help
+```
+
+### 3.4 Understand the data model
+
+Recon-ng modules often express their purpose as an input-table to output-table path such as:
+
+```text
+recon/domains-hosts/<module>
+recon/hosts-ports/<module>
+recon/companies-multi/<module>
+```
+
+This is a methodology cue. A domain can become a host lead; a host can become a port observation; a company name can produce multiple entity types.
+
+### 3.5 The workspace is evidence, not truth
+
+A row in a Recon-ng table means the framework recorded an observation. It does not automatically establish ownership, current status or exploitability. Use the database as a structured notebook that still requires analyst validation.
+
+---
+
+## Practical Lab 2 - Initialise and document a Recon-ng workspace
+
+### Tasks
+
+1. Install or launch Recon-ng in an isolated learning environment.
+2. Create a workspace called `osint-training`.
+3. Run `help` and identify the commands for workspaces, modules, marketplace and database interaction.
+4. Record the framework version.
+5. Create a short `notes/lab-02.md` file containing the version, installation method and any dependency warnings.
+6. Do **not** install every marketplace module. Select only modules required for the authorised learning task.
+
+### Acceptance criteria
+
+- the workspace is separate from other engagements;
+- framework version and installation source are recorded;
+- no production secrets or API keys are placed in the evidence file;
+- module selection is based on the requirement rather than “install all”.
+
+---
+
+## Module 4 - Recon-ng marketplace, modules and options
+
+### 4.1 Refresh and inspect before installing
+
+Use the marketplace as a catalogue, not as a blind package installer.
+
+```text
+marketplace refresh
+marketplace search domains-
+marketplace info recon/domains-hosts/certificate_transparency
+```
+
+The marketplace output indicates whether a module has additional dependencies or required keys. Module reliability can change when an upstream API or website changes, so inspect module metadata and current project issues when a module behaves unexpectedly.
+
+### 4.2 Install one module deliberately
+
+Example:
+
+```text
+marketplace install recon/domains-hosts/certificate_transparency
+modules search certificate
+modules load certificate_transparency
+info
+options list
+```
+
+A common domain-input pattern is:
+
+```text
+options set SOURCE example.com
+run
+```
+
+Use only a documentation domain, lab domain or asset that is explicitly in scope.
+
+### 4.3 The classic `bing_domain_web` workflow
+
+The historical training workflow often uses:
+
+```text
+marketplace search bing_domain_web
+marketplace install recon/domains-hosts/bing_domain_web
+modules load bing_domain_web
+options set SOURCE example.com
+run
+```
+
+The module still appears in the official marketplace index, but web-scraping modules are inherently vulnerable to upstream page changes and the marketplace has recorded issues with some modules over time. Teach the **methodology** - domain input, passive search, host output, validation - rather than assuming a particular module will always work.
+
+### 4.4 Useful passive-first module families
+
+Examples in the official marketplace include:
+
+- certificate-transparency search for domain-to-host discovery;
+- public search-engine hostname enumeration;
+- Shodan hostname enumeration using an API key;
+- hostname resolution and reverse-resolution modules;
+- WHOIS/RDAP-oriented organisation lookups;
+- reporting modules for exporting collected data.
+
+Always inspect `marketplace info` first because required keys and dependencies vary.
+
+### 4.5 API keys are secrets
+
+Do not hard-code an API key in a script, screenshot, commit or course evidence. Where Recon-ng uses its key store, add the key only in the learning environment and remove it when the exercise is complete.
+
+A typical workflow is:
+
+```text
+keys list
+keys add shodan_api <YOUR_KEY>
+```
+
+Do not paste the real key into screenshots or exported evidence.
+
+---
+
+## Practical Lab 3 - Run a passive Recon-ng module safely
+
+### Scenario
+
+You are validating the domain-to-host workflow, not hunting a third-party target.
+
+### Tasks
+
+1. Refresh the marketplace.
+2. Search for modules that accept domains and produce hosts.
+3. Select a passive module that requires no intrusive interaction.
+4. Review `marketplace info` and note dependencies, keys and update metadata.
+5. Install and load the module.
+6. Set the source to `example.com` or a Skunkworks Academy-provided sandbox domain.
+7. Run the module.
+8. Export or copy only the minimum evidence required: module name, query/source, timestamp and resulting host leads.
+9. Mark every result as **lead**, **corroborated** or **not validated**.
+
+### Troubleshooting branch
+
+If the selected module fails:
+
+- refresh the marketplace;
+- confirm that the module is installed and not disabled;
+- confirm required dependencies;
+- confirm required API keys;
+- inspect verbose/debug output;
+- check the current upstream issue tracker;
+- switch to another passive source rather than weakening controls or bypassing service restrictions.
+
+### Acceptance criteria
+
+- no active scanning is performed;
+- the module is chosen based on documented purpose;
+- failures are diagnosed instead of hidden;
+- results are treated as leads until corroborated.
+
+---
+
+## Module 5 - Shodan fundamentals
+
+### 5.1 What Shodan represents
+
+Shodan indexes observations about services reachable on the internet. A Shodan result is best understood as a **time-stamped observation of a service banner or derived property**, not a guarantee that the service is still present or that the indexed organisation owns the device.
+
+Typical fields can include:
+
+- IP address;
+- port and transport;
+- organisation or ASN context;
+- observed service data;
+- product or version hints;
+- TLS certificate information;
+- HTTP metadata;
+- tags and location metadata;
+- last-update timestamps.
+
+### 5.2 Search filters
+
+Shodan filters use the form:
+
+```text
+filter:value
+```
+
+Examples of filter concepts include:
+
+```text
+hostname:example.com
+port:443
+country:ZA
+org:"Example Organisation"
+product:"nginx"
+```
+
+Do not use the course to enumerate random organisations. Build queries against supplied fixtures or your own authorised assets.
+
+### 5.3 Count and facets before results
+
+The Shodan API provides a host-count method that can return counts and facets without returning full result records. This is useful when the question is statistical rather than host-specific.
+
+A careful workflow is:
+
+1. define the query;
+2. validate tokens/filters;
+3. request a count or facet summary;
+4. retrieve detailed records only when needed;
+5. document credit usage and retention requirements.
+
+### 5.4 Host information versus search
+
+The API distinguishes between:
+
+- **host information** for a specific IP address;
+- **host search** for records matching a query;
+- **host count** for aggregate counts and facets;
+- **search filters/facets** endpoints for discovering supported query fields.
+
+The Python client and REST API both require an API key for authenticated methods.
+
+### 5.5 Historical data changes the question
+
+Historical banners can be useful for incident or exposure timelines, but historical presence does not prove current exposure. Always label the observation date.
+
+---
+
+## Module 6 - Shodan query design and interpretation
+
+### 6.1 Build from a hypothesis
+
+Poor question:
+
+> “What can Shodan find?”
+
+Better question:
+
+> “Which Shodan observations associated with our approved domain indicate externally reachable HTTPS services that should be reconciled with the asset register?”
+
+This makes the query measurable and defensible.
+
+### 6.2 Use progressively narrower filters
+
+A query-design worksheet can include:
+
+| Step | Example | Purpose |
+|---|---|---|
+| 1 | `hostname:example.com` | Establish domain-linked observations |
+| 2 | `hostname:example.com port:443` | Restrict to HTTPS service observations |
+| 3 | add an approved organisation or net filter | Reduce false associations |
+| 4 | examine timestamps/certificates | Validate current relevance |
+
+### 6.3 Banner text is untrusted data
+
+A remote service can present arbitrary banner text. Never treat a product string as authoritative proof of software version, ownership or vulnerability.
+
+Corroborate with:
+
+- internal asset inventory;
+- authoritative DNS;
+- approved certificate records;
+- service-owner confirmation;
+- vendor-supported validation where authorised.
+
+### 6.4 Exposure does not equal vulnerability
+
+An open port is not automatically a security defect. Report the control question:
+
+- Is the service expected?
+- Is the owner known?
+- Is authentication appropriate?
+- Is the service supported and patched?
+- Is exposure restricted to the intended audience?
+- Is monitoring in place?
+
+### 6.5 A defensible Shodan finding
+
+Write findings in four parts:
+
+1. **Observed:** what Shodan recorded and when.
+2. **Associated:** why the record appears related to the scoped asset.
+3. **Validated:** which independent source confirmed or contradicted it.
+4. **Action:** what the asset owner should verify or remediate.
+
+---
+
+## Practical Lab 4 - Interpret synthetic Shodan results
+
+### Fixture
+
+Use the companion browser lab or the following synthetic record set:
+
+```json
+[
+  {
+    "ip_str": "192.0.2.24",
+    "port": 443,
+    "hostnames": ["portal.northwind-learning.example"],
+    "org": "Northwind Training ASN",
+    "product": "nginx",
+    "timestamp": "2026-08-01T08:15:00Z",
+    "ssl": {"subject": {"CN": "portal.northwind-learning.example"}}
+  },
+  {
+    "ip_str": "192.0.2.31",
+    "port": 22,
+    "hostnames": [],
+    "org": "Unrelated Transit Provider",
+    "product": "OpenSSH",
+    "timestamp": "2025-12-04T11:04:00Z"
+  }
+]
+```
+
+### Tasks
+
+1. Identify which record has stronger identity linkage to the authorised domain.
+2. Explain why the second record should not be attributed to the organisation based only on its presence in the fixture.
+3. Write the Shodan-style query you would use to narrow to the approved hostname and port.
+4. State what additional evidence you need before declaring the service owned by the organisation.
+5. Create a two-row findings table containing observation, confidence and next validation step.
+
+### Acceptance criteria
+
+- no live third-party query is required;
+- timestamps are included in conclusions;
+- banner/product strings are treated as untrusted evidence;
+- attribution requires corroboration.
+
+---
+
+## Module 7 - Correlation across DNS, certificates, repositories and service indexes
+
+### 7.1 Correlation creates value
+
+The strongest OSINT results often come from joining weak signals rather than collecting more data.
+
+Example chain:
+
+```text
+Public search result
+        ↓
+Host naming convention
+        ↓
+Certificate-transparency entry
+        ↓
+Authoritative DNS resolution
+        ↓
+Shodan observation
+        ↓
+Internal asset-owner validation
+```
+
+Each stage should increase or decrease confidence.
+
+### 7.2 Certificates are naming evidence
+
+Certificate transparency can reveal hostnames that appeared on issued certificates. It does not prove that every name is live or externally reachable today.
+
+Use certificate evidence to ask:
+
+- Is the hostname still in authoritative DNS?
+- Does it resolve to an approved network?
+- Is the certificate current or historical?
+- Is the service in the asset register?
+
+### 7.3 Public repositories are high-value and high-risk
+
+Public repositories can reveal technology names, infrastructure-as-code patterns, domains and documentation. They can also accidentally expose secrets.
+
+If you discover a plausible secret in a public repository during an authorised review:
+
+1. do not test the credential;
+2. do not copy it into tickets or screenshots unless the incident process requires a protected channel;
+3. preserve the minimum reference needed for the security team;
+4. notify the authorised owner through the agreed escalation route;
+5. treat revocation and rotation as the priority.
+
+### 7.4 Graph thinking
+
+Represent entities and relationships:
+
+- organisation → domain;
+- domain → hostname;
+- hostname → IP;
+- IP → ASN;
+- hostname → certificate;
+- repository → domain reference;
+- service observation → timestamp.
+
+A graph makes contradictions visible. If a hostname resolves to a new IP but Shodan has an old observation on a previous address, the timeline matters.
+
+---
+
+## Practical Lab 5 - Build an evidence correlation matrix
+
+Create a matrix for five synthetic observations. Columns must include:
+
+- entity;
+- source;
+- timestamp;
+- observation;
+- corroborating source;
+- confidence;
+- potential false-positive explanation;
+- recommended validation step.
+
+At least one row must remain **unresolved**. The goal is not to force every lead into a conclusion.
+
+### Acceptance criteria
+
+- contradictory evidence is preserved;
+- unresolved items remain unresolved;
+- confidence is justified;
+- collection remains within the stated scope.
+
+---
+
+## Module 8 - Reporting, provenance and evidence quality
+
+### 8.1 A report must survive review
+
+A defensible OSINT report allows another analyst to understand:
+
+- why the work was authorised;
+- what question was asked;
+- what sources were used;
+- what was observed;
+- what was inferred;
+- how confidence was assigned;
+- what remains unknown;
+- what action is recommended.
+
+### 8.2 Recommended evidence record
+
+For every material finding, capture:
+
+```text
+Finding ID:
+Collection objective:
+Source:
+Query or module:
+Collection timestamp:
+Raw observation summary:
+Corroboration:
+Analyst inference:
+Confidence:
+Sensitivity classification:
+Recommended action:
+Retention/disposal note:
+```
+
+### 8.3 Screenshots are secondary evidence
+
+Screenshots are useful for human review but weak for repeatability. Prefer structured exports, text logs, timestamps and queries. If you use screenshots, redact API keys, tokens, personal information and unrelated systems.
+
+### 8.4 Reporting severity
+
+Do not assign severity solely because a service appears in an index. Severity should reflect business impact, likelihood, control state and validated exposure.
+
+Example:
+
+| Observation | Poor report | Better report |
+|---|---|---|
+| Port 443 indexed | “Critical open port” | “Expected HTTPS service observed; validate ownership, TLS baseline and support status.” |
+| SSH banner indexed | “Server vulnerable” | “SSH service observed in historical data; confirm current exposure and approved administration boundary.” |
+| Public repo mentions old hostname | “Data leak” | “Historical hostname reference found; verify whether the asset is retired and whether DNS is still delegated.” |
+
+---
+
+## Module 9 - Data protection, privacy and professional conduct
+
+### 9.1 Minimise personal data
+
+A security objective focused on systems rarely requires building profiles of employees or private individuals. Prefer role-based and infrastructure-based information.
+
+Do not retain:
+
+- private phone numbers;
+- personal home addresses;
+- unrelated family or relationship information;
+- private social-media content;
+- credentials or authentication tokens;
+- sensitive personal information unrelated to the security requirement.
+
+### 9.2 Use purpose limitation
+
+If the task is “validate external services,” then employee hobbies, personal accounts and family information are irrelevant even if publicly discoverable.
+
+### 9.3 Legal and contractual overlays
+
+Depending on jurisdiction and engagement, OSINT work can be affected by:
+
+- data-protection law;
+- computer-misuse law;
+- contractual rules of engagement;
+- platform terms of service;
+- copyright and database rights;
+- sector-specific compliance requirements;
+- client confidentiality and retention requirements.
+
+This course does not replace legal advice. Escalate uncertain collection methods before running them.
+
+### 9.4 Analyst wellbeing
+
+OSINT can expose analysts to disturbing, manipulative or harmful content. Organisations should define safe-review procedures, escalation routes and limits on unnecessary exposure.
+
+---
+
+## Module 10 - Building a repeatable OSINT playbook
+
+### 10.1 The playbook structure
+
+A mature OSINT playbook should define:
+
+1. request intake;
+2. authority and scope;
+3. source selection;
+4. collection sequence;
+5. API-key handling;
+6. evidence storage;
+7. validation standards;
+8. confidence language;
+9. reporting template;
+10. retention and disposal;
+11. escalation for secrets, personal data or criminal indicators;
+12. post-engagement review.
+
+### 10.2 Passive-first decision tree
+
+```text
+Can the question be answered from an existing approved source?
+  ├─ Yes → use that source and stop.
+  └─ No
+      ↓
+Can a passive public index answer it?
+  ├─ Yes → collect minimally, validate and stop.
+  └─ No
+      ↓
+Would the next step create direct traffic to the target?
+  ├─ Yes → require explicit authorisation for active validation.
+  └─ No → continue within the approved collection plan.
+```
+
+### 10.3 Reliability engineering for OSINT tooling
+
+Tooling fails because APIs, HTML structures, quotas, authentication and dependencies change. Build resilience through:
+
+- source substitution;
+- explicit dependency checks;
+- version pinning for managed environments;
+- minimal module installation;
+- API quota monitoring;
+- repeatable test fixtures;
+- synthetic regression cases;
+- clear fallback procedures.
+
+### 10.4 “Go beyond the tool” safely
+
+Professional methodology is not a contest to collect the most data. Going beyond the tool means asking better questions, combining independent sources, testing assumptions and improving the evidence chain - while remaining within the rules of engagement.
+
+---
+
+## Practical Lab 6 - Companion browser lab: OSINT Reconnaissance Workbench
+
+Launch **LAB-OSINT-201**:
+
+[Open the OSINT Reconnaissance Workbench](https://labs.skunkworksacademy.com/labs/osint-recon-201/)
+
+The companion lab uses synthetic fixtures only and includes:
+
+- an authority-and-scope checkpoint;
+- a Recon-ng marketplace/module-selection simulation;
+- a synthetic Recon-ng host table;
+- a synthetic Shodan result set;
+- an evidence-correlation exercise;
+- a six-question safety and analysis assessment;
+- a browser-local completion record.
+
+### Evidence to retain
+
+- screenshot or exported note showing the completed scope checkpoint;
+- module-selection rationale;
+- correlation matrix;
+- final assessment score;
+- one-page analyst summary with observation, inference, confidence and action.
+
+---
+
+## Capstone - External attack-surface OSINT intelligence brief
+
+### Scenario
+
+Northwind Learning Services is preparing for an external security review. Leadership wants to know whether public information suggests unmanaged internet-facing services associated with the organisation.
+
+You are given a synthetic evidence pack containing:
+
+- search-engine snippets;
+- certificate-transparency records;
+- public DNS exports;
+- Recon-ng host-table output;
+- Shodan-style service observations;
+- a public repository metadata extract;
+- an internal asset-register excerpt for validation.
+
+### Deliverables
+
+Create the following:
+
+1. **Collection plan** - objective, scope, authority, exclusions and stop conditions.
+2. **Source register** - source, query, timestamp, purpose and sensitivity.
+3. **Correlation matrix** - at least eight observations with confidence ratings.
+4. **Findings register** - minimum three findings; at least one must remain unresolved or informational.
+5. **Executive brief** - one page describing validated exposure themes and recommended actions.
+6. **Technical appendix** - reproducible queries, module names and synthetic evidence references.
+7. **Data-disposal note** - what was removed from the working set and why.
+8. **Lessons learned** - one source/tool failure and the fallback method used.
+
+### Finding template
+
+```text
+Finding ID: OSINT-XX
+Title:
+Observation:
+Source and timestamp:
+Corroboration:
+Inference:
+Confidence: High / Medium / Low
+Business relevance:
+Recommended validation/remediation:
+What this finding does NOT prove:
+```
+
+### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Scope, authority and collection design | 15% | Clear lawful purpose, explicit exclusions and stop conditions |
+| Recon-ng methodology | 15% | Deliberate module selection, dependency awareness and reproducible workspace evidence |
+| Shodan interpretation | 15% | Query/filter reasoning, timestamp awareness and no false vulnerability claims |
+| Correlation and validation | 20% | Independent-source corroboration, contradictions preserved and confidence justified |
+| Privacy and data minimisation | 10% | Unnecessary personal/sensitive data excluded or disposed of |
+| Reporting quality | 15% | Observation/inference separation, concise findings and actionable recommendations |
+| Evidence quality | 10% | Reproducible queries, timestamps, source register and sanitised artefacts |
+
+<KnowledgeCheck
+  title="OSINT gathering final knowledge check"
+  questions={[
+    {
+      prompt: 'What is the strongest definition of OSINT for this course?',
+      options: ['Any information found on the internet', 'Lawfully available information collected and analysed against a defined intelligence requirement', 'Any data obtained without malware', 'Information that does not require documentation'],
+      answer: 1,
+      explanation: 'OSINT is an intelligence discipline: lawful public-source collection is tied to a defined requirement, validation and reporting.'
+    },
+    {
+      prompt: 'Why should Recon-ng marketplace metadata be reviewed before installing a module?',
+      options: ['To make the console faster', 'To identify dependencies, required keys and module status before execution', 'To bypass API authentication', 'To disable logging'],
+      answer: 1,
+      explanation: 'Modules can have separate dependencies and API-key requirements and can break when upstream services change.'
+    },
+    {
+      prompt: 'A Shodan result lists a product and version. What is the correct first conclusion?',
+      options: ['The host is definitely vulnerable', 'The banner is an observation that requires validation before ownership or vulnerability claims', 'The vendor supports the product', 'The device belongs to the organisation named in the query'],
+      answer: 1,
+      explanation: 'Service banners are untrusted, time-bound observations and must be corroborated.'
+    },
+    {
+      prompt: 'What is the safest response if a public repository appears to expose a credential during an authorised OSINT review?',
+      options: ['Test the credential immediately', 'Publish it in the evidence appendix', 'Do not use it; preserve the minimum reference and escalate through the authorised security process', 'Use it only to confirm the account owner'],
+      answer: 2,
+      explanation: 'Testing a discovered secret crosses the passive collection boundary and can create unauthorised access.'
+    },
+    {
+      prompt: 'Which wording best separates observation from inference?',
+      options: ['The company owns this server because Shodan says so', 'Shodan observed a certificate containing the scoped hostname; DNS corroborates the address, so ownership is likely but still requires internal confirmation', 'The IP is malicious', 'The hostname is exploitable'],
+      answer: 1,
+      explanation: 'Professional reporting states the source observation, corroboration, inference and remaining uncertainty.'
+    },
+    {
+      prompt: 'When should an OSINT workflow stop and request additional authorisation?',
+      options: ['When the next step would create direct target interaction outside the approved passive scope', 'Whenever a source returns no results', 'When a second analyst disagrees', 'Only after exploitation fails'],
+      answer: 0,
+      explanation: 'Moving from passive public-source collection to active target interaction requires explicit scope and authority.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="SEC-OSINT-201"
+  courseTitle="Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan"
+  tasks={[
+    'OSINT collection plan with scope, authority, stop conditions and data-minimisation rules',
+    'Recon-ng workspace setup and version/dependency record',
+    'Passive module-selection and execution evidence using an authorised or documentation target',
+    'Synthetic Shodan interpretation worksheet with timestamp and attribution reasoning',
+    'Cross-source evidence correlation matrix with confidence ratings',
+    'LAB-OSINT-201 completion record and analyst summary',
+    'Capstone external attack-surface intelligence brief and technical appendix'
+  ]}
+/>
+
+## Official reference set
+
+- [Recon-ng upstream repository](https://github.com/lanmaster53/recon-ng)
+- [Recon-ng Getting Started](https://github.com/lanmaster53/recon-ng/wiki/Getting-Started)
+- [Recon-ng Features and Module Marketplace](https://github.com/lanmaster53/recon-ng/wiki/Features)
+- [Recon-ng official marketplace repository](https://github.com/lanmaster53/recon-ng-marketplace)
+- [Recon-ng marketplace module index](https://github.com/lanmaster53/recon-ng-marketplace/blob/master/modules.yml)
+- [Shodan Help Center: Search Query Fundamentals](https://help.shodan.io/the-basics/search-query-fundamentals)
+- [Shodan Developer API documentation](https://developer.shodan.io/api)
+- [IANA example domains](https://www.iana.org/help/example-domains)
+- [RFC 5737: IPv4 Address Blocks Reserved for Documentation](https://www.rfc-editor.org/rfc/rfc5737)
+
+## Tool-maintenance note
+
+Recon-ng modules and public-data services can change independently of this course. Before a live engagement, verify the current upstream project, module metadata, API documentation, quotas, terms and known issues. The course teaches a repeatable methodology so that a broken source does not become a broken investigation.
+
+</EnrollmentGate>
