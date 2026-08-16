@@ -43,6 +43,15 @@
       "durationHours": "24-30",
       "level": "Intermediate",
       "evidenceOfCapability": true
+    },
+    {
+      "courseId": "LXD-SLD-201",
+      "title": "Evidence-Based Slide Design for Digital Learning",
+      "path": "/courses/evidence-based-slide-design-digital-learning",
+      "category": "Learning experience design",
+      "durationHours": "30-36",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
     }
   ]
 }

@@ -26,6 +26,12 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ['open-source-intelligence-gathering'],
     },
+    {
+      type: 'category',
+      label: 'Learning experience design',
+      collapsed: false,
+      items: ['evidence-based-slide-design-digital-learning'],
+    },
   ],
 };
 
