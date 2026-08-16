@@ -1,7 +1,7 @@
 {
   "schema": "skunkworks-academy/course-manifest/v1",
-  "generatedOn": "2026-07-27",
-  "catalogUrl": "https://skunkworks-academy.github.io/course-catalog/",
+  "generatedOn": "2026-08-16",
+  "catalogUrl": "https://catalog.skunkworksacademy.com/",
   "accessPolicy": {
     "overview": "public",
     "courseContent": "authenticated-active-enrolment",
@@ -32,6 +32,15 @@
       "path": "/course-catalog/courses/microsoft-365-licenses",
       "category": "Microsoft 365 administration",
       "durationHours": "5-8",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "SEC-OSINT-201",
+      "title": "Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan",
+      "path": "/courses/open-source-intelligence-gathering",
+      "category": "Cybersecurity and intelligence",
+      "durationHours": "24-30",
       "level": "Intermediate",
       "evidenceOfCapability": true
     }
