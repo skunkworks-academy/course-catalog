@@ -64,45 +64,47 @@ jobs:
           from pathlib import Path
           import re
 
-          loader = 'https://www.skunkworksacademy.com/assets/academy-navigation.js'
-          marker = 'data-skunkworks-global-shell="central"'
+          loader = 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.08.15.1'
+          marker = 'data-skunkworks-global-nav="v10"'
           script = f'<script defer src="{loader}" {marker}></script>'
           pages = sorted(Path('build').rglob('*.html'))
           if not pages:
               raise SystemExit('No published HTML pages found in build')
 
-          old_nav = re.compile(
-              r'<script\b[^>]*\bsrc=["\'][^"\']*academy-navigation\.js[^"\']*["\'][^>]*>\s*</script>',
-              re.IGNORECASE | re.DOTALL,
-          )
-          old_loader = re.compile(
-              r'<script\b[^>]*\bsrc=["\'][^"\']*academy-navigation-loader\.js[^"\']*["\'][^>]*>\s*</script>',
+          old_shell = re.compile(
+              r'<script\b[^>]*(?:academy-navigation(?:-loader)?\.js|data-skunkworks-global-nav|data-skunkworks-global-shell)[^>]*>\s*</script>',
               re.IGNORECASE | re.DOTALL,
           )
 
           for path in pages:
               html = path.read_text(encoding='utf-8', errors='ignore')
-              html = old_loader.sub('', old_nav.sub('', html))
-              if '</head>' not in html:
+              html = old_shell.sub('', html)
+              if not re.search(r'</head\s*>', html, re.I):
                   raise SystemExit(f'Cannot inject Academy shell loader into {path}')
-              html = html.replace('</head>', f'  {script}\n</head>', 1)
+              html = re.sub(r'</head\s*>', f'  {script}\n</head>', html, count=1, flags=re.I)
               path.write_text(html, encoding='utf-8')
 
           failures = []
+          duplicates = []
           for path in pages:
               html = path.read_text(encoding='utf-8', errors='ignore')
               if html.count(loader) != 1 or html.count(marker) != 1:
                   failures.append(str(path))
+              if html.count('academy-navigation.js') > 1:
+                  duplicates.append(str(path))
           if failures:
-              raise SystemExit('Central Academy shell verification failed for: ' + ', '.join(failures))
+              raise SystemExit('Canonical Academy shell verification failed for: ' + ', '.join(failures))
+          if duplicates:
+              raise SystemExit('Duplicate Academy shell loaders found in: ' + ', '.join(duplicates))
 
-          print(f'Central Academy shell loader verified on {len(pages)} published HTML page(s).')
+          print(f'Canonical Academy v10 shell loader verified on {len(pages)} published HTML page(s).')
           PY
 
       - name: Verify global-shell-only chrome
         run: |
           test -f build/index.html
-          grep -q 'https://www.skunkworksacademy.com/assets/academy-navigation.js' build/index.html
+          grep -q 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.08.15.1' build/index.html
+          grep -q 'data-skunkworks-global-nav="v10"' build/index.html
           if grep -q 'navbar__inner\|navbar__brand\|footer__links\|footer__bottom' build/index.html; then
             echo 'Native Docusaurus navbar/footer markup must not be rendered on the Course Catalog landing page.'
             exit 1
@@ -147,22 +149,30 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Course Catalog production and central Academy shell source
+      - name: Verify Course Catalog production and canonical Academy shell source
         run: |
-          loader_url='https://www.skunkworksacademy.com/assets/academy-navigation.js'
-          shell_url='https://www.skunkworksacademy.com/assets/skunkworks-shell.js'
+          loader_url='https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.08.15.1'
+          ui_url='https://skunkworksacademy.com/assets/skunkworks-ui.js?v=2026.08.15.1'
+          footer_url='https://skunkworksacademy.com/assets/skunkworks-footer.js?v=2026.08.15.1'
+          css_url='https://skunkworksacademy.com/assets/skunkworks-design-system.css?v=2026.08.15.1'
 
           for attempt in {1..30}; do
             home="$(curl --location --fail --silent --show-error --max-time 20 https://catalog.skunkworksacademy.com/ || true)"
             loader="$(curl --location --fail --silent --show-error --max-time 20 "$loader_url" || true)"
-            shell="$(curl --location --fail --silent --show-error --max-time 20 "$shell_url" || true)"
+            ui="$(curl --location --fail --silent --show-error --max-time 20 "$ui_url" || true)"
+            footer="$(curl --location --fail --silent --show-error --max-time 20 "$footer_url" || true)"
+            css="$(curl --location --fail --silent --show-error --max-time 20 "$css_url" || true)"
 
-            if printf '%s' "$home" | grep -q "$loader_url" \
+            if printf '%s' "$home" | grep -q 'academy-navigation.js?v=2026.08.15.1' \
+              && printf '%s' "$home" | grep -q 'data-skunkworks-global-nav="v10"' \
               && ! printf '%s' "$home" | grep -Eq 'navbar__inner|navbar__brand|footer__links|footer__bottom' \
-              && printf '%s' "$loader" | grep -q 'skunkworks-shell.js' \
-              && printf '%s' "$shell" | grep -q 'swa-global-shell-nav' \
-              && printf '%s' "$shell" | grep -q 'swa-global-shell-footer'; then
-              echo 'Course Catalog production verification succeeded with centrally sourced Academy navigation and footer.'
+              && printf '%s' "$loader" | grep -q 'skunkworks-ui.js' \
+              && printf '%s' "$loader" | grep -q 'skunkworks-footer.js' \
+              && printf '%s' "$loader" | grep -q 'skunkworks-design-system.css' \
+              && printf '%s' "$ui" | grep -q 'Skunkworks Academy Global UI' \
+              && printf '%s' "$footer" | grep -q 'Skunkworks Academy Global Footer' \
+              && printf '%s' "$css" | grep -q 'Skunkworks Academy Global Design System'; then
+              echo 'Course Catalog production verification succeeded with canonical Academy UI, footer and design system.'
               exit 0
             fi
             sleep 10
