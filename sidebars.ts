@@ -20,6 +20,12 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ['microsoft-365-licenses'],
     },
+    {
+      type: 'category',
+      label: 'Cybersecurity and intelligence',
+      collapsed: false,
+      items: ['open-source-intelligence-gathering'],
+    },
   ],
 };
 

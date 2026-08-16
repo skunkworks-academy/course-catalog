@@ -1,10 +1,11 @@
 # Skunkworks Academy Course Catalog
 
-Docusaurus-based self-paced course catalogue containing three evidence-led learning journeys:
+Docusaurus-based self-paced course catalogue containing evidence-led learning journeys including:
 
 - `SHP-UPA-101` — Shopify User Permissions
 - `GHP-DOM-101` — GitHub Pages Setup
 - `M365-LIC-101` — Microsoft 365 Licenses
+- `SEC-OSINT-201` — Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
 
 ## Framework baseline
 
@@ -31,7 +32,7 @@ npm run serve
 
 ## Course design standard
 
-Each course includes:
+Each validated course includes:
 
 - capability-based learning outcomes;
 - structured theory modules;
@@ -41,7 +42,7 @@ Each course includes:
 - capstone implementation scenario;
 - weighted assessment rubric;
 - browser-based Evidence of Capability Record export;
-- official vendor documentation references.
+- official vendor or authoritative documentation references.
 
 ## Learner access control
 
@@ -84,10 +85,10 @@ Every pull request executes the course-content validator and a complete Docusaur
 
 The workflow `.github/workflows/deploy-pages.yml` validates every pull request and deploys the `build` artefact after changes reach `main`.
 
-Expected project URL:
+Current catalogue URL:
 
 ```text
-https://skunkworks-academy.github.io/course-catalog/
+https://catalog.skunkworksacademy.com/
 ```
 
-The main Academy catalogue at `https://www.skunkworksacademy.com/self-paced/` links to the three protected course routes.
+The main Academy catalogue at `https://www.skunkworksacademy.com/self-paced/` references the published protected course routes.

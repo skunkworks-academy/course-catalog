@@ -27,16 +27,24 @@ const courses = [
     outcomes: ['Map requirements to licence plans', 'Allocate and reclaim licences safely', 'Reconcile billing, utilisation and compliance'],
     path: '/courses/microsoft-365-licenses',
   },
+  {
+    id: 'SEC-OSINT-201',
+    title: 'Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan',
+    duration: '24–30 hours · Intermediate',
+    description: 'Build a lawful, passive-first OSINT methodology using Recon-ng, Shodan, public-source correlation, provenance, privacy controls and evidence-led reporting.',
+    outcomes: ['Define scoped OSINT collection plans and stop conditions', 'Operate Recon-ng modular workflows and interpret Shodan observations', 'Correlate evidence and report observation, inference and confidence'],
+    path: '/courses/open-source-intelligence-gathering',
+  },
 ];
 
 export default function Home(): React.JSX.Element {
   return (
-    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for Shopify, GitHub Pages and Microsoft 365 administration.">
+    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for administration, deployment, Microsoft 365 and cybersecurity intelligence.">
       <header className="heroBanner">
         <div className="container">
           <p className="eyebrow">Self-paced capability journeys</p>
           <h1>Configure it. Validate it. Prove it.</h1>
-          <p>Three practical administration courses built around real implementation tasks, formative assessment and exportable evidence of capability records.</p>
+          <p>Practical self-paced courses built around implementation tasks, structured labs, formative assessment and exportable evidence of capability records.</p>
           <div className="heroActions">
             <a className="heroButton heroButtonPrimary" href="#courses">Explore courses</a>
             <a className="heroButton" href="https://portal.skunkworksacademy.com/">Learner sign in</a>
