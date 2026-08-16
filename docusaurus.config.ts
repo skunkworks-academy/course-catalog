@@ -1,7 +1,7 @@
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-const GLOBAL_SHELL_LOADER_URL = 'https://www.skunkworksacademy.com/assets/academy-navigation.js';
+const GLOBAL_SHELL_LOADER_URL = 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.08.15.1';
 
 const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
@@ -26,7 +26,7 @@ const config: Config = {
     {
       src: GLOBAL_SHELL_LOADER_URL,
       defer: true,
-      'data-skunkworks-global-shell': 'central',
+      'data-skunkworks-global-nav': 'v10',
     },
   ],
   customFields: {
