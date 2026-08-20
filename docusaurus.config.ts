@@ -30,6 +30,7 @@ const config: Config = {
     },
   ],
   customFields: {
+    catalogUrl: 'https://www.skunkworksacademy.com/courses',
     accessApi: 'https://portal.skunkworksacademy.com/api/course-access',
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
