@@ -5,7 +5,7 @@ const GLOBAL_SHELL_LOADER_URL = 'https://skunkworksacademy.com/assets/academy-na
 
 const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
-  tagline: 'Practical, evidence-led self-paced learning journeys',
+  tagline: 'Practical, evidence-led technology learning journeys',
   url: 'https://www.skunkworksacademy.com',
   baseUrl: '/',
   organizationName: 'skunkworks-academy',
@@ -35,6 +35,9 @@ const config: Config = {
     portalSignInUrl: 'https://portal.skunkworksacademy.com/signin',
     portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/',
   },
+  plugins: [
+    './plugins/generated-course-pages',
+  ],
   presets: [
     [
       'classic',
