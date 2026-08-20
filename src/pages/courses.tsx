@@ -2,6 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Head from '@docusaurus/Head';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import {usePluginData} from '@docusaurus/useGlobalData';
 import styles from './courses.module.css';
 
 type CourseType = {
@@ -9,6 +10,23 @@ type CourseType = {
   summary: string;
   bestFor: string;
   elements: string[];
+};
+
+type CatalogCourse = {
+  courseId: string;
+  title: string;
+  deliveryMode: string;
+  category: string;
+  level: string;
+  estimatedEffort: string;
+  description: string;
+  route: string;
+  contentStatus?: string;
+  source?: 'published' | 'generated';
+};
+
+type GeneratedPluginData = {
+  courses?: CatalogCourse[];
 };
 
 const courseTypes: CourseType[] = [
@@ -92,90 +110,210 @@ const deliveryStyles = [
   },
 ];
 
-const publishedCourses = [
+const publishedCourses: CatalogCourse[] = [
   {
-    id: 'SHP-UPA-101',
+    courseId: 'SHP-UPA-101',
     title: 'Shopify User Permissions',
-    description: 'Least-privilege role design, access reviews and auditable Shopify permission baselines.',
-    path: '/courses/shopify-user-permissions',
+    deliveryMode: 'Self-Paced',
+    category: 'Professional & Business Skills',
+    level: 'Beginner',
+    estimatedEffort: '4–6 hours',
+    description: 'Design least-privilege Shopify staff roles, separate duties, review access and produce an auditable permission baseline.',
+    route: '/courses/shopify-user-permissions',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
   },
   {
-    id: 'GHP-DOM-101',
+    courseId: 'GHP-DOM-101',
     title: 'GitHub Pages Setup',
-    description: 'Production-ready Pages deployment, custom domains, HTTPS, Actions and deployment validation.',
-    path: '/courses/github-pages-setup',
+    deliveryMode: 'Self-Paced',
+    category: 'Cloud, DevOps & Project Delivery',
+    level: 'Beginner',
+    estimatedEffort: '5–7 hours',
+    description: 'Publish a production-ready GitHub Pages site with Actions, custom-domain verification, HTTPS and deployment validation.',
+    route: '/courses/github-pages-setup',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
   },
   {
-    id: 'M365-LIC-101',
+    courseId: 'M365-LIC-101',
     title: 'Microsoft 365 Licenses',
-    description: 'Licence allocation, group-based assignment, billing controls, utilisation and governance evidence.',
-    path: '/courses/microsoft-365-licenses',
+    deliveryMode: 'Self-Paced',
+    category: 'Microsoft Technologies',
+    level: 'Intermediate',
+    estimatedEffort: '5–8 hours',
+    description: 'Administer Microsoft 365 licence allocation, group-based assignment, billing controls and governance evidence.',
+    route: '/courses/microsoft-365-licenses',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
   },
   {
-    id: 'SEC-OSINT-201',
-    title: 'Open-Source Intelligence Gathering',
-    description: 'A lawful, passive-first OSINT methodology using Recon-ng, Shodan, correlation and evidence-led reporting.',
-    path: '/courses/open-source-intelligence-gathering',
+    courseId: 'SEC-OSINT-201',
+    title: 'Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan',
+    deliveryMode: 'Self-Paced',
+    category: 'Cybersecurity',
+    level: 'Intermediate',
+    estimatedEffort: '24–30 hours',
+    description: 'Build a lawful, passive-first OSINT methodology using Recon-ng, Shodan, public-source correlation, provenance, privacy controls and evidence-led reporting.',
+    route: '/courses/open-source-intelligence-gathering',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
   },
   {
-    id: 'LXD-SLD-201',
+    courseId: 'LXD-SLD-201',
     title: 'Evidence-Based Slide Design for Digital Learning',
-    description: 'Build accessible learning experiences using cognitive science, multimedia learning, interaction design and LMS tracking.',
-    path: '/courses/evidence-based-slide-design-digital-learning',
+    deliveryMode: 'Self-Paced',
+    category: 'Creative Technology',
+    level: 'Intermediate',
+    estimatedEffort: '30–36 hours',
+    description: 'Design, build, test and publish accessible slide-based learning experiences using cognitive science, multimedia learning and LMS tracking.',
+    route: '/courses/evidence-based-slide-design-digital-learning',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
   },
 ];
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Skunkworks Academy Courses',
-  url: 'https://www.skunkworksacademy.com/courses',
-  description: 'Explore Skunkworks Academy online course formats, delivery styles and published practical technology learning journeys.',
-  provider: {
-    '@type': 'EducationalOrganization',
-    name: 'Skunkworks Academy',
-    url: 'https://www.skunkworksacademy.com/',
-  },
-  hasPart: courseTypes.map((courseType) => ({
-    '@type': 'Course',
-    name: courseType.name,
-    description: courseType.summary,
-    provider: {
-      '@type': 'EducationalOrganization',
-      name: 'Skunkworks Academy',
-    },
-  })),
-};
+function categoryAnchor(category: string): string {
+  return `track-${category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+}
 
 export default function CoursesLandingPage(): React.JSX.Element {
-  const [query, setQuery] = useState('');
+  const pluginData = usePluginData('skunkworks-academy-generated-course-pages') as GeneratedPluginData;
+  const generatedCourses = pluginData?.courses ?? [];
+
+  const [formatQuery, setFormatQuery] = useState('');
+  const [catalogQuery, setCatalogQuery] = useState('');
+  const [deliveryFilter, setDeliveryFilter] = useState('All');
+  const [levelFilter, setLevelFilter] = useState('All');
+  const [categoryFilter, setCategoryFilter] = useState('All');
 
   const filteredTypes = useMemo(() => {
-    const needle = query.trim().toLowerCase();
+    const needle = formatQuery.trim().toLowerCase();
     if (!needle) return courseTypes;
 
     return courseTypes.filter((courseType) => {
-      const searchable = [
-        courseType.name,
-        courseType.summary,
-        courseType.bestFor,
-        ...courseType.elements,
-      ].join(' ').toLowerCase();
+      const searchable = [courseType.name, courseType.summary, courseType.bestFor, ...courseType.elements]
+        .join(' ')
+        .toLowerCase();
       return searchable.includes(needle);
     });
-  }, [query]);
+  }, [formatQuery]);
+
+  const allCourses = useMemo(() => {
+    const byId = new Map<string, CatalogCourse>();
+    for (const course of generatedCourses) {
+      byId.set(course.courseId, {...course, source: 'generated'});
+    }
+    for (const course of publishedCourses) {
+      byId.set(course.courseId, course);
+    }
+    return Array.from(byId.values()).sort((a, b) => a.title.localeCompare(b.title));
+  }, [generatedCourses]);
+
+  const categories = useMemo(
+    () => Array.from(new Set(allCourses.map((course) => course.category))).sort((a, b) => a.localeCompare(b)),
+    [allCourses],
+  );
+
+  const deliveryModes = useMemo(
+    () => Array.from(new Set(allCourses.map((course) => course.deliveryMode))).sort((a, b) => a.localeCompare(b)),
+    [allCourses],
+  );
+
+  const levels = useMemo(
+    () => Array.from(new Set(allCourses.map((course) => course.level))).sort((a, b) => a.localeCompare(b)),
+    [allCourses],
+  );
+
+  const filteredCourses = useMemo(() => {
+    const needle = catalogQuery.trim().toLowerCase();
+    return allCourses.filter((course) => {
+      const matchesQuery = !needle || [
+        course.courseId,
+        course.title,
+        course.category,
+        course.deliveryMode,
+        course.level,
+        course.estimatedEffort,
+        course.description,
+      ].join(' ').toLowerCase().includes(needle);
+      const matchesDelivery = deliveryFilter === 'All' || course.deliveryMode === deliveryFilter;
+      const matchesLevel = levelFilter === 'All' || course.level === levelFilter;
+      const matchesCategory = categoryFilter === 'All' || course.category === categoryFilter;
+      return matchesQuery && matchesDelivery && matchesLevel && matchesCategory;
+    });
+  }, [allCourses, catalogQuery, deliveryFilter, levelFilter, categoryFilter]);
+
+  const groupedCourses = useMemo(() => {
+    const groups = new Map<string, CatalogCourse[]>();
+    for (const course of filteredCourses) {
+      const group = groups.get(course.category) ?? [];
+      group.push(course);
+      groups.set(course.category, group);
+    }
+    return Array.from(groups.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([category, courses]) => ({
+        category,
+        courses: courses.sort((a, b) => a.title.localeCompare(b.title)),
+      }));
+  }, [filteredCourses]);
+
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const course of allCourses) counts.set(course.category, (counts.get(course.category) ?? 0) + 1);
+    return counts;
+  }, [allCourses]);
+
+  const clearFilters = () => {
+    setCatalogQuery('');
+    setDeliveryFilter('All');
+    setLevelFilter('All');
+    setCategoryFilter('All');
+  };
+
+  const schema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Skunkworks Academy Courses',
+    url: 'https://www.skunkworksacademy.com/courses',
+    description: 'Complete Skunkworks Academy course catalogue with course formats, delivery modes, technology tracks and practical learning journeys.',
+    provider: {
+      '@type': 'EducationalOrganization',
+      name: 'Skunkworks Academy',
+      url: 'https://www.skunkworksacademy.com/',
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: allCourses.length,
+      itemListElement: allCourses.map((course, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Course',
+          name: course.title,
+          description: course.description,
+          url: `https://www.skunkworksacademy.com${course.route}`,
+          provider: {
+            '@type': 'EducationalOrganization',
+            name: 'Skunkworks Academy',
+          },
+        },
+      })),
+    },
+  }), [allCourses]);
 
   return (
     <Layout
-      title="Courses | Learning Formats and Training Delivery"
-      description="Explore Skunkworks Academy self-paced, instructor-led, blended, microlearning, bootcamp, certification prep, workshop, cohort and mentorship-driven course formats."
+      title="Courses | Complete Course Catalogue"
+      description="Browse the complete Skunkworks Academy course catalogue by format, category, delivery mode and level, including self-paced and instructor-led technology training."
     >
       <Head>
         <link rel="canonical" href="https://www.skunkworksacademy.com/courses" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Skunkworks Academy" />
-        <meta property="og:title" content="Skunkworks Academy Courses" />
-        <meta property="og:description" content="Choose the learning format that fits your goals, schedule and required level of practical support." />
+        <meta property="og:title" content="Skunkworks Academy Courses | Complete Catalogue" />
+        <meta property="og:description" content="Explore every Skunkworks Academy course offering by learning format, discipline, delivery mode and level." />
         <meta property="og:url" content="https://www.skunkworksacademy.com/courses" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
@@ -186,30 +324,30 @@ export default function CoursesLandingPage(): React.JSX.Element {
           <div className="container">
             <div className={styles.heroGrid}>
               <div>
-                <p className={styles.eyebrow}>Skunkworks Academy course catalogue</p>
-                <h1>Choose how you want to learn.</h1>
+                <p className={styles.eyebrow}>Complete Skunkworks Academy catalogue</p>
+                <h1>Every course. Every track. One catalogue.</h1>
                 <p className={styles.heroLead}>
-                  From independent self-paced study to instructor-led delivery, technical bootcamps, certification preparation and coached learning, choose a format that matches the capability you need to build.
+                  Browse the full Academy offering across technical disciplines, certification preparation, professional capability and applied digital learning. Compare course formats, filter the complete catalogue and open the learning journey that matches your goal.
                 </p>
                 <div className={styles.heroActions}>
-                  <a className={`${styles.button} ${styles.primaryButton}`} href="#course-types">Explore course types</a>
-                  <a className={styles.button} href="#published-courses">Browse published courses</a>
+                  <a className={`${styles.button} ${styles.primaryButton}`} href="#complete-catalogue">Browse all courses</a>
+                  <a className={styles.button} href="#course-types">Explore course types</a>
                   <a className={styles.button} href="https://portal.skunkworksacademy.com/">Learner portal</a>
                 </div>
               </div>
 
               <aside className={styles.heroPanel} aria-label="Course catalogue overview">
                 <div className={styles.heroMetric}>
-                  <strong>10</strong>
-                  <span>Core online course formats</span>
+                  <strong>{allCourses.length}</strong>
+                  <span>Course offerings currently represented</span>
                 </div>
                 <div className={styles.heroMetric}>
-                  <strong>3</strong>
-                  <span>Delivery-style groupings</span>
+                  <strong>{categories.length}</strong>
+                  <span>Technology and professional learning tracks</span>
                 </div>
                 <div className={styles.heroMetric}>
-                  <strong>Practical</strong>
-                  <span>Labs, projects, assessment and evidence-led learning</span>
+                  <strong>{deliveryModes.length}</strong>
+                  <span>Active delivery modes in the published catalogue</span>
                 </div>
               </aside>
             </div>
@@ -220,11 +358,11 @@ export default function CoursesLandingPage(): React.JSX.Element {
           <div className="container">
             <div className={styles.sectionHeader}>
               <div>
-                <p className={styles.eyebrow}>Major types of online courses</p>
-                <h2>Match the format to the learner and the outcome.</h2>
+                <p className={styles.eyebrow}>Course formats</p>
+                <h2>All major ways to learn with Skunkworks Academy.</h2>
               </div>
               <p>
-                The right delivery model depends on learner availability, complexity, required instructor support, assessment depth and how much hands-on practice is needed.
+                Course format describes how learning is experienced. The live catalogue below records the delivery mode, discipline and level for each current offering, while programmes can combine multiple formats where required.
               </p>
             </div>
 
@@ -232,9 +370,9 @@ export default function CoursesLandingPage(): React.JSX.Element {
               <input
                 className={styles.searchInput}
                 type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search formats by goal, method or learning element…"
+                value={formatQuery}
+                onChange={(event) => setFormatQuery(event.target.value)}
+                placeholder="Search course formats by goal, method or learning element…"
                 aria-label="Search course formats"
               />
               <div className={styles.resultCount} aria-live="polite">
@@ -266,7 +404,7 @@ export default function CoursesLandingPage(): React.JSX.Element {
               </div>
             ) : (
               <div className={styles.emptyState}>
-                No course format matches “{query}”. Try terms such as certification, lab, coaching, live, project or self-paced.
+                No course format matches “{formatQuery}”. Try certification, lab, coaching, live, project or self-paced.
               </div>
             )}
           </div>
@@ -276,18 +414,18 @@ export default function CoursesLandingPage(): React.JSX.Element {
           <div className="container">
             <div className={styles.sectionHeader}>
               <div>
-                <p className={styles.eyebrow}>Course types by delivery style</p>
-                <h2>Design around content, practice or verification.</h2>
+                <p className={styles.eyebrow}>Delivery emphasis</p>
+                <h2>Content, practice and verification can work together.</h2>
               </div>
               <p>
-                A programme can use more than one delivery style. A certification pathway, for example, may combine structured content, practical labs and assessment-heavy exam preparation.
+                A single learning journey may combine structured content, practical labs and assessment. This lets certification, enterprise and role-based programmes use the right balance for the required outcome.
               </p>
             </div>
 
             <div className={styles.styleGrid}>
               {deliveryStyles.map((deliveryStyle) => (
                 <article className={styles.styleCard} key={deliveryStyle.name}>
-                  <p className={styles.eyebrow}>Delivery emphasis</p>
+                  <p className={styles.eyebrow}>Course design style</p>
                   <h3>{deliveryStyle.name}</h3>
                   <p>{deliveryStyle.description}</p>
                   <ul className={styles.styleList}>
@@ -299,28 +437,119 @@ export default function CoursesLandingPage(): React.JSX.Element {
           </div>
         </section>
 
-        <section className={styles.section} id="published-courses">
+        <section className={styles.section} id="complete-catalogue">
           <div className="container">
             <div className={styles.sectionHeader}>
               <div>
-                <p className={styles.eyebrow}>Published learning journeys</p>
-                <h2>Start with a practical Skunkworks Academy course.</h2>
+                <p className={styles.eyebrow}>Complete course offering</p>
+                <h2>Browse the entire catalogue.</h2>
               </div>
               <p>
-                These learning journeys are already represented in the course-catalog repository and are built around implementation tasks, assessment and demonstrable outcomes.
+                Every offering represented in the course-catalog source is listed below. Use search and filters to narrow by discipline, delivery mode or level without leaving the page.
               </p>
             </div>
 
-            <div className={styles.publishedGrid}>
-              {publishedCourses.map((course) => (
-                <article className={styles.publishedCard} key={course.id}>
-                  <p className={styles.courseCode}>{course.id}</p>
-                  <h3>{course.title}</h3>
-                  <p>{course.description}</p>
-                  <Link className={styles.cardLink} to={course.path}>Open course</Link>
-                </article>
-              ))}
+            <div className={styles.catalogToolbar}>
+              <div className={styles.catalogSearch}>
+                <label htmlFor="catalog-search">Search the full catalogue</label>
+                <input
+                  id="catalog-search"
+                  className={styles.searchInput}
+                  type="search"
+                  value={catalogQuery}
+                  onChange={(event) => setCatalogQuery(event.target.value)}
+                  placeholder="Course title, code, technology, category or keyword…"
+                />
+              </div>
+
+              <div className={styles.filterGrid}>
+                <label>
+                  <span>Delivery mode</span>
+                  <select value={deliveryFilter} onChange={(event) => setDeliveryFilter(event.target.value)}>
+                    <option value="All">All delivery modes</option>
+                    {deliveryModes.map((mode) => <option key={mode} value={mode}>{mode}</option>)}
+                  </select>
+                </label>
+                <label>
+                  <span>Level</span>
+                  <select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)}>
+                    <option value="All">All levels</option>
+                    {levels.map((level) => <option key={level} value={level}>{level}</option>)}
+                  </select>
+                </label>
+                <label>
+                  <span>Course track</span>
+                  <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+                    <option value="All">All course tracks</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>{category} ({categoryCounts.get(category) ?? 0})</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div className={styles.catalogSummary}>
+                <div aria-live="polite">
+                  <strong>{filteredCourses.length}</strong> of {allCourses.length} offerings shown
+                </div>
+                <button type="button" className={styles.clearButton} onClick={clearFilters}>Clear filters</button>
+              </div>
             </div>
+
+            <nav className={styles.trackNav} aria-label="Course tracks">
+              {categories.map((category) => (
+                <a key={category} href={`#${categoryAnchor(category)}`}>
+                  {category}<span>{categoryCounts.get(category) ?? 0}</span>
+                </a>
+              ))}
+            </nav>
+
+            {groupedCourses.length > 0 ? (
+              <div className={styles.catalogGroups}>
+                {groupedCourses.map(({category, courses}) => (
+                  <section className={styles.catalogGroup} id={categoryAnchor(category)} key={category}>
+                    <div className={styles.groupHeader}>
+                      <div>
+                        <p className={styles.eyebrow}>Course track</p>
+                        <h3>{category}</h3>
+                      </div>
+                      <span>{courses.length} {courses.length === 1 ? 'offering' : 'offerings'}</span>
+                    </div>
+
+                    <div className={styles.offeringGrid}>
+                      {courses.map((course) => (
+                        <article className={styles.offeringCard} key={course.courseId}>
+                          <div className={styles.offeringTopline}>
+                            <span className={styles.courseCode}>{course.courseId}</span>
+                            {course.source === 'published' && <span className={styles.featuredBadge}>Published</span>}
+                          </div>
+                          <h4>{course.title}</h4>
+                          <div className={styles.metaRow}>
+                            <span>{course.deliveryMode}</span>
+                            <span>{course.level}</span>
+                            <span>{course.estimatedEffort}</span>
+                          </div>
+                          <p>{course.description}</p>
+                          <div className={styles.offeringFooter}>
+                            <Link className={styles.cardLink} to={course.route}>Open course</Link>
+                            <a
+                              className={styles.enrolLink}
+                              href={`https://portal.skunkworksacademy.com/checkout/?courseId=${encodeURIComponent(course.courseId)}`}
+                            >
+                              Register / enrol
+                            </a>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                No courses match the selected filters. Clear one or more filters or try a broader search term.
+              </div>
+            )}
           </div>
         </section>
 
@@ -329,9 +558,9 @@ export default function CoursesLandingPage(): React.JSX.Element {
             <div className={styles.ctaBand}>
               <div>
                 <p className={styles.eyebrow}>Build your learning path</p>
-                <h2>Need a format designed around your team?</h2>
+                <h2>Need a programme assembled around your team?</h2>
                 <p>
-                  Combine self-paced content, live instruction, labs, workshops, assessments and mentoring into one delivery plan aligned to business outcomes, certification targets or role capability.
+                  Combine self-paced content, instructor delivery, labs, workshops, assessments and mentoring into a structured pathway aligned to business outcomes, certification targets or role capability.
                 </p>
               </div>
               <div className={styles.sectionActions}>
