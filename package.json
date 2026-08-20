@@ -12,7 +12,7 @@
     "swizzle": "docusaurus swizzle",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "validate:content": "node scripts/validate-course-content.mjs"
+    "validate:content": "node scripts/validate-course-content.mjs && node scripts/validate-deployment-config.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
