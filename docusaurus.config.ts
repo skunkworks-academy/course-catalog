@@ -6,8 +6,8 @@ const GLOBAL_SHELL_LOADER_URL = 'https://skunkworksacademy.com/assets/academy-na
 const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
   tagline: 'Practical, evidence-led self-paced learning journeys',
-  url: 'https://catalog.skunkworksacademy.com',
-  baseUrl: '/',
+  url: 'https://www.skunkworksacademy.com',
+  baseUrl: '/courses/',
   organizationName: 'skunkworks-academy',
   projectName: 'course-catalog',
   deploymentBranch: 'gh-pages',
