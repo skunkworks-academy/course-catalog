@@ -7,7 +7,7 @@ const config: Config = {
   title: 'Skunkworks Academy Course Catalog',
   tagline: 'Practical, evidence-led self-paced learning journeys',
   url: 'https://www.skunkworksacademy.com',
-  baseUrl: '/courses/',
+  baseUrl: '/',
   organizationName: 'skunkworks-academy',
   projectName: 'course-catalog',
   deploymentBranch: 'gh-pages',
