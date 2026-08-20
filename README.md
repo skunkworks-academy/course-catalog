@@ -1,6 +1,6 @@
 # Skunkworks Academy Course Catalog
 
-Docusaurus-based self-paced course catalogue containing evidence-led learning journeys including:
+Docusaurus-based course catalogue containing evidence-led learning journeys including:
 
 - `SHP-UPA-101` — Shopify User Permissions
 - `GHP-DOM-101` — GitHub Pages Setup
@@ -8,12 +8,23 @@ Docusaurus-based self-paced course catalogue containing evidence-led learning jo
 - `SEC-OSINT-201` — Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
 - `LXD-SLD-201` — Evidence-Based Slide Design for Digital Learning
 
+## Canonical production URL
+
+```text
+https://www.skunkworksacademy.com/courses
+```
+
+This repository is the source of truth for the course-catalog application. Production hosting is owned by `skunkworks-academy/www`: its site-release workflow checks out this repository, builds the Docusaurus site, mounts the generated `/courses` routes and required assets into the Academy GitHub Pages artifact, and verifies the production URL after deployment.
+
+The former standalone custom domain `catalog.skunkworksacademy.com` is no longer the canonical deployment target.
+
 ## Framework baseline
 
 - Docusaurus `3.10.2`
-- React `18.3`
+- React `19.2.8`
 - Node.js `20+`
-- GitHub Actions build and GitHub Pages deployment
+- GitHub Actions validation in this repository
+- GitHub Pages publication through `skunkworks-academy/www`
 - Central Skunkworks Academy global navigation loader
 
 ## Local development
@@ -80,16 +91,14 @@ The required API contract and control requirements are documented in `architectu
 
 ## Continuous validation
 
-Every pull request executes the course-content validator and a complete Docusaurus production build. Only the `main` branch deploys the generated `build` artefact to the GitHub Pages environment.
+Every pull request and push to `main` executes the course-content validator, deployment-configuration validator and a complete Docusaurus production build. The workflow uploads the build as a diagnostic artifact but does not publish an independent GitHub Pages site.
 
-## Deployment
+## Deployment ownership
 
-The workflow `.github/workflows/deploy-pages.yml` validates every pull request and deploys the `build` artefact after changes reach `main`.
+- Source repository: `skunkworks-academy/course-catalog`
+- Hosting repository: `skunkworks-academy/www`
+- Canonical route: `https://www.skunkworksacademy.com/courses`
+- Publication workflow: `skunkworks-academy/www/.github/workflows/site-release.yml`
+- Refresh cadence: every `www` production release and every four hours through the scheduled site-release workflow
 
-Current catalogue URL:
-
-```text
-https://catalog.skunkworksacademy.com/
-```
-
-The main Academy catalogue at `https://www.skunkworksacademy.com/self-paced/` references the published protected course routes.
+The public Academy self-paced catalogue at `https://www.skunkworksacademy.com/self-paced/` can continue to reference individual protected course routes under the canonical `/courses` namespace.
