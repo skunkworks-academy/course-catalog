@@ -11,7 +11,7 @@
     {
       "courseId": "SHP-UPA-101",
       "title": "Shopify User Permissions",
-      "path": "/course-catalog/courses/shopify-user-permissions",
+      "path": "/courses/shopify-user-permissions",
       "category": "Commerce administration",
       "durationHours": "4-6",
       "level": "Beginner to intermediate",
@@ -20,7 +20,7 @@
     {
       "courseId": "GHP-DOM-101",
       "title": "GitHub Pages Setup",
-      "path": "/course-catalog/courses/github-pages-setup",
+      "path": "/courses/github-pages-setup",
       "category": "Web deployment",
       "durationHours": "5-7",
       "level": "Beginner to intermediate",
@@ -29,7 +29,7 @@
     {
       "courseId": "M365-LIC-101",
       "title": "Microsoft 365 Licenses",
-      "path": "/course-catalog/courses/microsoft-365-licenses",
+      "path": "/courses/microsoft-365-licenses",
       "category": "Microsoft 365 administration",
       "durationHours": "5-8",
       "level": "Intermediate",
@@ -41,6 +41,15 @@
       "path": "/courses/open-source-intelligence-gathering",
       "category": "Cybersecurity and intelligence",
       "durationHours": "24-30",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "LXD-SLD-201",
+      "title": "Evidence-Based Slide Design for Digital Learning",
+      "path": "/courses/evidence-based-slide-design-digital-learning",
+      "category": "Learning experience design",
+      "durationHours": "30-36",
       "level": "Intermediate",
       "evidenceOfCapability": true
     }
