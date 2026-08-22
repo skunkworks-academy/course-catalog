@@ -35,19 +35,11 @@ const courses = [
     outcomes: ['Define scoped OSINT collection plans and stop conditions', 'Operate Recon-ng modular workflows and interpret Shodan observations', 'Correlate evidence and report observation, inference and confidence'],
     path: '/courses/open-source-intelligence-gathering',
   },
-  {
-    id: 'LXD-SLD-201',
-    title: 'Evidence-Based Slide Design for Digital Learning',
-    duration: '30–36 hours · Intermediate',
-    description: 'Design, build, test and publish accessible slide-based learning experiences using cognitive science, multimedia learning, storyboarding, interaction design and LMS tracking.',
-    outcomes: ['Architect slides from measurable learning outcomes and assessment evidence', 'Build accessible visual, multimedia and interactive learning sequences', 'Publish and validate a complete LMS-ready learning module with evidence of capability'],
-    path: '/courses/evidence-based-slide-design-digital-learning',
-  },
 ];
 
 export default function Home(): React.JSX.Element {
   return (
-    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for administration, deployment, Microsoft 365, cybersecurity intelligence and learning experience design.">
+    <Layout title="Practical self-paced courses" description="Evidence-led Skunkworks Academy learning journeys for administration, deployment, Microsoft 365 and cybersecurity intelligence.">
       <header className="heroBanner">
         <div className="container">
           <p className="eyebrow">Self-paced capability journeys</p>

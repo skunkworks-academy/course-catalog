@@ -1,7 +1,7 @@
 {
   "schema": "skunkworks-academy/course-manifest/v1",
-  "generatedOn": "2026-08-20",
-  "catalogUrl": "https://www.skunkworksacademy.com/courses",
+  "generatedOn": "2026-08-16",
+  "catalogUrl": "https://catalog.skunkworksacademy.com/",
   "accessPolicy": {
     "overview": "public",
     "courseContent": "authenticated-active-enrolment",
