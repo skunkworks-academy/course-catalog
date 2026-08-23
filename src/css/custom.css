@@ -32,7 +32,9 @@
 html { scroll-behavior: smooth; }
 body { line-height: 1.6; }
 .navbar { display: none; }
-.main-wrapper { padding-top: 72px; }
+/* The canonical Academy shell supplies the only header. Do not reserve a
+   second Docusaurus navbar slot beneath it. */
+.main-wrapper { padding-top: 0; }
 
 .heroBanner {
   background:
@@ -149,7 +151,7 @@ body { line-height: 1.6; }
 
 @media (max-width: 996px) {
   .courseGrid { grid-template-columns: 1fr; }
-  .main-wrapper { padding-top: 64px; }
+  .main-wrapper { padding-top: 0; }
 }
 
 @media print {
