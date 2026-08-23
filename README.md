@@ -6,6 +6,7 @@ Docusaurus-based self-paced course catalogue containing evidence-led learning jo
 - `GHP-DOM-101` — GitHub Pages Setup
 - `M365-LIC-101` — Microsoft 365 Licenses
 - `SEC-OSINT-201` — Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
+- `LXD-SLD-201` — Evidence-Based Slide Design for Digital Learning
 
 ## Framework baseline
 

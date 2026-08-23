@@ -7,6 +7,7 @@ const courses = [
   {file: 'docs/github-pages-setup.mdx', id: 'GHP-DOM-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/microsoft-365-licenses.mdx', id: 'M365-LIC-101', minimumModules: 8, minimumLabs: 4},
   {file: 'docs/open-source-intelligence-gathering.mdx', id: 'SEC-OSINT-201', minimumModules: 10, minimumLabs: 6},
+  {file: 'docs/evidence-based-slide-design-digital-learning.mdx', id: 'LXD-SLD-201', minimumModules: 12, minimumLabs: 8},
 ];
 
 const requiredFiles = [
