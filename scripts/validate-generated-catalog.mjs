@@ -1,11 +1,20 @@
-import {existsSync} from 'node:fs';
+import {existsSync, readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {join} from 'node:path';
 
 const root = process.cwd();
 const require = createRequire(import.meta.url);
 const catalogPath = join(root, 'data/generated-courses.cjs');
-const requiredFiles = [catalogPath, join(root, 'plugins/generated-course-pages/index.js'), join(root, 'src/components/GeneratedCoursePage.tsx'), join(root, 'src/components/GeneratedCoursePage.module.css')];
+const configPath = join(root, 'docusaurus.config.ts');
+const coursesPagePath = join(root, 'src/pages/courses.tsx');
+const requiredFiles = [
+  catalogPath,
+  configPath,
+  coursesPagePath,
+  join(root, 'plugins/generated-course-pages/index.js'),
+  join(root, 'src/components/GeneratedCoursePage.tsx'),
+  join(root, 'src/components/GeneratedCoursePage.module.css'),
+];
 const errors = [];
 for (const file of requiredFiles) if (!existsSync(file)) errors.push(`Missing generated-catalog file: ${file.replace(`${root}/`, '')}`);
 
@@ -37,9 +46,32 @@ if (existsSync(catalogPath)) {
   }
 }
 
+if (existsSync(configPath)) {
+  const config = readFileSync(configPath, 'utf8');
+  for (const marker of ["'./plugins/generated-course-pages'", "catalogUrl: 'https://www.skunkworksacademy.com/courses'"]) {
+    if (!config.includes(marker)) errors.push(`Docusaurus config is missing generated catalogue marker: ${marker}`);
+  }
+}
+
+if (existsSync(coursesPagePath)) {
+  const page = readFileSync(coursesPagePath, 'utf8');
+  const requiredPageMarkers = [
+    "usePluginData('skunkworks-academy-generated-course-pages')",
+    'Complete course offering',
+    'Browse the entire catalogue.',
+    'deliveryFilter',
+    'levelFilter',
+    'categoryFilter',
+    'generatedCourses',
+  ];
+  for (const marker of requiredPageMarkers) {
+    if (!page.includes(marker)) errors.push(`Courses landing page is missing complete-catalogue marker: ${marker}`);
+  }
+}
+
 if (errors.length) {
   console.error('Generated course catalogue validation failed.');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
-console.log('Generated course catalogue validation passed for 176 courses.');
+console.log('Generated course catalogue validation passed for 176 generated courses and the complete /courses landing page.');

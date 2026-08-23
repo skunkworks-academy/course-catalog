@@ -11,9 +11,10 @@ Docusaurus-based self-paced course catalogue containing evidence-led learning jo
 ## Framework baseline
 
 - Docusaurus `3.10.2`
-- React `18.3`
+- React `19.2.8`
 - Node.js `20+`
-- GitHub Actions build and GitHub Pages deployment
+- GitHub Actions validation in this repository
+- GitHub Pages publication through `skunkworks-academy/www`
 - Central Skunkworks Academy global navigation loader
 
 ## Local development
@@ -80,11 +81,7 @@ The required API contract and control requirements are documented in `architectu
 
 ## Continuous validation
 
-Every pull request executes the course-content validator and a complete Docusaurus production build. Only the `main` branch deploys the generated `build` artefact to the GitHub Pages environment.
-
-## Deployment
-
-The workflow `.github/workflows/deploy-pages.yml` validates every pull request and deploys the `build` artefact after changes reach `main`.
+Every pull request and push to `main` executes the course-content validator, deployment-configuration validator and a complete Docusaurus production build. The workflow uploads the build as a diagnostic artifact but does not publish an independent GitHub Pages site.
 
 Current catalogue URL:
 
