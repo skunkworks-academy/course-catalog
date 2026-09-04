@@ -6,7 +6,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Commerce administration',
       collapsed: false,
-      items: ['shopify-user-permissions', 'shopify-store-operations'],
+      items: ['shopify/user-permissions', 'shopify/store-operations'],
     },
     {
       type: 'category',
