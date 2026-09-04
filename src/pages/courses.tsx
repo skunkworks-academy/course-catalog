@@ -112,6 +112,18 @@ const deliveryStyles = [
 
 const publishedCourses: CatalogCourse[] = [
   {
+    courseId: 'SHP-OPS-201',
+    title: 'Shopify Store Operations and Growth',
+    deliveryMode: 'Self-Paced',
+    category: 'Professional & Business Skills',
+    level: 'Beginner to intermediate',
+    estimatedEffort: '18-22 hours',
+    description: 'Build, operate, measure and continuously improve a secure Shopify storefront with practical merchandising, fulfilment, conversion and launch-readiness work.',
+    route: '/courses/shopify/store-operations',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
+  },
+  {
     courseId: 'SHP-UPA-101',
     title: 'Shopify User Permissions',
     deliveryMode: 'Self-Paced',
