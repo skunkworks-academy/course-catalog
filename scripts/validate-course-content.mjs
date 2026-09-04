@@ -4,6 +4,7 @@ import {join} from 'node:path';
 const root = process.cwd();
 const courses = [
   {file: 'docs/shopify-user-permissions.mdx', id: 'SHP-UPA-101', minimumModules: 7, minimumLabs: 3},
+  {file: 'docs/shopify-store-operations.mdx', id: 'SHP-OPS-201', minimumModules: 8, minimumLabs: 5},
   {file: 'docs/github-pages-setup.mdx', id: 'GHP-DOM-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/microsoft-365-licenses.mdx', id: 'M365-LIC-101', minimumModules: 8, minimumLabs: 4},
   {file: 'docs/open-source-intelligence-gathering.mdx', id: 'SEC-OSINT-201', minimumModules: 10, minimumLabs: 6},
