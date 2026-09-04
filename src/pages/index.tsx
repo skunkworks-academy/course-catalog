@@ -4,6 +4,14 @@ import Link from '@docusaurus/Link';
 
 const courses = [
   {
+    id: 'SHP-OPS-201',
+    title: 'Shopify Store Operations and Growth',
+    duration: '18-22 hours - Beginner to intermediate',
+    description: 'Build, operate, measure and continuously improve a secure Shopify storefront through practical merchandising, fulfilment, conversion and launch-readiness work.',
+    outcomes: ['Publish trusted, discoverable product experiences', 'Run controlled order and customer-service operations', 'Use metrics and release evidence to improve store performance'],
+    path: '/courses/shopify-store-operations',
+  },
+  {
     id: 'SHP-UPA-101',
     title: 'Shopify User Permissions',
     duration: '4–6 hours · Beginner to intermediate',
