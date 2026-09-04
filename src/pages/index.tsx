@@ -9,7 +9,7 @@ const courses = [
     duration: '18-22 hours - Beginner to intermediate',
     description: 'Build, operate, measure and continuously improve a secure Shopify storefront through practical merchandising, fulfilment, conversion and launch-readiness work.',
     outcomes: ['Publish trusted, discoverable product experiences', 'Run controlled order and customer-service operations', 'Use metrics and release evidence to improve store performance'],
-    path: '/courses/shopify-store-operations',
+    path: '/courses/shopify/store-operations',
   },
   {
     id: 'SHP-UPA-101',

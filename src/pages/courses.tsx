@@ -119,7 +119,7 @@ const publishedCourses: CatalogCourse[] = [
     level: 'Beginner to intermediate',
     estimatedEffort: '18-22 hours',
     description: 'Build, operate, measure and continuously improve a secure Shopify storefront with practical merchandising, fulfilment, conversion and launch-readiness work.',
-    route: '/courses/shopify-store-operations',
+    route: '/courses/shopify/store-operations',
     contentStatus: 'Published evidence-led learning journey',
     source: 'published',
   },
