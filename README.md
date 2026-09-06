@@ -7,6 +7,9 @@ Docusaurus-based self-paced course catalogue containing evidence-led learning jo
 - `M365-LIC-101` — Microsoft 365 Licenses
 - `SEC-OSINT-201` — Open-Source Intelligence (OSINT) Gathering with Recon-ng and Shodan
 - `LXD-SLD-201` — Evidence-Based Slide Design for Digital Learning
+- `AFF-FND-101` — Affiliate Marketing Foundations: Platforms, Offers and Trust
+- `AFF-TLF-201` — Affiliate Traffic, Lead Capture and Email Foundations
+- `AFF-OPS-301` — Affiliate Campaign Operations, Measurement and Compliance
 
 ## Framework baseline
 
