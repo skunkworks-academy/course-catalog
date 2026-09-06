@@ -9,6 +9,33 @@
   },
   "courses": [
     {
+      "courseId": "AFF-FND-101",
+      "title": "Affiliate Marketing Foundations: Platforms, Offers and Trust",
+      "path": "/courses/affiliate-marketing-foundations",
+      "category": "Digital commerce and affiliate marketing",
+      "durationHours": "6-8",
+      "level": "Beginner",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "AFF-TLF-201",
+      "title": "Affiliate Traffic, Lead Capture and Email Foundations",
+      "path": "/courses/affiliate-traffic-and-list-building",
+      "category": "Digital commerce and affiliate marketing",
+      "durationHours": "8-10",
+      "level": "Beginner to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "AFF-OPS-301",
+      "title": "Affiliate Campaign Operations, Measurement and Compliance",
+      "path": "/courses/affiliate-campaign-operations-and-compliance",
+      "category": "Digital commerce and affiliate marketing",
+      "durationHours": "10-12",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    },
+    {
       "courseId": "SHP-UPA-101",
       "title": "Shopify User Permissions",
       "path": "/courses/shopify-user-permissions",
