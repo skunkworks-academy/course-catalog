@@ -32,6 +32,16 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ['evidence-based-slide-design-digital-learning'],
     },
+    {
+      type: 'category',
+      label: 'Affiliate marketing and digital commerce',
+      collapsed: false,
+      items: [
+        'affiliate-marketing-foundations',
+        'affiliate-traffic-and-list-building',
+        'affiliate-campaign-operations-and-compliance',
+      ],
+    },
   ],
 };
 
