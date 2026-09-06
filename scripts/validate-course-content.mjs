@@ -3,6 +3,9 @@ import {join} from 'node:path';
 
 const root = process.cwd();
 const courses = [
+  {file: 'docs/affiliate-marketing-foundations.mdx', id: 'AFF-FND-101', minimumModules: 6, minimumLabs: 3},
+  {file: 'docs/affiliate-traffic-and-list-building.mdx', id: 'AFF-TLF-201', minimumModules: 6, minimumLabs: 3},
+  {file: 'docs/affiliate-campaign-operations-and-compliance.mdx', id: 'AFF-OPS-301', minimumModules: 6, minimumLabs: 3},
   {file: 'docs/shopify/user-permissions.mdx', id: 'SHP-UPA-101', minimumModules: 7, minimumLabs: 3},
   {file: 'docs/shopify/store-operations.mdx', id: 'SHP-OPS-201', minimumModules: 8, minimumLabs: 5},
   {file: 'docs/github-pages-setup.mdx', id: 'GHP-DOM-101', minimumModules: 7, minimumLabs: 3},
