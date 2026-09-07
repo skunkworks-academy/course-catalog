@@ -65,6 +65,53 @@ body { line-height: 1.6; }
 .heroButtonPrimary { background: var(--skw-blue); border-color: var(--skw-blue); }
 .heroButton:hover { color: #fff; text-decoration: none; transform: translateY(-1px); }
 
+/*
+ * Dark hero contrast guard.
+ *
+ * The Academy global page-contract runtime can classify transparent/layered
+ * gradient surfaces as light because the visible base colour lives inside a
+ * CSS gradient. When that happens, its !important foreground contract can
+ * replace the intentionally light hero typography with graphite/slate text.
+ * Keep course-catalog hero foregrounds bound to the actual dark visual
+ * surface. The selectors intentionally outrank the global runtime contract.
+ */
+body .heroBanner,
+body section[class*='hero'] {
+  color: #ffffff !important;
+}
+
+body .heroBanner h1,
+body .heroBanner h2,
+body section[class*='hero'] h1,
+body section[class*='hero'] h2,
+body section[class*='hero'] h3,
+body section[class*='hero'] strong {
+  color: #ffffff !important;
+}
+
+body .heroBanner p,
+body section[class*='hero'] p,
+body section[class*='hero'] li,
+body section[class*='hero'] span {
+  color: #dce8f8 !important;
+}
+
+body .heroBanner .eyebrow,
+body section[class*='hero'] [class*='eyebrow'] {
+  color: #b7d2ff !important;
+}
+
+body .heroBanner a.heroButton,
+body section[class*='hero'] a[class*='button'] {
+  color: #ffffff !important;
+}
+
+body section[class*='hero'] a[class*='primaryButton'] {
+  border-color: var(--skw-blue) !important;
+  background: var(--skw-blue) !important;
+  color: #ffffff !important;
+}
+
 .catalogSection { padding: 4rem 0 6rem; }
 .catalogHeader { max-width: 820px; margin-bottom: 2rem; }
 .eyebrow { color: var(--skw-blue); font-size: .75rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
