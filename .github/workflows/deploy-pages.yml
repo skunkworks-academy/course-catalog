@@ -45,7 +45,7 @@ jobs:
         run: |
           test -f build/courses.html || test -f build/courses/index.html
           grep -R -q 'https://www.skunkworksacademy.com/courses' build/courses.html build/courses/index.html 2>/dev/null
-          grep -R -q 'academy-navigation.js?v=2026.08.15.1' build/courses.html build/courses/index.html 2>/dev/null
+          grep -R -q 'academy-navigation.js?v=2026.09.08.1' build/courses.html build/courses/index.html 2>/dev/null
           if grep -R -q 'catalog.skunkworksacademy.com' build --include='*.html' --include='*.xml'; then
             echo 'Legacy catalog.skunkworksacademy.com references remain in build output.'
             exit 1
