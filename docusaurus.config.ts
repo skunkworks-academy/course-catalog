@@ -4,6 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const GLOBAL_SHELL_LOADER_URL = 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.09.08.2';
 
 const config: Config = {
+  favicon: 'images/favicon-search.png',
   title: 'Skunkworks Academy Course Catalog',
   tagline: 'Practical, evidence-led technology learning journeys',
   url: 'https://www.skunkworksacademy.com',
