@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import styles from './DinosaurArticulationLab.module.css';
 import PracticeStudio from './PracticeStudio';
 
@@ -17,6 +17,8 @@ const emptyScores=():Scores=>Object.fromEntries(dimensions.map(d=>[d,0]));
 function average(scores:Scores){const v=dimensions.map(d=>scores[d]);return v.every(Boolean)?Math.round(v.reduce((a,b)=>a+b,0)/v.length*20):null;}
 export default function DinosaurArticulationLab(){
  const [selected,setSelected]=useState(0);
+ const activeChallengeRef=useRef<HTMLDivElement | null>(null);
+ function chooseChallenge(index:number){setSelected(index);requestAnimationFrame(()=>activeChallengeRef.current?.scrollIntoView({behavior:'smooth',block:'start'}));}
  const [phase,setPhase]=useState<'baseline'|'final'>('baseline');
  const [scores,setScores]=useState<{baseline:Scores;final:Scores}>({baseline:emptyScores(),final:emptyScores()});
  const [listener,setListener]=useState({baseline:'',final:''});
@@ -33,8 +35,8 @@ export default function DinosaurArticulationLab(){
  return <section className={styles.lab} aria-labelledby="dino-lab-heading">
   <div className={styles.hero}><span className={styles.dino} aria-hidden="true">🦖</span><div><p className={styles.kicker}>ART-101 · Dinosaur field lab</p><h2 id="dino-lab-heading">The Articulation Expedition</h2><p>Six guided speech challenges, listener-based checkpoints and comparable before-and-after scores. Dinosaur challenges reinforce professional capability; the Academy brand stays in control.</p></div></div>
   <div className={styles.diagram} role="img" aria-label="Practice loop: establish baseline, drill speech, receive listener feedback, repeat equivalent final assessment and compare results"><span>Baseline</span><b>→</b><span>Speak</span><b>→</b><span>Listener feedback</span><b>→</b><span>Repeat</span><b>→</b><span>Compare</span></div>
-  <h3>1. Choose a challenge</h3><p>Select any dinosaur challenge. The speech prompt and recorder below update to match your selection.</p><div className={styles.grid}>{exercises.map((e,i)=><button type="button" key={e.name} aria-pressed={selected===i} className={selected===i?styles.active:styles.challenge} onClick={()=>{setSelected(i);}}><strong>{i+1}. {e.name}</strong><small>{e.focus}</small></button>)}</div>
-  <div className={styles.prompt} id="art101-active-challenge"><h3>{current.name}</h3><p>{current.prompt}</p><strong>Listening checkpoint</strong><p>{current.checkpoint}</p><button type="button" className={styles.secondary} onClick={()=>setShowGuide(v=>!v)} aria-expanded={showGuide}> {showGuide?'Hide':'Show'} delivery guide</button>{showGuide&&<p>Read naturally, articulate critical sounds without forcing them, and pause at meaning boundaries. Record using the ART-101 Practice Studio elsewhere on this page or another consented recording tool. Ask a second person to listen without reading the script.</p>}</div>
+  <h3>1. Choose a challenge</h3><p>Select any dinosaur challenge. The speech prompt and recorder below update to match your selection.</p><div className={styles.grid}>{exercises.map((e,i)=><button type="button" key={e.name} aria-pressed={selected===i} className={selected===i?styles.active:styles.challenge} onClick={()=>chooseChallenge(i)}><strong>{i+1}. {e.name}</strong><small>{e.focus}</small></button>)}</div>
+  <div className={styles.prompt} id="art101-active-challenge" ref={activeChallengeRef} style={{scrollMarginTop:"110px"}} tabIndex={-1}><h3>{current.name}</h3><p>{current.prompt}</p><strong>Listening checkpoint</strong><p>{current.checkpoint}</p><button type="button" className={styles.secondary} onClick={()=>setShowGuide(v=>!v)} aria-expanded={showGuide}> {showGuide?'Hide':'Show'} delivery guide</button>{showGuide&&<p>Read naturally, articulate critical sounds without forcing them, and pause at meaning boundaries. Record in the studio directly below this guide or using another consented recording tool. Ask a second person to listen without reading the script.</p>}</div>
   <h3>2. Record your selected challenge</h3><p>Use Start recording, allow microphone permission, speak the selected prompt, then Stop recording. Replay and download your audio. The microphone indicator and timer show when recording is active.</p>
   <PracticeStudio key={selected} courseId="ART-101" exerciseId={`dino-${selected+1}`} title={`${current.name} — speech recorder`} prompt={current.prompt} targetSeconds={90}/>
   <h3>3. Assess before and after</h3><p>Use the <strong>same scenario and comparable duration</strong> for both recordings. A listener should independently score each dimension from 1 (not yet clear) to 5 (consistently clear). These are structured ratings, not clinical measures or automatic speech-recognition scores.</p>
