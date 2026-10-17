@@ -61,6 +61,12 @@ const config: Config = {
     ],
   ],
   themeConfig: {
+    // The shared Academy shell suppresses the Docusaurus navbar. Avoid
+    // scroll-spy reading document.querySelector('.navbar').clientHeight when
+    // there is no framework navbar in the composed static site.
+    navbar: {
+      hideOnScroll: true,
+    },
     image: 'img/skunkworks-academy-course-catalog.svg',
     metadata: [
       {name: 'author', content: 'Skunkworks Academy'},
