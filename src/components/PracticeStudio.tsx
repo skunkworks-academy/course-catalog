@@ -26,6 +26,7 @@ export default function PracticeStudio({
   const [audioUrl, setAudioUrl] = useState('');
   const audioUrlRef = useRef('');
   const startedAtRef = useRef(0);
+  const [recordedMimeType, setRecordedMimeType] = useState('audio/webm');
   const [transcript, setTranscript] = useState('');
   const [status, setStatus] = useState('Ready. Recording stays on this device unless you export and submit it.');
 
@@ -75,7 +76,9 @@ export default function PracticeStudio({
         if (event.data.size > 0) chunksRef.current.push(event.data);
       };
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, {type: recorder.mimeType || 'audio/webm'});
+        const mimeType = recorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunksRef.current, {type: mimeType});
+        setRecordedMimeType(mimeType);
         const nextUrl = URL.createObjectURL(blob);
         audioUrlRef.current = nextUrl;
         setAudioUrl(nextUrl);
@@ -142,7 +145,7 @@ export default function PracticeStudio({
         <button className="recordButton recordButtonSecondary" type="button" onClick={stopRecording} disabled={!recording}>Stop recording</button>
       </div>
 
-      {audioUrl && <div><audio className="studioAudio" controls src={audioUrl}>Your browser does not support audio playback.</audio><p><a href={audioUrl} download={`${courseId.toLowerCase()}-${exerciseId}-recording.webm`}>Download audio recording</a></p></div>}
+      {audioUrl && <div><audio className="studioAudio" controls src={audioUrl}>Your browser does not support audio playback.</audio><p><a href={audioUrl} download={`${courseId.toLowerCase()}-${exerciseId}-recording.${recordedMimeType.includes('mp4') ? 'm4a' : recordedMimeType.includes('ogg') ? 'ogg' : 'webm'}`}>Download audio recording</a></p></div>}
 
       <label className="studioLabel" htmlFor={`${exerciseId}-transcript`}>Paste or type your transcript</label>
       <textarea
