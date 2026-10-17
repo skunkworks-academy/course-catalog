@@ -22,6 +22,7 @@ export default function PracticeStudio({
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [recording, setRecording] = useState(false);
+  const [starting, setStarting] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [audioUrl, setAudioUrl] = useState('');
   const audioUrlRef = useRef('');
@@ -62,6 +63,8 @@ export default function PracticeStudio({
     }
 
     try {
+      setStarting(true);
+      setStatus('Requesting microphone permission…');
       if (audioUrlRef.current) {
         URL.revokeObjectURL(audioUrlRef.current);
         audioUrlRef.current = '';
@@ -93,7 +96,11 @@ export default function PracticeStudio({
       timerRef.current = setInterval(() => setSeconds((current) => current + 1), 1000);
       setStatus('Recording. Speak naturally and complete the prompt without reading every word.');
     } catch {
-      setStatus('Microphone access was unavailable or denied. Check browser permissions or use an external recorder.');
+      streamRef.current?.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+      setStatus('Microphone access was unavailable or denied. Open this HTTPS page in Safari, allow microphone permission, and retry.');
+    } finally {
+      setStarting(false);
     }
   }
 
@@ -126,8 +133,10 @@ export default function PracticeStudio({
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = `${courseId.toLowerCase()}-${exerciseId.toLowerCase()}-practice.json`;
+    document.body.appendChild(anchor);
     anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
     setStatus('Practice metrics exported. Save the audio separately where required by the assessment brief.');
   }
 
@@ -141,7 +150,7 @@ export default function PracticeStudio({
       <p role="status" aria-live="polite">{recording ? 'Recording in progress — microphone active' : audioUrl ? 'Recording saved on this device — ready to replay' : 'Microphone ready'}</p>
       <div className="studioTimer" aria-live="polite">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div>
       <div className="recordActions">
-        <button className="recordButton recordButtonPrimary" type="button" onClick={startRecording} disabled={recording}>Start recording</button>
+        <button className="recordButton recordButtonPrimary" type="button" onClick={startRecording} disabled={recording || starting}>{starting ? "Requesting microphone…" : "Start recording"}</button>
         <button className="recordButton recordButtonSecondary" type="button" onClick={stopRecording} disabled={!recording}>Stop recording</button>
       </div>
 
