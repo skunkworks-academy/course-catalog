@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styles from './DinosaurArticulationLab.module.css';
 import PracticeStudio from './PracticeStudio';
 
@@ -17,8 +17,25 @@ const emptyScores=():Scores=>Object.fromEntries(dimensions.map(d=>[d,0]));
 function average(scores:Scores){const v=dimensions.map(d=>scores[d]);return v.every(Boolean)?Math.round(v.reduce((a,b)=>a+b,0)/v.length*20):null;}
 export default function DinosaurArticulationLab(){
  const [selected,setSelected]=useState(0);
+ const [exampleRate,setExampleRate]=useState(0.85);
+ const [exampleStatus,setExampleStatus]=useState('Ready to play a synthesised reference example.');
+ const [examplePlaying,setExamplePlaying]=useState(false);
+ useEffect(()=>()=>{if(typeof window!=='undefined' && 'speechSynthesis' in window)window.speechSynthesis.cancel();},[]);
+ function stopExample(){if(typeof window!=='undefined' && 'speechSynthesis' in window)window.speechSynthesis.cancel();setExamplePlaying(false);setExampleStatus('Example playback stopped.');}
+ function playExample(){
+   if(typeof window==='undefined'||!('speechSynthesis' in window)){setExampleStatus('Speech playback is unavailable in this browser. Read the reference script below.');return;}
+   window.speechSynthesis.cancel();
+   const utterance=new SpeechSynthesisUtterance(current.prompt.replace(/\[Pause\]/gi,'. '));
+   utterance.lang='en-ZA';
+   utterance.rate=exampleRate;
+   utterance.onstart=()=>{setExamplePlaying(true);setExampleStatus('Playing synthesised reference. Listen for clear words and natural pauses.');};
+   utterance.onend=()=>{setExamplePlaying(false);setExampleStatus('Example complete. Record your own version below.');};
+   utterance.onerror=()=>{setExamplePlaying(false);setExampleStatus('Example playback was unavailable. Try Safari or another supported browser.');};
+   window.speechSynthesis.speak(utterance);
+ }
+
  const activeChallengeRef=useRef<HTMLDivElement | null>(null);
- function chooseChallenge(index:number){setSelected(index);requestAnimationFrame(()=>activeChallengeRef.current?.scrollIntoView({behavior:'smooth',block:'start'}));}
+ function chooseChallenge(index:number){stopExample();setSelected(index);requestAnimationFrame(()=>activeChallengeRef.current?.scrollIntoView({behavior:'smooth',block:'start'}));}
  const [phase,setPhase]=useState<'baseline'|'final'>('baseline');
  const [scores,setScores]=useState<{baseline:Scores;final:Scores}>({baseline:emptyScores(),final:emptyScores()});
  const [listener,setListener]=useState({baseline:'',final:''});
@@ -36,7 +53,7 @@ export default function DinosaurArticulationLab(){
   <div className={styles.hero}><span className={styles.dino} aria-hidden="true">🦖</span><div><p className={styles.kicker}>ART-101 · Dinosaur field lab</p><h2 id="dino-lab-heading">The Articulation Expedition</h2><p>Six guided speech challenges, listener-based checkpoints and comparable before-and-after scores. Dinosaur challenges reinforce professional capability; the Academy brand stays in control.</p></div></div>
   <div className={styles.diagram} role="img" aria-label="Practice loop: establish baseline, drill speech, receive listener feedback, repeat equivalent final assessment and compare results"><span>Baseline</span><b>→</b><span>Speak</span><b>→</b><span>Listener feedback</span><b>→</b><span>Repeat</span><b>→</b><span>Compare</span></div>
   <h3>1. Choose a challenge</h3><p>Select any dinosaur challenge. The speech prompt and recorder below update to match your selection.</p><div className={styles.grid}>{exercises.map((e,i)=><button type="button" key={e.name} aria-pressed={selected===i} className={selected===i?styles.active:styles.challenge} onClick={()=>chooseChallenge(i)}><strong>{i+1}. {e.name}</strong><small>{e.focus}</small></button>)}</div>
-  <div className={styles.prompt} id="art101-active-challenge" ref={activeChallengeRef} style={{scrollMarginTop:"110px"}} tabIndex={-1}><h3>{current.name}</h3><p>{current.prompt}</p><strong>Listening checkpoint</strong><p>{current.checkpoint}</p><button type="button" className={styles.secondary} onClick={()=>setShowGuide(v=>!v)} aria-expanded={showGuide}> {showGuide?'Hide':'Show'} delivery guide</button>{showGuide&&<p>Read naturally, articulate critical sounds without forcing them, and pause at meaning boundaries. Record in the studio directly below this guide or using another consented recording tool. Ask a second person to listen without reading the script.</p>}</div>
+  <div className={styles.prompt} id="art101-active-challenge" ref={activeChallengeRef} style={{scrollMarginTop:"110px"}} tabIndex={-1}><h3>{current.name}</h3><p>{current.prompt}</p><div aria-label="Reference audio example"><h4>Listen to a model delivery</h4><p>This is a browser-generated example of the selected script, not a human coach recording or an accent standard. Compare articulation, pacing and pauses, then record your own response.</p><label htmlFor="art101-example-rate">Playback speed </label><select id="art101-example-rate" value={exampleRate} onChange={e=>setExampleRate(Number(e.target.value))}><option value={0.7}>Slow (0.7×)</option><option value={0.85}>Practice (0.85×)</option><option value={1}>Normal (1×)</option></select> <button type="button" className={styles.secondary} onClick={playExample}>Play example</button> <button type="button" className={styles.secondary} onClick={stopExample} disabled={!examplePlaying}>Stop example</button><p role="status" aria-live="polite">{exampleStatus}</p></div><strong>Listening checkpoint</strong><p>{current.checkpoint}</p><button type="button" className={styles.secondary} onClick={()=>setShowGuide(v=>!v)} aria-expanded={showGuide}> {showGuide?'Hide':'Show'} delivery guide</button>{showGuide&&<p>Read naturally, articulate critical sounds without forcing them, and pause at meaning boundaries. Record in the studio directly below this guide or using another consented recording tool. Ask a second person to listen without reading the script.</p>}</div>
   <h3>2. Record your selected challenge</h3><p>Use Start recording, allow microphone permission, speak the selected prompt, then Stop recording. Replay and download your audio. The microphone indicator and timer show when recording is active.</p>
   <PracticeStudio key={selected} courseId="ART-101" exerciseId={`dino-${selected+1}`} title={`${current.name} — speech recorder`} prompt={current.prompt} targetSeconds={90}/>
   <h3>3. Assess before and after</h3><p>Use the <strong>same scenario and comparable duration</strong> for both recordings. A listener should independently score each dimension from 1 (not yet clear) to 5 (consistently clear). These are structured ratings, not clinical measures or automatic speech-recognition scores.</p>
