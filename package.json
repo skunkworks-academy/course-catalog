@@ -12,7 +12,8 @@
     "swizzle": "docusaurus swizzle",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "validate:content": "node scripts/validate-course-content.mjs && node scripts/validate-generated-catalog.mjs && node scripts/validate-deployment-config.mjs"
+    "validate:content": "node scripts/validate-course-content.mjs && node scripts/validate-generated-catalog.mjs && node scripts/validate-deployment-config.mjs && node scripts/build-ai-master-catalog.mjs --check",
+    "generate:ai-catalog": "node scripts/build-ai-master-catalog.mjs --write"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
