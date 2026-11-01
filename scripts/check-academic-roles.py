@@ -30,6 +30,15 @@ for c in courses:
         for name in ('learner-guide.md','learner-workbook.md','facilitator-guide.md'): assert name in z.namelist()
     lab=pack.parent/'lab.py'
     if lab.exists(): subprocess.run([sys.executable,str(lab),'test'],check=True)
+    if c['courseId'] in ('EDU-PYT-201', 'EDU-ITL-201'):
+        original=lab.read_text()
+        mutant=original.replace('        if not rows.fieldnames or not {"id","score"}.issubset(rows.fieldnames):\n            raise ValueError("id and score columns required")\n', '')
+        assert mutant != original, 'The published schema fault must still target the validation branch'
+        with tempfile.TemporaryDirectory() as tmp:
+            broken=pathlib.Path(tmp)/'schema_mutant.py';broken.write_text(mutant)
+            result=subprocess.run([sys.executable,str(broken),'test'],capture_output=True,text=True)
+            assert result.returncode != 0 and 'FAILED' in result.stderr, 'Prescribed schema defect escaped the lab tests'
+        print(c['courseId'] + ': missing-header fault injection detected')
 java=root/'static/downloads/academic-roles/hardware-software-lecturer/SearchLab.java'
 javac=shutil.which('javac') or ('/usr/lib/jvm/java-17-openjdk-amd64/bin/javac' if pathlib.Path('/usr/lib/jvm/java-17-openjdk-amd64/bin/javac').exists() else None)
 if javac:

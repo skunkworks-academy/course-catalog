@@ -41,9 +41,11 @@ class ImportTests(unittest.TestCase):
             path=Path(root)/"scores.csv"; path.write_text("id,score\nL01,80\n",encoding="utf-8")
             self.assertEqual(load_scores(path),[("L01",80.0)])
     def test_bad_header(self):
-        with tempfile.TemporaryDirectory() as root:
-            path=Path(root)/"scores.csv"; path.write_text("name,points\nL01,80\n",encoding="utf-8")
-            with self.assertRaises(ValueError): load_scores(path)
+        for content in ("name,points\nL01,80\n", "name,points\n"):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as root:
+                path=Path(root)/"scores.csv"; path.write_text(content,encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "^id and score columns required$"):
+                    load_scores(path)
     def test_bad_line(self):
         with tempfile.TemporaryDirectory() as root:
             path=Path(root)/"scores.csv"; path.write_text("id,score\nL01,nope\n",encoding="utf-8")
