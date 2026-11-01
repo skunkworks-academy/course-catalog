@@ -143,11 +143,11 @@ body section[class*='hero'] a[class*='primaryButton'] {
 /* The composed Academy theme applies !important colours to ordinary links.
    These anchors are filled action buttons, so retain a white label in both
    themes and all interaction states (5.16:1 on the Academy blue surface). */
-body main a.cardButton.cardButtonPrimary,
-body main a.cardButton.cardButtonPrimary:visited,
-body main a.cardButton.cardButtonPrimary:hover,
-body main a.cardButton.cardButtonPrimary:focus,
-body main a.cardButton.cardButtonPrimary:active {
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:visited,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:hover,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:focus,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:active {
   color: #ffffff !important;
 }
 .cardButton:hover { text-decoration: none; }
