@@ -88,6 +88,42 @@
       "durationHours": "30-36",
       "level": "Intermediate",
       "evidenceOfCapability": true
+    },
+    {
+      "courseId": "DAT-OUT-101",
+      "title": "Understanding Outliers in Data Files",
+      "path": "/courses/data-outlier-analysis",
+      "category": "Data analytics",
+      "durationHours": "24-30",
+      "level": "Foundation to intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "EFL-DOM-101",
+      "title": "EasyFile Domain Setup and Production Launch",
+      "path": "/courses/easyfile-domain-setup",
+      "category": "Web deployment",
+      "durationHours": "22-28",
+      "level": "Intermediate",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "PYE-101",
+      "title": "Python Certification Preparation",
+      "path": "/courses/python-certification-prep",
+      "category": "Programming and certification",
+      "durationHours": "30-36",
+      "level": "Beginner",
+      "evidenceOfCapability": true
+    },
+    {
+      "courseId": "ART-101",
+      "title": "Professional Articulation and Executive Communication",
+      "path": "/courses/professional-articulation",
+      "category": "Professional and business skills",
+      "durationHours": "36-40",
+      "level": "Foundation to advanced",
+      "evidenceOfCapability": true
     }
   ]
 }
