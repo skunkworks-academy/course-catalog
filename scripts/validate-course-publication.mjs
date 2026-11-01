@@ -112,6 +112,18 @@ for (const course of courses) {
 
 for (const doc of docs) {
   if (routes.has(doc.route)) continue;
+  // Individual lesson routes inherit the registered parent course ID.
+  // They must still be enrolment-gated and discoverable in the course sidebar.
+  const parent = courses.find(course => doc.route.startsWith(course.path + '/'));
+  if (parent) {
+    if (doc.enrollmentId !== parent.courseId) {
+      errors.push(doc.rel + ': module must use parent EnrollmentGate for ' + parent.courseId);
+    }
+    if (!sidebar.includes("'" + doc.docId + "'") && !sidebar.includes('"' + doc.docId + '"')) {
+      errors.push(doc.rel + ': lesson missing from Docusaurus course sidebar.');
+    }
+    continue;
+  }
   // A resource pack is a subpage of the publicly catalogued ART-101 course.
   const isArtResource = doc.rel === 'docs/professional-articulation-resources.mdx'
     && doc.enrollmentId === 'ART-101';

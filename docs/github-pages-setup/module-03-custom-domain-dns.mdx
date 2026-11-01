@@ -1,0 +1,117 @@
+---
+id: module-03-custom-domain-dns
+slug: /github-pages-setup/module-03-custom-domain-dns
+title: "Module 3 — Configure and verify custom domains and DNS"
+sidebar_label: "03. Configure and verify custom domains and DNS"
+description: "GHP-DOM-101 Module 3 — Configure and verify custom domains and DNS: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 3 — Configure and verify custom domains and DNS
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 45–60 minutes · **Module 3 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-03.svg" alt="Configure and verify custom domains and DNS: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/illustrative-dns-record.svg" alt="Illustrative mock interface: a schematic DNS provider record editor displaying name and target fields; example only, not a real screenshot." loading="lazy" />
+  <figcaption>Illustrative mock interface, not a live GitHub or DNS-provider screenshot. Exact menu names may differ; validate in the official vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={3} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Explain the difference between an apex and subdomain DNS configuration.
+- Map a training subdomain CNAME to the organization github.io host without a repository suffix.
+- Verify organization domain ownership and record DNS resolution evidence.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Plan a nonproduction subdomain change. Record the old zone state, TTL, GitHub Pages custom-domain association, authoritative nameservers and before/after resolver outputs. If DNS permissions are unavailable, use documented simulation values and label the result as simulated.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### 3.1 Verify before delegation
+
+Verify the domain in the owning GitHub account or organization before attaching it to a Pages repository. Domain verification reduces the risk that another repository can claim an immediate subdomain.
+
+### 3.2 Subdomain pattern
+
+For a subdomain such as `learn.example.com`:
+
+```text
+Record type: CNAME
+Name/host: learn
+Target/value: YOUR-ORG.github.io
+```
+
+Do not include the repository path in the CNAME target. Configure the custom domain in repository Pages settings and then validate DNS.
+
+### 3.3 Apex pattern
+
+Apex domains use records supported by the DNS provider, commonly `A`, `ALIAS` or `ANAME`. Use the current GitHub documentation for the required address set. Do not copy old address values from screenshots or third-party blogs.
+
+### 3.4 DNS validation commands
+
+```powershell title="PowerShell"
+Resolve-DnsName learn.example.com -Type CNAME
+Resolve-DnsName learn.example.com -Type A
+```
+
+```bash title="Bash"
+dig learn.example.com CNAME +short
+dig learn.example.com A +short
+```
+
+Record the response, authoritative nameserver and validation time. DNS caching means different resolvers may not update simultaneously.
+
+## Practical Lab 3 — Validate a training subdomain
+
+### Tasks
+
+1. Confirm organization ownership of the parent domain.
+2. Verify the domain in GitHub organization settings.
+3. Add the custom domain in repository Pages settings.
+4. Create the required DNS record.
+5. Validate the record from at least two independent resolvers.
+6. Confirm the custom hostname opens the intended site.
+7. Enable HTTPS when the certificate becomes available.
+8. Confirm HTTP redirects to HTTPS.
+9. Record rollback steps before closing the change.
+
+### Rollback plan
+
+- remove or revert the Pages custom-domain setting;
+- restore the previous DNS record and TTL;
+- confirm the former endpoint resolves;
+- preserve the failed-change evidence;
+- open a follow-up incident or problem record if required.
+
+## Applied exercise and assessment evidence
+
+**Task.** Plan a nonproduction subdomain change. Record the old zone state, TTL, GitHub Pages custom-domain association, authoritative nameservers and before/after resolver outputs. If DNS permissions are unavailable, use documented simulation values and label the result as simulated.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** The CNAME target is correct, ownership is verified or clearly pending, DNS resolution is captured and rollback is documented.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={3} />

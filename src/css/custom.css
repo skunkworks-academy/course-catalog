@@ -205,3 +205,97 @@ body section[class*='hero'] a[class*='primaryButton'] {
   .accessGateActions, .recordActions, .theme-doc-sidebar-container, .pagination-nav, footer { display: none !important; }
   .main-wrapper { padding-top: 0; }
 }
+
+/* GHP-DOM-101: reusable course pathway, light/dark Academy tokens only. */
+.ghp-course-navigation {
+  margin: 2rem 0;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: var(--skw-panel);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--skw-line);
+  border-radius: 1.25rem;
+}
+.ghp-course-navigation__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  padding-bottom: .85rem;
+}
+.ghp-course-navigation__heading span { color: var(--skw-slate); }
+.ghp-course-navigation__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: .6rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ghp-course-navigation__grid li { margin: 0; }
+.ghp-course-navigation__grid a {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: .7rem;
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  border: 1px solid var(--skw-line);
+  border-radius: .7rem;
+  padding: .7rem;
+  background: var(--ifm-background-color);
+}
+.ghp-course-navigation__grid a:hover,
+.ghp-course-navigation__grid a:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 1px;
+}
+.ghp-course-navigation__grid a.ghp-course-navigation__active {
+  border: 2px solid var(--ifm-color-primary);
+  font-weight: 800;
+}
+.ghp-course-navigation__number {
+  font-size: .8rem;
+  font-weight: 900;
+  border: 1px solid currentColor;
+  border-radius: .45rem;
+  padding: .25rem .4rem;
+}
+.ghp-course-navigation__paging {
+  margin-top: 1rem;
+  padding-top: .9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .75rem;
+  border-top: 1px solid var(--skw-line);
+}
+.ghp-figure {
+  margin: 1.5rem 0 2rem;
+  padding: .7rem;
+  background: var(--skw-panel);
+  border: 1px solid var(--skw-line);
+  border-radius: 1.1rem;
+}
+.ghp-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: .75rem;
+}
+.ghp-figure figcaption {
+  font-size: .9rem;
+  padding: .7rem .25rem .25rem;
+  color: var(--skw-slate);
+}
+.ghp-lesson-summary {
+  margin: 1rem 0;
+  border-left: 4px solid var(--ifm-color-primary);
+  background: var(--skw-panel);
+  border-radius: .5rem;
+  padding: 1rem 1.2rem;
+}
+@media (max-width: 600px) {
+  .ghp-course-navigation__grid { grid-template-columns: minmax(0, 1fr); }
+  .ghp-course-navigation__paging a { min-height: 44px; display: inline-flex; align-items: center; }
+}

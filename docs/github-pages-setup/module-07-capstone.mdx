@@ -1,0 +1,144 @@
+---
+id: module-07-capstone
+slug: /github-pages-setup/module-07-capstone
+title: "Module 7 — Capstone: production-ready branded website"
+sidebar_label: "07. Capstone: production-ready branded website"
+description: "GHP-DOM-101 Module 7 — Capstone: production-ready branded website: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+import KnowledgeCheck from '@site/src/components/KnowledgeCheck';
+import EvidenceRecord from '@site/src/components/EvidenceRecord';
+
+# Module 7 — Capstone: production-ready branded website
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 60–90 minutes · **Module 7 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-07.svg" alt="Capstone: production-ready branded website: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={7} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Deliver a branded multi-page Docusaurus website through a controlled release.
+- Verify TLS, DNS, route behavior, source provenance and security controls.
+- Submit an evidence-of-capability pack against the weighted rubric.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Build the capstone website with three content routes, a custom-domain plan, a reproducible workflow, a route/asset verification script and a structured root-cause report for one injected failure. Submit redacted screenshots, logs, deployment commit and runbook.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### Scenario
+
+A business needs a Docusaurus-based brand-guidelines site deployed from GitHub, available at a custom subdomain, with a controlled release workflow and evidence that the site can be operated safely.
+
+### Deliverables
+
+1. Repository with branch protection recommendations.
+2. Docusaurus configuration for the deployment URL.
+3. Build-and-deploy GitHub Actions workflow.
+4. Public landing page and at least three content routes.
+5. Custom 404 or route-recovery method.
+6. DNS and domain-verification change plan.
+7. HTTPS validation record.
+8. Deployment test script and results.
+9. Root-cause analysis for one injected failure.
+10. Operations runbook and rollback procedure.
+
+### Assessment rubric
+
+| Criterion | Weight | Competent evidence |
+|---|---:|---|
+| Repository and build design | 20% | Reproducible source, supported runtime and valid static build |
+| Deployment automation | 20% | Least-privilege Actions workflow with clear artefact handling |
+| Domain and HTTPS | 20% | Correct DNS, verified domain, HTTPS and takeover controls |
+| Validation and troubleshooting | 20% | Positive tests plus structured root-cause analysis |
+| Security and governance | 10% | No secrets, protected release path and retirement controls |
+| Evidence quality | 10% | Traceable commits, screenshots, logs and signed checklist |
+
+<KnowledgeCheck
+  title="GitHub Pages deployment knowledge check"
+  questions={[
+    {
+      prompt: 'A Docusaurus project site loads HTML but no CSS. What should be checked first?',
+      options: ['The repository description', 'The configured base URL and asset paths', 'The issue template', 'The user avatar'],
+      answer: 1,
+      explanation: 'Project sites are hosted beneath the repository path, so incorrect base-path configuration commonly breaks assets.'
+    },
+    {
+      prompt: 'What should a CNAME for a Pages subdomain normally target?',
+      options: ['The repository clone URL', 'The organization github.io hostname', 'The workflow file path', 'The repository issues page'],
+      answer: 1,
+      explanation: 'The DNS CNAME targets the owner github.io hostname, not a repository path.'
+    },
+    {
+      prompt: 'Why verify a custom domain before attaching it to a repository?',
+      options: ['To change repository visibility', 'To reduce custom-domain takeover risk', 'To enable Issues', 'To avoid using HTTPS'],
+      answer: 1,
+      explanation: 'Verification establishes account or organization control over the domain and protects immediate subdomains.'
+    },
+    {
+      prompt: 'Which workflow permission set is aligned to a Pages deployment?',
+      options: ['contents: write only', 'contents: read, pages: write and id-token: write', 'admin: write', 'packages: delete'],
+      answer: 1,
+      explanation: 'The build reads source and the deployment requires Pages and identity-token permissions.'
+    },
+    {
+      prompt: 'What should happen when a Pages site is retired?',
+      options: ['Leave the DNS record indefinitely', 'Remove the custom-domain association and clean up dangling DNS', 'Publish secrets in the README', 'Disable HTTPS only'],
+      answer: 1,
+      explanation: 'Repository retirement must include domain and DNS cleanup to prevent dangling references and takeover risk.'
+    }
+  ]}
+/>
+
+<EvidenceRecord
+  courseId="GHP-DOM-101"
+  courseTitle="GitHub Pages Setup"
+  tasks={[
+    'Repository and source-control setup with reviewed pull request',
+    'Successful static-site build and Pages deployment evidence',
+    'Base-path, deep-link and 404 validation results',
+    'Custom-domain verification and DNS change record',
+    'HTTPS and security-control validation record',
+    'Troubleshooting root-cause analysis and operations runbook'
+  ]}
+/>
+
+## Official reference set
+
+- [GitHub Docs: Getting started with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages)
+- [GitHub Docs: Using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- [GitHub Docs: Managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+- [GitHub Docs: Verifying a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages)
+- [GitHub Docs: Securing GitHub Pages with HTTPS](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https)
+- [Docusaurus installation](https://docusaurus.io/docs/installation)
+
+## Applied exercise and assessment evidence
+
+**Task.** Build the capstone website with three content routes, a custom-domain plan, a reproducible workflow, a route/asset verification script and a structured root-cause report for one injected failure. Submit redacted screenshots, logs, deployment commit and runbook.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** All deliverables are traceable; the assessor can verify the published route, independently run checks and score each of the six rubric criteria.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={7} />
