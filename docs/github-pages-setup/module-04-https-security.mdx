@@ -1,0 +1,84 @@
+---
+id: module-04-https-security
+slug: /github-pages-setup/module-04-https-security
+title: "Module 4 — Enforce HTTPS and prevent domain takeovers"
+sidebar_label: "04. Enforce HTTPS and prevent domain takeovers"
+description: "GHP-DOM-101 Module 4 — Enforce HTTPS and prevent domain takeovers: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 4 — Enforce HTTPS and prevent domain takeovers
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 40–55 minutes · **Module 4 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-04.svg" alt="Enforce HTTPS and prevent domain takeovers: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={4} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Validate HTTPS redirect and hostname coverage after certificate issuance.
+- Identify dangling DNS records and unclaimed Pages domains as takeover risks.
+- Demonstrate that secrets and private learner records do not belong in static build output.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Design a domain security review checklist for your simulated deployment. Record certificate status, mixed-content checks, external script approvals, publishing permissions and what happens when the site is retired.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### 4.1 HTTPS enforcement
+
+After DNS is correct and the certificate has been issued, enable **Enforce HTTPS**. Validate:
+
+- certificate hostname coverage;
+- certificate chain and expiry;
+- HTTP-to-HTTPS redirect;
+- mixed-content warnings;
+- secure loading of fonts, images, scripts and styles.
+
+### 4.2 Avoid dangling DNS
+
+A DNS record that points to a Pages hostname after the repository or custom-domain association is removed can create takeover risk. Include DNS cleanup in repository retirement and domain migration procedures.
+
+### 4.3 Avoid wildcard records
+
+Do not use a wildcard record as a shortcut for Pages subdomains. Create explicit records for approved sites and maintain an ownership register.
+
+### 4.4 Protect the deployment path
+
+- protect `main` with pull-request review;
+- require successful status checks;
+- limit who can change workflow files;
+- review third-party Actions;
+- use environment protection for production where supported;
+- keep deployment tokens and secrets out of site source;
+- monitor Pages deployments and domain changes.
+
+## Applied exercise and assessment evidence
+
+**Task.** Design a domain security review checklist for your simulated deployment. Record certificate status, mixed-content checks, external script approvals, publishing permissions and what happens when the site is retired.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** The security review clearly separates required controls, evidence gathered, risks outstanding and the named owner for follow-up.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={4} />
