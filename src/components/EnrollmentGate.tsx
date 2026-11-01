@@ -85,8 +85,8 @@ export default function EnrollmentGate({courseId, courseTitle, children}: Enroll
       {state !== 'checking' && (
         <div className="accessGateActions">
           <a className="cardButton cardButtonPrimary sk-button sk-button--primary" href={signInUrl}>Sign in to continue</a>
-          <a className="cardButton sk-button sk-button--secondary" href={enrollUrl}>Register or enrol</a>
-          <a className="cardButton sk-button sk-button--secondary" href="https://www.skunkworksacademy.com/self-paced/">Return to catalogue</a>
+          <a className="cardButton" href={enrollUrl}>Register or enrol</a>
+          <a className="cardButton" href="https://www.skunkworksacademy.com/self-paced/">Return to catalogue</a>
         </div>
       )}
     </section>
