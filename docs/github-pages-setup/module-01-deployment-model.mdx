@@ -1,0 +1,140 @@
+---
+id: module-01-deployment-model
+slug: /github-pages-setup/module-01-deployment-model
+title: "Module 1 — Publishing architecture and repository models"
+sidebar_label: "01. Publishing architecture and repository models"
+description: "GHP-DOM-101 Module 1 — Publishing architecture and repository models: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 1 — Publishing architecture and repository models
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 35–50 minutes · **Module 1 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-01.svg" alt="Publishing architecture and repository models: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={1} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Distinguish organization, project and custom-domain GitHub Pages deployments.
+- Choose a publishing source and base-path configuration for a realistic requirement.
+- Draw the path from reviewed source through build artifact to HTTPS delivery.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Create an architecture decision record that compares two deployment options for a small training site. Specify the repository owner, Pages publishing source, generated artifact location, canonical URL, and two rollback conditions.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### 1.1 Site types
+
+GitHub Pages commonly publishes:
+
+- an organization or user site at `<owner>.github.io`;
+- a project site at `<owner>.github.io/<repository>`;
+- a verified custom domain such as `academy.example.com`.
+
+Project sites require the application to understand the repository base path. Static-site generators such as Docusaurus, Vite and React Router can produce broken assets or routes when the base path is omitted.
+
+### 1.2 Publishing sources
+
+Two operational models are common:
+
+1. **Branch or folder publishing** — GitHub publishes from a selected branch and root or `/docs` folder.
+2. **GitHub Actions publishing** — a workflow builds the application, uploads a Pages artefact and deploys it.
+
+Use Actions when the site requires a build step, validation, dependency installation or repeatable release controls.
+
+### 1.3 Deployment architecture
+
+```text
+Developer change
+      │
+      ▼
+Pull request ──► review and checks
+      │
+      ▼
+Main branch
+      │
+      ▼
+GitHub Actions build
+      │
+      ├── validate content and links
+      ├── generate static output
+      └── upload Pages artefact
+      │
+      ▼
+GitHub Pages deployment
+      │
+      ├── github.io project URL
+      └── optional verified custom domain + HTTPS
+```
+
+## Practical Lab 1 — Publish a minimal project site
+
+### Tasks
+
+1. Create a repository named `pages-training-site`.
+2. Add an `index.html` containing a meaningful title, heading, paragraph and navigation link.
+3. Add a `404.html` with a route-recovery link.
+4. Commit changes through a feature branch and pull request.
+5. Open **Settings → Pages**.
+6. Select the approved publishing source.
+7. Wait for the deployment to complete.
+8. Open the Pages URL in a private browser session.
+9. Validate the document title, visible content, CSS and 404 behaviour.
+
+### Suggested files
+
+```html title="index.html"
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pages Training Site</title>
+</head>
+<body>
+  <main>
+    <h1>Deployment verified</h1>
+    <p>This site was published through a controlled GitHub Pages workflow.</p>
+  </main>
+</body>
+</html>
+```
+
+### Acceptance criteria
+
+- the site is reachable from the Pages URL;
+- the deployed commit can be traced to the source branch;
+- no secret or environment-specific credential appears in source or build output;
+- a failed route returns a useful recovery page.
+
+## Applied exercise and assessment evidence
+
+**Task.** Create an architecture decision record that compares two deployment options for a small training site. Specify the repository owner, Pages publishing source, generated artifact location, canonical URL, and two rollback conditions.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** The diagram shows the correct URL shape, a build/release boundary and no assumption that GitHub Pages runs backend code.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={1} />
