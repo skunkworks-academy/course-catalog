@@ -1,0 +1,86 @@
+---
+id: module-05-troubleshooting
+slug: /github-pages-setup/module-05-troubleshooting
+title: "Module 5 — Troubleshoot failed Pages releases"
+sidebar_label: "05. Troubleshoot failed Pages releases"
+description: "GHP-DOM-101 Module 5 — Troubleshoot failed Pages releases: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 5 — Troubleshoot failed Pages releases
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 45–60 minutes · **Module 5 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-05.svg" alt="Troubleshoot failed Pages releases: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={5} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Follow a systematic source-to-browser troubleshooting path.
+- Distinguish build, artifact, DNS, certificate and client-side routing failures.
+- Produce a concise root-cause analysis with verified corrective action.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Inject one safe failure: invalid baseUrl, missing artifact output, incorrect DNS target in a simulated change plan, or a broken deep link. Capture the expected behavior, actual results, diagnostic commands, fix and evidence that the issue is resolved.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### Diagnostic sequence
+
+1. **Source:** Is the expected commit on the deployment branch?
+2. **Trigger:** Did the workflow run for the correct event?
+3. **Build:** Did dependency installation and static generation succeed?
+4. **Artefact:** Does the uploaded artefact contain `index.html` at its root?
+5. **Deployment:** Did the Pages environment deployment succeed?
+6. **Routing:** Are base paths and trailing-slash assumptions correct?
+7. **DNS:** Does the hostname resolve to the intended Pages target?
+8. **TLS:** Is the certificate issued and HTTPS enforced?
+9. **Browser:** Is cache, service-worker state or mixed content masking the fix?
+
+### Failure scenarios
+
+#### Scenario A — Workflow succeeds, site returns 404
+
+Check the Pages source is set to **GitHub Actions**, the artefact root, `baseUrl`, case-sensitive file paths and deployment URL.
+
+#### Scenario B — Custom domain says “improperly configured”
+
+Check the repository custom-domain value, DNS record type, target value, duplicate records, proxy/CDN settings and resolver propagation.
+
+#### Scenario C — HTTPS option unavailable
+
+Confirm DNS is valid, the custom domain is attached, CAA records permit the certificate authority and sufficient issuance time has elapsed.
+
+#### Scenario D — Assets fail only on project URL
+
+Search for absolute paths beginning with `/`. Replace them with generator-aware paths that include the repository base path.
+
+## Applied exercise and assessment evidence
+
+**Task.** Inject one safe failure: invalid baseUrl, missing artifact output, incorrect DNS target in a simulated change plan, or a broken deep link. Capture the expected behavior, actual results, diagnostic commands, fix and evidence that the issue is resolved.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** A different engineer can reproduce the fault, understand the root cause and independently verify the remediation.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={5} />
