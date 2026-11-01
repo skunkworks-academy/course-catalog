@@ -28,6 +28,18 @@ const config: Config = {
       defer: true,
       'data-skunkworks-global-nav': 'v10',
     },
+    // The compatibility loader intentionally skips React-owned /courses routes.
+    // Load canonical, hydration-safe header and footer runtimes directly here.
+    {
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-ui.js?v=2026.09.08.3',
+      defer: true,
+      'data-skunkworks-ui': 'canonical',
+    },
+    {
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-footer.js?v=2026.09.08.4',
+      defer: true,
+      'data-skunkworks-global-footer': 'canonical',
+    },
   ],
   customFields: {
     catalogUrl: 'https://www.skunkworksacademy.com/courses',
