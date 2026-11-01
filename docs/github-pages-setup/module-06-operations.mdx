@@ -1,0 +1,81 @@
+---
+id: module-06-operations
+slug: /github-pages-setup/module-06-operations
+title: "Module 6 — Operate a production Pages site safely"
+sidebar_label: "06. Operate a production Pages site safely"
+description: "GHP-DOM-101 Module 6 — Operate a production Pages site safely: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 6 — Operate a production Pages site safely
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 35–50 minutes · **Module 6 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-06.svg" alt="Operate a production Pages site safely: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Conceptual diagram — not a screenshot of a live system. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={6} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Create a runbook that names service and DNS ownership.
+- Define release acceptance, monitoring, renewal and rollback steps.
+- Describe an incident escalation sequence and evidence retention policy.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Write a one-page operational runbook covering your repository, canonical domain, publishing workflow, dependencies, health checks, alert criteria, DNS owner, escalation path, recovery steps and review cadence.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+Create an operating standard containing:
+
+- repository owner and technical owner;
+- source branch and deployment workflow;
+- Node and framework versions;
+- custom domain and DNS owner;
+- change, review and rollback process;
+- deployment health checks;
+- dependency update cadence;
+- site retirement procedure;
+- evidence retention location.
+
+### Production release checklist
+
+- pull request approved;
+- validation and build checks passed;
+- Pages source is correct;
+- deployment artefact contains expected files;
+- public URL, deep link and 404 tested;
+- custom domain resolves correctly;
+- HTTPS is enforced;
+- no secrets or private data are exposed;
+- analytics and external scripts are approved;
+- rollback path is documented.
+
+## Applied exercise and assessment evidence
+
+**Task.** Write a one-page operational runbook covering your repository, canonical domain, publishing workflow, dependencies, health checks, alert criteria, DNS owner, escalation path, recovery steps and review cadence.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** The runbook identifies decisions, responsible roles, validation evidence and a tested or rehearsed recovery path.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={6} />
