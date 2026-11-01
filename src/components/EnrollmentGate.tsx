@@ -80,7 +80,7 @@ export default function EnrollmentGate({courseId, courseTitle, children}: Enroll
   return (
     <section className="accessGate" role="status" aria-live="polite">
       <p className="eyebrow">Protected learning content</p>
-      <h2>{state === 'checking' ? 'Checking learner access…' : `${courseTitle} is enrolment-gated`}</h2>
+      <h1>{state === 'checking' ? courseTitle : `${courseTitle} — learner access required`}</h1>
       <p className="accessStatus">{detail}</p>
       {state !== 'checking' && (
         <div className="accessGateActions">
