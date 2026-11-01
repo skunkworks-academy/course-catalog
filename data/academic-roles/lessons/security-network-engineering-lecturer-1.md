@@ -1,0 +1,56 @@
+## Outcomes
+
+Partition an IPv4 address block; verify non-overlap and usable-host ranges; distinguish address separation from enforced access policy.
+
+## Explain and demonstrate
+
+An IPv4 prefix identifies the network portion of an address. Splitting 10.20.0.0/24 into /26 networks borrows two additional prefix bits, producing four equal blocks of 64 addresses. For these conventional /26 subnets, the network and broadcast addresses leave 62 host addresses. Do not generalize that subtraction rule to every prefix type; point-to-point /31 addressing is a separate case.
+
+Address planning and segmentation are related but different. Assigning different subnets does not itself prevent routed communication. An enforcement point needs rules governing traffic between zones. A teaching design should therefore include both an address table and an access matrix, with source, destination, service and decision stated explicitly.
+
+### Worked example: four classroom zones
+
+| Zone | Prefix | First host | Last host |
+|---|---|---|---|
+| Learner lab | 10.20.0.0/26 | 10.20.0.1 | 10.20.0.62 |
+| Teaching service | 10.20.0.64/26 | 10.20.0.65 | 10.20.0.126 |
+| Administration | 10.20.0.128/26 | 10.20.0.129 | 10.20.0.190 |
+| Reserved lab | 10.20.0.192/26 | 10.20.0.193 | 10.20.0.254 |
+
+An example policy permits the learner lab to reach a teaching web service on TCP 443 while denying access to the administration zone. This is a fictional design, not a firewall configuration to apply to a real campus. Private addressing also does not imply encryption or trusted identity.
+
+## Lab — validate a segmentation plan offline
+
+**Setup:** Use the supplied `lab.py` and Python’s standard-library `ipaddress` module. The exercise sends no packets and modifies no interfaces.
+
+1. Calculate the four ranges by hand, then run `python lab.py subnets`.
+2. Confirm each row reports 62 hosts and that no prefixes overlap.
+3. Assign 50 fictional learners to the first subnet and explain how gateway and infrastructure addresses affect remaining capacity.
+4. Build a three-row policy matrix: learner-to-teaching HTTPS, learner-to-administration, and administration-to-teaching management. State assumptions and approval requirements.
+5. Add an overlapping range to a copy of the plan and use `overlaps` to demonstrate the defect.
+
+**Expected observations:** Correct arithmetic does not establish that traffic is blocked; enforcement must be separately tested in an authorized lab. **Fault injection:** Allocate the same /26 to two zones and identify the collision. **Recovery:** Restore the unique allocation before writing the final matrix.
+
+**Evidence:** Address plan, overlap check, capacity reasoning and access matrix. **Cleanup:** Delete the faulty plan; no infrastructure teardown is required.
+
+## Common pitfalls and teaching decisions
+
+A diagram with separate boxes may imply isolation that the configuration does not enforce. Ask learners to name the enforcement point and the allowed flow. Avoid introducing public targets or real organizational ranges; documentation and private fixture addresses are sufficient. Explain that the subnet lab assesses planning, not live firewall operation.
+
+## Retrieval and reflection
+
+<details><summary>Does putting learners and administrators in different subnets prove isolation?</summary>
+
+No. Routing and enforcement policy determine allowed traffic. Verify both positive and negative access cases in an authorized environment.
+
+</details>
+
+<details><summary>Why can a 62-host subnet still be too small for 62 learners?</summary>
+
+Gateway and other infrastructure interfaces may consume usable addresses. Include those requirements and growth assumptions.
+
+</details>
+
+## Official references
+
+[RFC 1918 private address space](https://www.rfc-editor.org/rfc/rfc1918) · [Python ipaddress](https://docs.python.org/3.14/library/ipaddress.html) · [RFC 3021 point-to-point /31 use](https://www.rfc-editor.org/rfc/rfc3021).

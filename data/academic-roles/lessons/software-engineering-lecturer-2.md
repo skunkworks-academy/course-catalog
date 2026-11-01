@@ -1,0 +1,56 @@
+## Outcomes
+
+Separate policy from presentation; compare two deduplication strategies using an explicit workload; teach the difference between operation counts and elapsed time.
+
+## Explain and demonstrate
+
+A small program can teach architecture without requiring a distributed system. Keep booking policy in a function, input conversion at the boundary and printing in the command-line interface. The function should not read from a keyboard or depend on a web request. This separation allows the same policy to be tested directly and reused in a later interface.
+
+Consider deduplicating a list of submission identifiers while preserving the first occurrence. A novice solution scans the results already collected before adding each new value. It is easy to trace, but on a list of distinct values the comparisons grow as 0 + 1 + … + (n − 1). A set can support membership checks more efficiently on average, while a separate output list preserves order. The tradeoff includes additional memory and a requirement for hashable values. “Use a set” is therefore an incomplete explanation.
+
+### Worked example: an architecture decision record
+
+| Concern | List scan | Set plus output list |
+|---|---|---|
+| First-occurrence order | Preserved | Preserved by the output list |
+| Distinct-value membership work | Quadratic comparisons | Expected near-linear total membership work |
+| Values | Equality-comparable objects | Hashable objects |
+| Teaching purpose | Exposes the repeated scan | Exposes a time/memory tradeoff |
+
+For four distinct items, the scan makes 6 comparisons. For eight, it makes 28. Doubling the input did not merely double the count. This is evidence about this algorithm and this workload. It is not a benchmark of a particular computer, and it does not establish the time taken by Python’s built-in operations.
+
+## Lab — explain a design tradeoff
+
+**Setup:** Use the supplied offline `lab.py` and a text editor. Work in a new folder; no service or database is required.
+
+1. Run `python lab.py design`. Expect `n=4; comparisons=6` and `n=8; comparisons=28`.
+2. Trace `unique_scan([1, 2, 1])` by hand. Record the result list after each iteration and the number of equality checks.
+3. Add a function using a `seen` set and a result list. Compare its returned values with the original on empty, duplicate and distinct inputs.
+4. Explain why a list containing nested lists needs a different policy: nested lists are not hashable. Do not silently stringify arbitrary objects to make the error disappear.
+5. Write a short decision record with context, chosen option, rejected option and a trigger for revisiting the choice.
+
+**Expected observations:** `[1, 2, 1]` produces `[1, 2]` with two comparisons. Both designs should preserve output order for supported inputs. **Fault injection:** Remove the membership check from the new function; show that the duplicate test detects the problem. Restore it before submission.
+
+**Evidence:** Keep the trace table, test cases and decision record. **Cleanup:** Remove the defective variant; retain the working code and environment version.
+
+## Common pitfalls and teaching decisions
+
+A stopwatch measurement on one small input is noisy and does not prove asymptotic complexity. Counting only successful matches misses unsuccessful comparisons. Mixing UI and policy makes a unit test unnecessarily depend on keyboard input. Ask learners to make a prediction first, observe evidence second and revise their explanation third.
+
+## Retrieval and reflection
+
+<details><summary>Why can a faster membership structure still be the wrong choice?</summary>
+
+It may require unsupported value types, extra memory or different semantics. State the constraints before choosing a structure.
+
+</details>
+
+<details><summary>What evidence would show that the refactor preserved behaviour?</summary>
+
+The same contract-based cases should produce the same ordered results, including empty and duplicate inputs. Operation counts alone do not establish correctness.
+
+</details>
+
+## Official references
+
+[Python data structures](https://docs.python.org/3.14/tutorial/datastructures.html) · [Git tutorial for versioned changes](https://git-scm.com/docs/gittutorial). Examples and comparison counts are original Academy fixtures, not vendor benchmark results.

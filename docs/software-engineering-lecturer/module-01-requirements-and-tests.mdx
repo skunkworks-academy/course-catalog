@@ -1,0 +1,82 @@
+---
+id: module-01-requirements-and-tests
+slug: /software-engineering-lecturer/module-01-requirements-and-tests
+title: "Module 1 \u2014 Requirements and testable contracts"
+sidebar_label: "Module 1 \u2014 Requirements and testable contracts"
+description: "Requirements and testable contracts: worked examples, a safe practical exercise, evidence and formative feedback for Software Engineering Lecturer Practice."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 1 — Requirements and testable contracts
+
+**EDU-SWE-201** · Module 1 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** A relevant computing qualification or equivalent software-development experience; basic Python and Git. Use the [course environment and downloads](/courses/software-engineering-lecturer#course-materials).
+
+<RoleCourseNav courseId="EDU-SWE-201" current={1} />
+
+## Outcomes
+
+Translate a prose requirement into a contract; distinguish rejected input from a legitimate negative result; produce tests that expose an off-by-one error.
+
+## Explain and demonstrate
+
+A requirement describes observable behaviour, while an implementation explains how to obtain it. For a fictional lab-booking service, “prevent overbooking” is too vague to assess. Specify that capacity and enrolment are non-negative integer counts, enrolment cannot already exceed capacity, and a booking requests at least one seat. An exact fill is valid. A request exceeding available seats returns `False`; an impossible starting state raises an error. This distinction makes a failed booking different from corrupt data.
+
+A useful teaching sequence starts with examples before code. Ask learners to predict the decision for capacity 10, enrolled 8 and requested 2. Then change only the requested count to 3. Keeping the other variables fixed isolates the boundary. Finally introduce `True` as the requested count: Python treats booleans as integers in some contexts, so this example deliberately checks exact integer types. Explain the policy choice rather than presenting it as a universal rule.
+
+### Worked example: a test oracle
+
+| Capacity | Enrolled | Requested | Expected decision | Reason |
+|---|---|---|---|---|
+| 10 | 8 | 2 | Accept | Exactly fills the class |
+| 10 | 8 | 3 | Decline | Exceeds available places |
+| 10 | 8 | 0 | Input error | No booking was requested |
+| 10 | 11 | 1 | Input error | Starting state violates the contract |
+
+The table is an oracle: the expected answer comes from the requirement, not from whatever the current program prints. A green test suite is persuasive only when its cases can detect plausible defects. Replacing `<=` with `<` should break the exact-capacity test. If it does not, the suite misses the key boundary.
+
+## Lab — turn a requirement into evidence
+
+**Setup:** Download `lab.py` from the course overview into a new folder. Use synthetic counts only. Record `python --version`; use `python3` if that is your interpreter command.
+
+1. Run `python lab.py contracts`. Expected output: `True False`.
+2. Run `python lab.py test`. Seven automated checks should pass; execution time may vary.
+3. In a copy of the file, change the final comparison in `reserve` from `<=` to `<`. Run the tests again and identify the failed assertion.
+4. Restore the original comparison. Add a test for capacity 0, enrolled 0 and requested 1. Justify the expected result from the contract.
+5. Write a three-sentence feedback note for a learner who only tested a class with spare capacity. Name the missing boundary, provide a hint and ask them to explain their repaired test.
+
+**Expected observations:** The mutant incorrectly refuses the exact fill. The zero-capacity request is a valid request that cannot be fulfilled, so the result is `False`.
+
+**Evidence:** Save the input table, the failing assertion, the repaired test output and the feedback note. **Cleanup:** Keep the original and repaired files labelled; remove the deliberately faulty copy after comparison.
+
+## Common pitfalls and teaching decisions
+
+Testing only normal inputs rewards a plausible implementation without checking the contract. Catching every exception and returning `False` hides data defects. Publishing actual enrolment records adds no learning value: fictional counts are sufficient. For a learner needing a non-coding route, use the table to explain the boundary before moving to executable assertions.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why should the expected result be written before running the implementation?</summary>
+
+It reduces the chance of treating a defect as correct behaviour. Derive the oracle from the requirement, then compare the program with it. Revisit the input table if the distinction is unclear.
+
+</details>
+
+<details>
+<summary>Does seven passing tests prove the booking function is correct for every input?</summary>
+
+No. Tests establish the checked cases. Explain the input domain and remaining assumptions, and add cases for credible failure modes.
+
+</details>
+
+## Official references
+
+[Python unittest: fixtures and assertions](https://docs.python.org/3.14/library/unittest.html) · [Python built-in types](https://docs.python.org/3.14/library/stdtypes.html). Reference baseline checked 1 November 2026; the executable example uses Python 3.12-compatible syntax.
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-SWE-201)
+
+<RoleCourseNav courseId="EDU-SWE-201" current={1} />

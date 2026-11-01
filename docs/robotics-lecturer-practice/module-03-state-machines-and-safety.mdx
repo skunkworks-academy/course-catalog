@@ -1,0 +1,84 @@
+---
+id: module-03-state-machines-and-safety
+slug: /robotics-lecturer-practice/module-03-state-machines-and-safety
+title: "Module 3 \u2014 State machines and fault handling"
+sidebar_label: "Module 3 \u2014 State machines and fault handling"
+description: "State machines and fault handling: worked examples, a safe practical exercise, evidence and formative feedback for Robotics Lecturer Practice."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 3 — State machines and fault handling
+
+**EDU-ROB-201** · Module 3 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** Complete Module 2 or demonstrate its evidence criteria. Use the [course environment and downloads](/courses/robotics-lecturer-practice#course-materials).
+
+<RoleCourseNav courseId="EDU-ROB-201" current={3} />
+
+## Outcomes
+
+Specify a finite-state controller; test invalid-input behaviour; explain why fault recovery needs an explicit transition.
+
+## Explain and demonstrate
+
+A state machine describes permitted transitions between named operating conditions. The fixture uses RUN, STOP and FAULT. An invalid sensor reading moves any state to FAULT. Valid data alone does not clear a latched fault. An explicit reset with valid data moves FAULT to STOP, giving a separate decision point before operation resumes.
+
+The ordering of rules matters. Check invalid input first so a simultaneous reset cannot conceal it. Then handle the latched fault. Only when no fault remains should the obstacle condition select STOP or RUN. In a physical system, safe motion would require more controls than this three-state model. The exercise deliberately remains disconnected from actuators.
+
+### Worked example: transition priority
+
+| Current state | Input | Next state | Teaching point |
+|---|---|---|---|
+| Any | Invalid sensor | FAULT | Invalid evidence takes priority |
+| FAULT | Valid, no reset | FAULT | Fault remains latched |
+| FAULT | Valid, reset | STOP | Reset does not directly command motion |
+| RUN or STOP | Valid, obstacle | STOP | Obstacle prevents run |
+| RUN or STOP | Valid, clear | RUN | Normal operation in this simplified model |
+
+A transition table is executable design evidence: each row can become a test. Testing only the happy path misses the most consequential rule. Ask learners to explain what happens when two conditions occur together, not just when each condition is isolated.
+
+## Lab — inject a recoverable fault
+
+**Setup:** Use `lab.py` offline. No robot, ROS middleware, external sensors or network access is required.
+
+1. Predict the three outputs of `python lab.py states`, then run it. Expect `FAULT`, `FAULT`, `STOP` on separate lines.
+2. Run `python lab.py test`; six robotics checks should pass.
+3. Add a test for invalid data and reset occurring simultaneously. The expected result remains FAULT.
+4. Add a test for an obstacle while running. Explain why STOP and FAULT represent different situations.
+5. Draw a labelled state diagram or use the complete transition table. Include a text explanation of priority and recovery.
+6. Extend the requirements to demand a separate operator-start event after reset. Write the revised table before modifying code; explain which original transition is no longer acceptable.
+
+**Fault injection:** Remove the latched-fault branch in a copy. Show that valid input can now resume RUN without reset and that a test detects the defect. Restore the branch.
+
+**Expected observations:** Fault handling is a temporal property: the previous state affects the decision. **Evidence:** Transition table, added tests, failure log and recovery rationale. **Cleanup:** Remove the faulty variant and retain the corrected simulation.
+
+## Common pitfalls and teaching decisions
+
+Do not equate a software STOP label with a verified physical emergency stop. A missing reading is not the same as a reading of zero. A reset should not be used to discard evidence of an unresolved condition. Give learners a sequence of inputs to trace so they practise state over time.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why does valid data alone leave the fixture in FAULT?</summary>
+
+The fault is latched until an explicit reset occurs with valid input. This makes recovery a deliberate transition.
+
+</details>
+
+<details>
+<summary>What should happen if reset and invalid data arrive together?</summary>
+
+FAULT remains the result because invalid data has priority. Add this combination as a regression test.
+
+</details>
+
+## Official references
+
+[ROS managed-node lifecycle design](https://design.ros2.org/articles/node_lifecycle.html) · [Python unittest assertions](https://docs.python.org/3.14/library/unittest.html). The lifecycle source is a comparison for explicit transitions, not a claim that this fixture implements ROS lifecycle states.
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-ROB-201)
+
+<RoleCourseNav courseId="EDU-ROB-201" current={3} />

@@ -1,0 +1,57 @@
+## Outcomes
+
+Calculate proportional feedback; explain actuator saturation; compare a response trace with the stated plant model.
+
+## Explain and demonstrate
+
+A controller compares a target with an observed state. In the scalar fixture, error is target minus position, and the requested velocity is gain times error. The command is clamped between −1 and 1 to model a bounded actuator. Position then changes by that velocity for a one-second step. These assumptions make the trace easy to calculate; they do not establish that the controller is safe for real machinery.
+
+With target 4, initial position 0 and gain 0.5, the first requested velocity is 2, but saturation limits it to 1. Position becomes 1. The next two commands also equal 1, reaching position 3. Thereafter the command drops to 0.5, then 0.25, because the error has decreased. The controller approaches the target gradually in this idealized model.
+
+### Worked example: the bounded response
+
+| Tick | Command | Position after step |
+|---|---|---|
+| 0 | 1.000 | 1.000 |
+| 1 | 1.000 | 2.000 |
+| 2 | 1.000 | 3.000 |
+| 3 | 0.500 | 3.500 |
+| 4 | 0.250 | 3.750 |
+
+The table separates command from state. A common misconception is to treat the controller output as the next position. Another is to assume increasing gain always improves the response. In a real system, delay, inertia and sampling affect stability. Even in a simple discrete model, excessive gain can create overshoot or oscillation.
+
+## Lab — explain a control trace
+
+**Setup:** Use the supplied offline `lab.py`. Do not use these functions to drive hardware.
+
+1. Calculate the five rows by hand, then run `python lab.py control` and compare.
+2. Change the target to a negative value in a copy. Verify the command remains within the declared bounds and has the appropriate sign.
+3. Compare gain 0.25 with gain 0.5 while keeping target, time step and bounds constant.
+4. Run an explicitly labelled alternative with gain 2 and a sufficiently large command bound. Observe the idealized oscillation and explain why saturation had obscured that behaviour in the original setup.
+5. Write a learner question asking for the distinction between setpoint, error, command and measured state.
+
+**Fault injection:** Reverse the error to position minus target. Predict the direction before execution and show that the controller moves away from the target in the fixture. Restore the sign.
+
+**Expected observations:** Saturation limits command magnitude; it does not guarantee convergence or physical safety. **Evidence:** Two response tables, the sign-error diagnosis and a model-limit statement. **Cleanup:** Label exploratory variants and retain the corrected baseline.
+
+## Common pitfalls and teaching decisions
+
+Comparing two controllers while changing several parameters at once makes the cause of improvement unclear. A plot without units is hard to assess. Use a table first, then a graph if helpful. Declare whether the state is simulated, measured or estimated; these are different kinds of evidence.
+
+## Retrieval and reflection
+
+<details><summary>Why does the first command equal 1 when gain times error equals 2?</summary>
+
+The command is clamped to the configured upper bound. Distinguish requested and applied command.
+
+</details>
+
+<details><summary>Does a command limit prove a robot is safe?</summary>
+
+No. Physical safety also depends on hardware, hazards, sensing, faults and independent controls. This lesson demonstrates only a mathematical bound.
+
+</details>
+
+## Official references
+
+[ROS control PID controller documentation](https://control.ros.org/jazzy/doc/ros2_controllers/pid_controller/doc/userdoc.html) · [Python numerical functions](https://docs.python.org/3.14/library/math.html). The lab uses proportional control only; integral and derivative terms are extension topics.

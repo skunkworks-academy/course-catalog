@@ -1,0 +1,56 @@
+## Outcomes
+
+Construct an evidence timeline; compare competing failure hypotheses; propose a minimal correction with a verification and rollback plan.
+
+## Explain and demonstrate
+
+Troubleshooting starts with a bounded symptom and preserves the distinction between observation and inference. “The network is broken” is too broad. “At 09:00 a fictional learner resolved the service name, established a connection and received a 403 for a lab resource” is more useful. It narrows the likely layer without proving a root cause.
+
+A hypothesis should make a testable prediction. If name resolution were failing, a successful DNS answer would be unexpected. If the role assignment were missing, a policy denial naming that requirement would support the hypothesis. Correlation still matters: logs from another request or an earlier session can mislead. Record timestamps, time zones and identifiers, and avoid silently joining unrelated observations.
+
+### Worked example: competing hypotheses
+
+| Hypothesis | Predicted evidence | Fixture observation | Decision |
+|---|---|---|---|
+| DNS failure | No usable name answer | Answer present | Weakened for this request |
+| Transport failure | Connection cannot complete | Connection established | Weakened for this request |
+| Missing course role | Authorization denial | Synthetic policy reason matches | Supported within the fixture |
+
+The final column is scoped to the fixture. It is not proof about a real campus service. A proposed fix should target the missing course entitlement through an authorized process, not open all firewall rules or grant broad administrator access.
+
+## Lab — write a defensible incident explanation
+
+**Setup:** Run `python lab.py logs`. Every line is explicitly labelled SIMULATED. The documentation address 192.0.2.10 is not a test target.
+
+1. Copy the three synthetic lines into a timeline and label each as observation.
+2. Add the three hypotheses above and explain which evidence supports or weakens each.
+3. Propose the minimum authorized policy correction. State who may approve it and what evidence they must inspect, using organizational roles rather than invented people.
+4. Define positive verification: the intended learner can read the intended lab. Define negative verification: the learner still cannot change grades or read an unrelated course.
+5. Define rollback: revert the specific entitlement change if scope is wrong or an unauthorized case becomes allowed. Preserve the audit record.
+6. Prepare a two-minute explanation that distinguishes symptom, cause hypothesis, correction and verification.
+
+**Fault injection:** Insert a log line from a different request and identify why it must not be used as causal evidence. **Recovery:** Separate it from the correlated timeline.
+
+**Expected observations:** The narrow correction preserves least privilege. **Evidence:** Timeline, hypothesis table, change proposal and paired positive/negative checks. **Cleanup:** Keep only synthetic logs; do not attach live credentials, tokens or packet captures.
+
+## Common pitfalls and teaching decisions
+
+The first plausible cause is not necessarily the root cause. Rebooting or widening access can erase evidence and add risk. In a classroom, give learners a counterexample where the same status code has a different cause so they learn to reason from evidence. Do not ask them to scan third-party systems to make the exercise feel realistic.
+
+## Retrieval and reflection
+
+<details><summary>Why is an allowed-path test insufficient after changing a role assignment?</summary>
+
+The change may also grant unintended access. Negative tests verify that the denied boundaries remain intact.
+
+</details>
+
+<details><summary>When does a timeline become misleading?</summary>
+
+When events from different requests, time zones or systems are combined without a justified correlation. Preserve identifiers and uncertainty.
+
+</details>
+
+## Official references
+
+[NIST SP 800-61 Revision 3 incident response guidance](https://csrc.nist.gov/pubs/sp/800/61/r3/final) · [RFC 5737 documentation IPv4 blocks](https://www.rfc-editor.org/rfc/rfc5737). The scenario is an original training simulation.

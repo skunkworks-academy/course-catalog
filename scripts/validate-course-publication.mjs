@@ -95,7 +95,19 @@ for (const course of courses) {
     errors.push(id + ': manifest route has no matching MDX course: ' + route);
     continue;
   }
-  if (id === 'ART-101') {
+  if (course.contentAccess === 'public') {
+    const registration = '/course-registration/?course=' + encodeURIComponent(id);
+    if (course.releaseState !== 'pilot' || course.assessmentStatus !== 'facilitated-enquiry-only' ||
+        course.registrationPath !== registration || !doc.content.includes(registration)) {
+      errors.push(id + ': public pilot requires explicit status and a course-scoped registration enquiry.');
+    }
+    if (!index.includes("registrationPath: '" + registration + "'")) {
+      errors.push(id + ': catalogue card must use the pilot enquiry route.');
+    }
+    if (!doc.content.includes('Public pilot') || !doc.content.includes('Independent subject review is pending')) {
+      errors.push(id + ': public pilot must disclose its review and assessment limitations.');
+    }
+  } else if (id === 'ART-101') {
     if (!doc.content.includes('https://portal.skunkworksacademy.com/')) {
       errors.push('ART-101 public course must link to portal registration.');
     }
@@ -116,7 +128,11 @@ for (const doc of docs) {
   // They must still be enrolment-gated and discoverable in the course sidebar.
   const parent = courses.find(course => doc.route.startsWith(course.path + '/'));
   if (parent) {
-    if (doc.enrollmentId !== parent.courseId) {
+    if (parent.contentAccess === 'public') {
+      if (!doc.content.includes(parent.registrationPath) || !doc.content.includes('RoleCourseNav')) {
+        errors.push(doc.rel + ': public module needs parent navigation and scoped registration enquiry.');
+      }
+    } else if (doc.enrollmentId !== parent.courseId) {
       errors.push(doc.rel + ': module must use parent EnrollmentGate for ' + parent.courseId);
     }
     if (!sidebar.includes("'" + doc.docId + "'") && !sidebar.includes('"' + doc.docId + '"')) {
@@ -166,7 +182,9 @@ if (buildAt !== -1) {
       errors.push('Docusaurus sitemap.xml missing from build.');
     } else {
       const sitemap = fs.readFileSync(sitemapPath, 'utf8').replaceAll('&amp;', '&');
-      for (const course of courses) {
+      // Validate every lesson route, not only manifested course overviews.
+      const publishedPages = docs.map(doc => ({courseId: doc.id, path: doc.route}));
+      for (const course of publishedPages) {
         const canonical = origin + course.path;
         if (!sitemap.includes('<loc>' + canonical + '</loc>')) {
           errors.push(course.courseId + ': canonical course URL missing from generated sitemap: ' + canonical);
