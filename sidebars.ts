@@ -12,7 +12,24 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Web deployment',
       collapsed: false,
-      items: ['github-pages-setup', 'easyfile-domain-setup'],
+      items: [
+        {
+          type: 'category',
+          label: 'GitHub Pages Setup — 7 visual modules',
+          collapsed: false,
+          items: [
+            'github-pages-setup',
+            'github-pages-setup/module-01-deployment-model',
+            'github-pages-setup/module-02-actions-deployment',
+            'github-pages-setup/module-03-custom-domain-dns',
+            'github-pages-setup/module-04-https-security',
+            'github-pages-setup/module-05-troubleshooting',
+            'github-pages-setup/module-06-operations',
+            'github-pages-setup/module-07-capstone',
+          ],
+        },
+        'easyfile-domain-setup',
+      ],
     },
     {
       type: 'category',
