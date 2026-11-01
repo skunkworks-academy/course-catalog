@@ -299,3 +299,18 @@ body section[class*='hero'] a[class*='primaryButton'] {
   .ghp-course-navigation__grid { grid-template-columns: minmax(0, 1fr); }
   .ghp-course-navigation__paging a { min-height: 44px; display: inline-flex; align-items: center; }
 }
+
+/* WCAG 2.2 AA rendered contrast corrections confirmed by Chromium + axe.
+   Light breadcrumbs had a 4.39:1 ratio against #ebedef; the active
+   breadcrumb now uses dark navy. Dark-mode .eyebrow labels previously used
+   #1e6bd0 against dark surfaces (2.97:1 to 3.63:1); they now use a pale
+   accessible foreground without changing primary button backgrounds. */
+html:not([data-theme='dark']) .breadcrumbs__item--active > .breadcrumbs__link {
+  color: #174d9a !important;
+}
+html[data-theme='dark'] .breadcrumbs__item--active > .breadcrumbs__link {
+  color: #c2d9ff !important;
+}
+html[data-theme='dark'] .eyebrow {
+  color: #a8c9ff !important;
+}
