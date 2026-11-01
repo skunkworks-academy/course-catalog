@@ -41,6 +41,9 @@ jobs:
       - name: Build Docusaurus for Academy origin
         run: npm exec docusaurus build
 
+      - name: Enforce rendered course publication contract
+        run: npm run validate:publication-build
+
       - name: Verify canonical /courses output
         run: |
           test -f build/courses.html || test -f build/courses/index.html

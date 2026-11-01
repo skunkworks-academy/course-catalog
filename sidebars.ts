@@ -12,7 +12,25 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Web deployment',
       collapsed: false,
-      items: ['github-pages-setup'],
+      items: ['github-pages-setup', 'easyfile-domain-setup'],
+    },
+    {
+      type: 'category',
+      label: 'Data analytics',
+      collapsed: false,
+      items: ['data-outlier-analysis'],
+    },
+    {
+      type: 'category',
+      label: 'Programming and certification',
+      collapsed: false,
+      items: ['python-certification-prep'],
+    },
+    {
+      type: 'category',
+      label: 'Professional and business skills',
+      collapsed: false,
+      items: ['professional-articulation', 'professional-articulation-resources'],
     },
     {
       type: 'category',
