@@ -101,6 +101,9 @@ for (const course of courses) {
         course.registrationPath !== registration || !doc.content.includes(registration)) {
       errors.push(id + ': public pilot requires explicit status and a course-scoped registration enquiry.');
     }
+    if (!index.includes("registrationPath: '" + registration + "'")) {
+      errors.push(id + ': catalogue card must use the pilot enquiry route.');
+    }
     if (!doc.content.includes('Public pilot') || !doc.content.includes('Independent subject review is pending')) {
       errors.push(id + ': public pilot must disclose its review and assessment limitations.');
     }
@@ -179,7 +182,9 @@ if (buildAt !== -1) {
       errors.push('Docusaurus sitemap.xml missing from build.');
     } else {
       const sitemap = fs.readFileSync(sitemapPath, 'utf8').replaceAll('&amp;', '&');
-      for (const course of courses) {
+      // Validate every lesson route, not only manifested course overviews.
+      const publishedPages = docs.map(doc => ({courseId: doc.id, path: doc.route}));
+      for (const course of publishedPages) {
         const canonical = origin + course.path;
         if (!sitemap.includes('<loc>' + canonical + '</loc>')) {
           errors.push(course.courseId + ': canonical course URL missing from generated sitemap: ' + canonical);

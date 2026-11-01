@@ -314,3 +314,14 @@ html[data-theme='dark'] .breadcrumbs__item--active > .breadcrumbs__link {
 html[data-theme='dark'] .eyebrow {
   color: #a8c9ff !important;
 }
+
+/* Preserve keyboard access to Infima's scrollable native tables. */
+.theme-doc-markdown table:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+/* Inline references remain identifiable without relying on link colour. */
+.theme-doc-markdown p a {
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
