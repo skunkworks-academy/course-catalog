@@ -1,6 +1,6 @@
 {
   "schema": "skunkworks-academy/course-manifest/v1",
-  "generatedOn": "2026-08-16",
+  "generatedOn": "2026-11-01",
   "catalogUrl": "https://www.skunkworksacademy.com/courses",
   "accessPolicy": {
     "overview": "public",
@@ -124,6 +124,110 @@
       "durationHours": "36-40",
       "level": "Foundation to advanced",
       "evidenceOfCapability": true
+    },
+    {
+      "courseId": "EDU-SWE-201",
+      "title": "Software Engineering Lecturer Practice",
+      "path": "/courses/software-engineering-lecturer",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-SWE-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-MAT-201",
+      "title": "Mathematics for IT Lecturers",
+      "path": "/courses/mathematics-for-it-lecturers",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-MAT-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-EDT-201",
+      "title": "Academic Copy Editing and Source Verification",
+      "path": "/courses/academic-copy-editing",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-EDT-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-ITL-201",
+      "title": "IT Lecturer Practice and Assessment",
+      "path": "/courses/it-lecturer-practice",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-ITL-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-ROB-201",
+      "title": "Robotics Lecturer Practice",
+      "path": "/courses/robotics-lecturer-practice",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-ROB-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-NET-201",
+      "title": "Security and Network Engineering Lecturer Practice",
+      "path": "/courses/security-network-engineering-lecturer",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-NET-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-HWS-201",
+      "title": "IT Hardware and Software Lecturer Practice",
+      "path": "/courses/hardware-software-lecturer",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-HWS-201",
+      "assessmentStatus": "facilitated-enquiry-only"
+    },
+    {
+      "courseId": "EDU-PYT-201",
+      "title": "Python Programming Lecturer Practice",
+      "path": "/courses/python-programming-lecturer",
+      "category": "Academic teaching and editorial practice",
+      "durationHours": "10",
+      "level": "Intermediate",
+      "evidenceOfCapability": true,
+      "contentAccess": "public",
+      "releaseState": "pilot",
+      "registrationPath": "/course-registration/?course=EDU-PYT-201",
+      "assessmentStatus": "facilitated-enquiry-only"
     }
   ]
 }

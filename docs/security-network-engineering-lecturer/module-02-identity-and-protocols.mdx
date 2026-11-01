@@ -1,0 +1,82 @@
+---
+id: module-02-identity-and-protocols
+slug: /security-network-engineering-lecturer/module-02-identity-and-protocols
+title: "Module 2 \u2014 Identity, policy and protocol boundaries"
+sidebar_label: "Module 2 \u2014 Identity, policy and protocol boundaries"
+description: "Identity, policy and protocol boundaries: worked examples, a safe practical exercise, evidence and formative feedback for Security and Network Engineering Lecturer Practice."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 2 — Identity, policy and protocol boundaries
+
+**EDU-NET-201** · Module 2 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** Complete Module 1 or demonstrate its evidence criteria. Use the [course environment and downloads](/courses/security-network-engineering-lecturer#course-materials).
+
+<RoleCourseNav courseId="EDU-NET-201" current={2} />
+
+## Outcomes
+
+Separate authentication, device evidence and authorization; construct an explicit allow rule; explain the different assurances provided by network reachability and TLS.
+
+## Explain and demonstrate
+
+A successful connection does not establish permission to perform every action. Authentication establishes a claimed identity under a chosen mechanism; authorization decides whether that identity may perform a specific action on a resource. Device compliance is another input, not a substitute for either. The offline fixture allows a learner to read a lab only when identity is authenticated, the device is compliant, the role is learner and the action is `read-lab`.
+
+This is a deliberately narrow policy model. A real implementation also needs trustworthy evidence sources, session handling, resource scope, expiry and server-side enforcement. A browser flag that says “allowed” cannot supply those properties. Zero-trust reasoning asks for explicit decisions using relevant evidence rather than trusting a request because it originated on an internal network.
+
+### Worked example: distinct layers of evidence
+
+| Observation | Supports | Does not establish |
+|---|---|---|
+| DNS answer | Name resolution returned data | Service identity or authorization |
+| TCP connection | Transport endpoint was reachable | Application permission |
+| Verified TLS identity | Peer identity under certificate validation | User entitlement to a resource |
+| HTTP 403 response | Application or intermediary refused the request | Exact policy cause without more evidence |
+
+Avoid diagnosing solely from one status code. A proxy can generate a response, and a system may deliberately conceal some details. Combine client observations with authorized service logs and a request identifier when available.
+
+## Lab — test least-privilege decisions
+
+**Setup:** Run only the supplied Boolean policy simulation. No credentials, accounts or external services are used.
+
+1. Run `python lab.py policy`. Expect `read-lab: True` and `change-grades: False`.
+2. Create a decision table varying one input at a time: unauthenticated, noncompliant device, different role and different action.
+3. Add a resource identifier to a proposed policy. Explain why permission for one course should not automatically grant another.
+4. Write two negative tests and one allowed test. Include a case where the user is authenticated but lacks the action permission.
+5. Draft a short explanation for a learner who says “TLS succeeded, so the application must allow access.”
+
+**Fault injection:** Replace the complete decision with `return authenticated` in a copy. Show that the change-grades case now passes incorrectly. **Recovery:** Restore the narrow rule and rerun `python lab.py test`.
+
+**Expected observations:** Authentication is necessary for this policy but insufficient by itself. **Evidence:** Decision table, tests and layer explanation. **Cleanup:** Remove the broad-rule copy; retain no tokens or real identity records.
+
+## Common pitfalls and teaching decisions
+
+Do not call the fixture a production access-control service. A role name is meaningful only when assigned through a trusted process. Changing a UI control does not enforce a server decision. Require learners to distinguish the design of a policy from proof that a deployed service enforces it.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why should an authenticated learner still be denied permission to change grades?</summary>
+
+The permitted action is read-lab. Authentication does not grant unrelated privileges.
+
+</details>
+
+<details>
+<summary>What further evidence is needed to explain a 403?</summary>
+
+Authorized application or gateway evidence identifying the resource and policy decision, correlated with the request. The code alone does not identify the cause.
+
+</details>
+
+## Official references
+
+[NIST SP 800-207 Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final) · [RFC 9110 HTTP semantics](https://www.rfc-editor.org/rfc/rfc9110) · [RFC 8446 TLS 1.3](https://www.rfc-editor.org/rfc/rfc8446).
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-NET-201)
+
+<RoleCourseNav courseId="EDU-NET-201" current={2} />

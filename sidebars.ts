@@ -4,6 +4,20 @@ const sidebars: SidebarsConfig = {
   courseSidebar: [
     {
       type: 'category',
+      label: 'Academic teaching and editorial practice',
+      items: [
+        {type: 'category', label: "Software Engineering Lecturer Practice", items: ['software-engineering-lecturer', 'software-engineering-lecturer/module-01-requirements-and-tests', 'software-engineering-lecturer/module-02-design-and-algorithms', 'software-engineering-lecturer/module-03-digital-image-processing', 'software-engineering-lecturer/module-04-teaching-capstone']},
+        {type: 'category', label: "Mathematics for IT Lecturers", items: ['mathematics-for-it-lecturers', 'mathematics-for-it-lecturers/module-01-logic-and-proof', 'mathematics-for-it-lecturers/module-02-vectors-and-transforms', 'mathematics-for-it-lecturers/module-03-probability-and-evidence', 'mathematics-for-it-lecturers/module-04-teaching-capstone']},
+        {type: 'category', label: "Academic Copy Editing and Source Verification", items: ['academic-copy-editing', 'academic-copy-editing/module-01-editorial-scope', 'academic-copy-editing/module-02-source-verification', 'academic-copy-editing/module-03-accessible-technical-editing', 'academic-copy-editing/module-04-editorial-capstone']},
+        {type: 'category', label: "IT Lecturer Practice and Assessment", items: ['it-lecturer-practice', 'it-lecturer-practice/module-01-alignment-and-planning', 'it-lecturer-practice/module-02-lab-facilitation', 'it-lecturer-practice/module-03-assessment-and-moderation', 'it-lecturer-practice/module-04-teaching-capstone']},
+        {type: 'category', label: "Robotics Lecturer Practice", items: ['robotics-lecturer-practice', 'robotics-lecturer-practice/module-01-motion-and-frames', 'robotics-lecturer-practice/module-02-feedback-control', 'robotics-lecturer-practice/module-03-state-machines-and-safety', 'robotics-lecturer-practice/module-04-teaching-capstone']},
+        {type: 'category', label: "Security and Network Engineering Lecturer Practice", items: ['security-network-engineering-lecturer', 'security-network-engineering-lecturer/module-01-segmentation-and-addressing', 'security-network-engineering-lecturer/module-02-identity-and-protocols', 'security-network-engineering-lecturer/module-03-incident-diagnosis', 'security-network-engineering-lecturer/module-04-teaching-capstone']},
+        {type: 'category', label: "IT Hardware and Software Lecturer Practice", items: ['hardware-software-lecturer', 'hardware-software-lecturer/module-01-architecture-and-measurement', 'hardware-software-lecturer/module-02-operating-system-diagnosis', 'hardware-software-lecturer/module-03-java-data-structures', 'hardware-software-lecturer/module-04-teaching-capstone']},
+        {type: 'category', label: "Python Programming Lecturer Practice", items: ['python-programming-lecturer', 'python-programming-lecturer/module-01-execution-and-data', 'python-programming-lecturer/module-02-contracts-and-errors', 'python-programming-lecturer/module-03-files-and-tests', 'python-programming-lecturer/module-04-teaching-capstone']},
+      ],
+    },
+    {
+      type: 'category',
       label: 'Commerce administration',
       collapsed: false,
       items: ['shopify/user-permissions', 'shopify/store-operations'],

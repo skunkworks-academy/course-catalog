@@ -1,0 +1,178 @@
+{
+  "EDU-SWE-201": {
+    "title": "Software Engineering Lecturer Practice",
+    "slug": "software-engineering-lecturer",
+    "modules": [
+      [
+        "requirements-and-tests",
+        "Requirements and testable contracts"
+      ],
+      [
+        "design-and-algorithms",
+        "Design boundaries and algorithm evidence"
+      ],
+      [
+        "digital-image-processing",
+        "Digital image processing"
+      ],
+      [
+        "teaching-capstone",
+        "Software engineering teaching capstone"
+      ]
+    ]
+  },
+  "EDU-MAT-201": {
+    "title": "Mathematics for IT Lecturers",
+    "slug": "mathematics-for-it-lecturers",
+    "modules": [
+      [
+        "logic-and-proof",
+        "Logic, quantifiers and counterexamples"
+      ],
+      [
+        "vectors-and-transforms",
+        "Vectors and coordinate transformations"
+      ],
+      [
+        "probability-and-evidence",
+        "Conditional probability and evidence"
+      ],
+      [
+        "teaching-capstone",
+        "Mathematics teaching capstone"
+      ]
+    ]
+  },
+  "EDU-EDT-201": {
+    "title": "Academic Copy Editing and Source Verification",
+    "slug": "academic-copy-editing",
+    "modules": [
+      [
+        "editorial-scope",
+        "Editorial scope, style and author queries"
+      ],
+      [
+        "source-verification",
+        "Fact checking and source verification"
+      ],
+      [
+        "accessible-technical-editing",
+        "Accessible technical content"
+      ],
+      [
+        "editorial-capstone",
+        "Editorial release capstone"
+      ]
+    ]
+  },
+  "EDU-ITL-201": {
+    "title": "IT Lecturer Practice and Assessment",
+    "slug": "it-lecturer-practice",
+    "modules": [
+      [
+        "alignment-and-planning",
+        "Outcomes, alignment and lesson planning"
+      ],
+      [
+        "lab-facilitation",
+        "Inclusive lab facilitation and feedback"
+      ],
+      [
+        "assessment-and-moderation",
+        "Assessment design and moderation"
+      ],
+      [
+        "teaching-capstone",
+        "IT teaching portfolio capstone"
+      ]
+    ]
+  },
+  "EDU-ROB-201": {
+    "title": "Robotics Lecturer Practice",
+    "slug": "robotics-lecturer-practice",
+    "modules": [
+      [
+        "motion-and-frames",
+        "Motion models and reference frames"
+      ],
+      [
+        "feedback-control",
+        "Feedback, saturation and model limits"
+      ],
+      [
+        "state-machines-and-safety",
+        "State machines and fault handling"
+      ],
+      [
+        "teaching-capstone",
+        "Robotics teaching capstone"
+      ]
+    ]
+  },
+  "EDU-NET-201": {
+    "title": "Security and Network Engineering Lecturer Practice",
+    "slug": "security-network-engineering-lecturer",
+    "modules": [
+      [
+        "segmentation-and-addressing",
+        "Subnetting and segmentation"
+      ],
+      [
+        "identity-and-protocols",
+        "Identity, policy and protocol boundaries"
+      ],
+      [
+        "incident-diagnosis",
+        "Evidence-led network diagnosis"
+      ],
+      [
+        "teaching-capstone",
+        "Network security teaching capstone"
+      ]
+    ]
+  },
+  "EDU-HWS-201": {
+    "title": "IT Hardware and Software Lecturer Practice",
+    "slug": "hardware-software-lecturer",
+    "modules": [
+      [
+        "architecture-and-measurement",
+        "Architecture and measurement"
+      ],
+      [
+        "operating-system-diagnosis",
+        "Operating-system diagnosis"
+      ],
+      [
+        "java-data-structures",
+        "Java data structures and algorithms"
+      ],
+      [
+        "teaching-capstone",
+        "Hardware and software teaching capstone"
+      ]
+    ]
+  },
+  "EDU-PYT-201": {
+    "title": "Python Programming Lecturer Practice",
+    "slug": "python-programming-lecturer",
+    "modules": [
+      [
+        "execution-and-data",
+        "Execution models and data structures"
+      ],
+      [
+        "contracts-and-errors",
+        "Functions, contracts and errors"
+      ],
+      [
+        "files-and-tests",
+        "Files, tests and reproducibility"
+      ],
+      [
+        "teaching-capstone",
+        "Python teaching capstone"
+      ]
+    ]
+  }
+}

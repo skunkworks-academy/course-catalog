@@ -38,6 +38,9 @@ jobs:
       - name: Validate course content
         run: npm run validate:content
 
+      - name: Verify academic-role Python and Java lab fixtures
+        run: python3 scripts/check-academic-roles.py --java-required
+
       - name: Build Docusaurus for Academy origin
         run: npm exec docusaurus build
 

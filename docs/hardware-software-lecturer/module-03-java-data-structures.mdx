@@ -1,0 +1,81 @@
+---
+id: module-03-java-data-structures
+slug: /hardware-software-lecturer/module-03-java-data-structures
+title: "Module 3 \u2014 Java data structures and algorithms"
+sidebar_label: "Module 3 \u2014 Java data structures and algorithms"
+description: "Java data structures and algorithms: worked examples, a safe practical exercise, evidence and formative feedback for IT Hardware and Software Lecturer Practice."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 3 — Java data structures and algorithms
+
+**EDU-HWS-201** · Module 3 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** Complete Module 2 or demonstrate its evidence criteria. Use the [course environment and downloads](/courses/hardware-software-lecturer#course-materials).
+
+<RoleCourseNav courseId="EDU-HWS-201" current={3} />
+
+## Outcomes
+
+Run a Java comparison fixture; explain binary search prerequisites; justify a collection choice using access patterns and evidence.
+
+## Explain and demonstrate
+
+An algorithm’s behaviour depends on its data representation. Linear search examines items in sequence until it finds the target or reaches the end. Binary search repeatedly halves a sorted search interval. It requires the ordering to match the comparison rule. Efficient index access also matters: repeatedly retrieving middle positions from a linked structure can change the practical cost.
+
+The supplied Java fixture stores integers 0 through 15 in an `ArrayList`. Searching for 15 takes 16 comparisons in the linear implementation and 5 in the binary implementation. These are exact counts for this input and these implementations. They are not elapsed times, nor proof that binary search always wins for every workload. Sorting, updates, memory and small-input overhead may change the design choice.
+
+### Worked example: choose by operation
+
+| Requirement | Candidate | Question to ask |
+|---|---|---|
+| Indexed ordered values | ArrayList | How often is the list resized or modified? |
+| Membership without duplicates | HashSet | Are values hashable with stable equality semantics? |
+| Key-to-value lookup | HashMap | Are keys unique and correctly compared? |
+| Sorted search | Sorted random-access list | Who maintains ordering after updates? |
+
+A collection’s name is not a justification. A learner should identify the operations the application performs and the constraints that matter. Keep the teaching fixture small enough to trace by hand before discussing larger input sizes.
+
+## Lab — reproduce and explain Java search
+
+**Setup:** Download `SearchLab.java`. Use JDK 17 or later; confirm `java -version` and `javac -version`. A JRE without the compiler is insufficient. Work in a new folder.
+
+1. Compile with `javac SearchLab.java` and run `java SearchLab`.
+2. Expect `linear=16; binary=5`, followed by a reminder that comparisons are not elapsed time.
+3. Trace the binary-search middle indices for target 15: 7, 11, 13, 14 and 15.
+4. Change the target to 0 in a copy and predict both counts before execution. Update the fixture’s expected-count assertion to match your derived oracle.
+5. Shuffle the data deliberately. Explain why binary search’s ordering precondition no longer holds; do not generalize a coincidental successful result.
+6. Propose a collection for frequent unique-ID membership checks and justify the tradeoff.
+
+**Expected observations:** For target 0, linear search uses one comparison and this binary implementation uses four. **Recovery:** Restore sorted input and the original assertion. **Evidence:** Version output, run result, index trace and collection decision. **Cleanup:** Delete generated `SearchLab.class` when finished; retain the source and evidence.
+
+## Common pitfalls and teaching decisions
+
+Changing the test’s expected answer merely to match a defect invalidates the test. Derive the answer independently. Explain primitive comparison versus object equality when extending the example. Do not advertise comparison counts as a benchmark of Java or a particular computer.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why can binary search fail on unsorted data even when the code compiles?</summary>
+
+Compilation does not establish the algorithm’s ordering precondition. Its interval decisions rely on sorted values.
+
+</details>
+
+<details>
+<summary>Why might linear search be appropriate for a tiny or frequently changing list?</summary>
+
+Maintaining sorted order and other overheads may outweigh fewer search comparisons. Evaluate the complete workload.
+
+</details>
+
+## Official references
+
+[Java Collections Framework overview](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/package-summary.html) · [Java ArrayList](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html) · [Java Collections binarySearch](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collections.html#binarySearch(java.util.List,T)).
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-HWS-201)
+
+<RoleCourseNav courseId="EDU-HWS-201" current={3} />
