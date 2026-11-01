@@ -136,7 +136,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-SWE-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/software-engineering-lecturer/module-01-requirements-and-tests",
+          "title": "Requirements and testable contracts"
+        },
+        {
+          "path": "/courses/software-engineering-lecturer/module-02-design-and-algorithms",
+          "title": "Design boundaries and algorithm evidence"
+        },
+        {
+          "path": "/courses/software-engineering-lecturer/module-03-digital-image-processing",
+          "title": "Digital image processing"
+        },
+        {
+          "path": "/courses/software-engineering-lecturer/module-04-teaching-capstone",
+          "title": "Software engineering teaching capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-MAT-201",
@@ -149,7 +167,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-MAT-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/mathematics-for-it-lecturers/module-01-logic-and-proof",
+          "title": "Logic, quantifiers and counterexamples"
+        },
+        {
+          "path": "/courses/mathematics-for-it-lecturers/module-02-vectors-and-transforms",
+          "title": "Vectors and coordinate transformations"
+        },
+        {
+          "path": "/courses/mathematics-for-it-lecturers/module-03-probability-and-evidence",
+          "title": "Conditional probability and evidence"
+        },
+        {
+          "path": "/courses/mathematics-for-it-lecturers/module-04-teaching-capstone",
+          "title": "Mathematics teaching capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-EDT-201",
@@ -162,7 +198,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-EDT-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/academic-copy-editing/module-01-editorial-scope",
+          "title": "Editorial scope, style and author queries"
+        },
+        {
+          "path": "/courses/academic-copy-editing/module-02-source-verification",
+          "title": "Fact checking and source verification"
+        },
+        {
+          "path": "/courses/academic-copy-editing/module-03-accessible-technical-editing",
+          "title": "Accessible technical content"
+        },
+        {
+          "path": "/courses/academic-copy-editing/module-04-editorial-capstone",
+          "title": "Editorial release capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-ITL-201",
@@ -175,7 +229,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-ITL-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/it-lecturer-practice/module-01-alignment-and-planning",
+          "title": "Outcomes, alignment and lesson planning"
+        },
+        {
+          "path": "/courses/it-lecturer-practice/module-02-lab-facilitation",
+          "title": "Inclusive lab facilitation and feedback"
+        },
+        {
+          "path": "/courses/it-lecturer-practice/module-03-assessment-and-moderation",
+          "title": "Assessment design and moderation"
+        },
+        {
+          "path": "/courses/it-lecturer-practice/module-04-teaching-capstone",
+          "title": "IT teaching portfolio capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-ROB-201",
@@ -188,7 +260,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-ROB-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/robotics-lecturer-practice/module-01-motion-and-frames",
+          "title": "Motion models and reference frames"
+        },
+        {
+          "path": "/courses/robotics-lecturer-practice/module-02-feedback-control",
+          "title": "Feedback, saturation and model limits"
+        },
+        {
+          "path": "/courses/robotics-lecturer-practice/module-03-state-machines-and-safety",
+          "title": "State machines and fault handling"
+        },
+        {
+          "path": "/courses/robotics-lecturer-practice/module-04-teaching-capstone",
+          "title": "Robotics teaching capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-NET-201",
@@ -201,7 +291,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-NET-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/security-network-engineering-lecturer/module-01-segmentation-and-addressing",
+          "title": "Subnetting and segmentation"
+        },
+        {
+          "path": "/courses/security-network-engineering-lecturer/module-02-identity-and-protocols",
+          "title": "Identity, policy and protocol boundaries"
+        },
+        {
+          "path": "/courses/security-network-engineering-lecturer/module-03-incident-diagnosis",
+          "title": "Evidence-led network diagnosis"
+        },
+        {
+          "path": "/courses/security-network-engineering-lecturer/module-04-teaching-capstone",
+          "title": "Network security teaching capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-HWS-201",
@@ -214,7 +322,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-HWS-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/hardware-software-lecturer/module-01-architecture-and-measurement",
+          "title": "Architecture and measurement"
+        },
+        {
+          "path": "/courses/hardware-software-lecturer/module-02-operating-system-diagnosis",
+          "title": "Operating-system diagnosis"
+        },
+        {
+          "path": "/courses/hardware-software-lecturer/module-03-java-data-structures",
+          "title": "Java data structures and algorithms"
+        },
+        {
+          "path": "/courses/hardware-software-lecturer/module-04-teaching-capstone",
+          "title": "Hardware and software teaching capstone"
+        }
+      ]
     },
     {
       "courseId": "EDU-PYT-201",
@@ -227,7 +353,25 @@
       "contentAccess": "public",
       "releaseState": "pilot",
       "registrationPath": "/course-registration/?course=EDU-PYT-201",
-      "assessmentStatus": "facilitated-enquiry-only"
+      "assessmentStatus": "facilitated-enquiry-only",
+      "modules": [
+        {
+          "path": "/courses/python-programming-lecturer/module-01-execution-and-data",
+          "title": "Execution models and data structures"
+        },
+        {
+          "path": "/courses/python-programming-lecturer/module-02-contracts-and-errors",
+          "title": "Functions, contracts and errors"
+        },
+        {
+          "path": "/courses/python-programming-lecturer/module-03-files-and-tests",
+          "title": "Files, tests and reproducibility"
+        },
+        {
+          "path": "/courses/python-programming-lecturer/module-04-teaching-capstone",
+          "title": "Python teaching capstone"
+        }
+      ]
     }
   ]
 }
