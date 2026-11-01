@@ -137,6 +137,8 @@ for (const marker of [
   "url: '" + origin + "'",
   "routeBasePath: 'courses'",
   'academy-navigation.js',
+  'skunkworks-ui.js',
+  'skunkworks-footer.js',
   'data-skunkworks-global-nav',
   "portalEnrollUrl: 'https://portal.skunkworksacademy.com/checkout/'",
   "portalSignInUrl: 'https://portal.skunkworksacademy.com/signin'",
