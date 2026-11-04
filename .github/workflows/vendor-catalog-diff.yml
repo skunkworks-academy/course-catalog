@@ -1,0 +1,23 @@
+name: Vendor catalogue diff tests
+on:
+  pull_request:
+    paths:
+      - 'scripts/vendor-catalog-diff.mjs'
+      - 'tests/vendor-catalog-diff.test.mjs'
+      - '.github/workflows/vendor-catalog-diff.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/vendor-catalog-diff.mjs'
+      - 'tests/vendor-catalog-diff.test.mjs'
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/vendor-catalog-diff.test.mjs
