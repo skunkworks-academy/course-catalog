@@ -1,15 +1,19 @@
-name: Vendor catalogue diff tests
+name: Vendor catalogue metadata tests
 on:
   pull_request:
     paths:
       - 'scripts/vendor-catalog-diff.mjs'
+      - 'scripts/import-skunkworks-manifest.mjs'
       - 'tests/vendor-catalog-diff.test.mjs'
+      - 'tests/import-skunkworks-manifest.test.mjs'
       - '.github/workflows/vendor-catalog-diff.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/vendor-catalog-diff.mjs'
+      - 'scripts/import-skunkworks-manifest.mjs'
       - 'tests/vendor-catalog-diff.test.mjs'
+      - 'tests/import-skunkworks-manifest.test.mjs'
 jobs:
   unit-test:
     runs-on: ubuntu-latest
@@ -20,4 +24,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/vendor-catalog-diff.test.mjs
+      - run: node --test tests/vendor-catalog-diff.test.mjs tests/import-skunkworks-manifest.test.mjs
