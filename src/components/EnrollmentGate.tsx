@@ -80,11 +80,11 @@ export default function EnrollmentGate({courseId, courseTitle, children}: Enroll
   return (
     <section className="accessGate" role="status" aria-live="polite">
       <p className="eyebrow">Protected learning content</p>
-      <h2>{state === 'checking' ? 'Checking learner access…' : `${courseTitle} is enrolment-gated`}</h2>
+      <h1>{state === 'checking' ? courseTitle : `${courseTitle} — learner access required`}</h1>
       <p className="accessStatus">{detail}</p>
       {state !== 'checking' && (
         <div className="accessGateActions">
-          <a className="cardButton cardButtonPrimary" href={signInUrl}>Sign in to continue</a>
+          <a className="cardButton cardButtonPrimary sk-button sk-button--primary" href={signInUrl}>Sign in to continue</a>
           <a className="cardButton" href={enrollUrl}>Register or enrol</a>
           <a className="cardButton" href="https://www.skunkworksacademy.com/self-paced/">Return to catalogue</a>
         </div>

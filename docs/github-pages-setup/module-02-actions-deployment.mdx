@@ -1,0 +1,166 @@
+---
+id: module-02-actions-deployment
+slug: /github-pages-setup/module-02-actions-deployment
+title: "Module 2 — Build and deploy securely with GitHub Actions"
+sidebar_label: "02. Build and deploy securely with GitHub Actions"
+description: "GHP-DOM-101 Module 2 — Build and deploy securely with GitHub Actions: objectives, guided examples, applied practice, and validation evidence."
+keywords: [GitHub Pages, Skunkworks Academy, GitHub Actions, DNS, deployment, practical lab]
+---
+
+import EnrollmentGate from '@site/src/components/EnrollmentGate';
+import GitHubPagesModuleNav from '@site/src/components/GitHubPagesModuleNav';
+
+# Module 2 — Build and deploy securely with GitHub Actions
+
+**Course:** GHP-DOM-101 · **Estimated study time:** 50–65 minutes · **Module 2 of 7**
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/module-02.svg" alt="Build and deploy securely with GitHub Actions: a five-step labeled conceptual process diagram, with a visible illustration disclaimer." loading="lazy" />
+  <figcaption>Skunkworks Academy visual learning aid. Illustrative workflow mock-up — not an actual GitHub screenshot. Confirm actual interface labels against current vendor documentation.</figcaption>
+</figure>
+
+<figure className="ghp-figure">
+  <img src="/img/ghp-dom-101/illustrative-actions-run.svg" alt="Illustrative mock interface: a schematic of source validation, artifact creation and deployment checks; example only, not a real screenshot." loading="lazy" />
+  <figcaption>Illustrative mock interface, not a live GitHub or DNS-provider screenshot. Exact menu names may differ; validate in the official vendor documentation.</figcaption>
+</figure>
+
+<GitHubPagesModuleNav current={2} />
+
+## Measurable learning outcomes
+
+By the end of this module, the learner should be able to:
+
+- Explain the minimum Pages deployment permissions and why they are scoped.
+- Build a reproducible Docusaurus pipeline with pull-request validation and release separation.
+- Diagnose asset and route failures caused by an incorrect Docusaurus base URL.
+
+<div className="ghp-lesson-summary">
+  <strong>Practical deliverable:</strong> Implement the example workflow in a throwaway repository. Run validation on a feature branch, capture a successful Actions artifact, then deliberately introduce a broken baseUrl and record the browser Network errors before fixing it.
+</div>
+
+<EnrollmentGate courseId="GHP-DOM-101" courseTitle="GitHub Pages Setup">
+
+## Guided lesson
+
+### 2.1 Minimum workflow permissions
+
+A Pages deployment workflow normally requires:
+
+- `contents: read` to read the repository;
+- `pages: write` to publish the artefact;
+- `id-token: write` for the deployment identity flow.
+
+Keep workflow permissions explicit and minimal.
+
+### 2.2 Reference workflow
+
+```yaml title=".github/workflows/deploy-pages.yml"
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Pin actions to approved major versions or immutable commit SHAs according to your supply-chain policy. Review action publishers before use.
+
+### 2.3 Build controls
+
+A production workflow should fail before deployment when any of these controls fail:
+
+- dependency installation;
+- unit or content validation;
+- static-site build;
+- broken internal links;
+- required files or metadata;
+- accessibility smoke checks;
+- secret scanning or policy checks.
+
+## Practical Lab 2 — Deploy a Docusaurus project site
+
+### Tasks
+
+1. Scaffold a Docusaurus site using the current stable release.
+2. Set the organization and repository values.
+3. Configure the project-site base path.
+4. Add at least two pages and one document.
+5. Add an Actions workflow that builds and deploys the `build` directory.
+6. Open a pull request and confirm validation runs without deploying production.
+7. Merge and verify the Pages deployment.
+8. Inspect browser developer tools for missing assets or incorrect route prefixes.
+
+### Project-site configuration pattern
+
+```ts title="docusaurus.config.ts"
+const config = {
+  url: 'https://YOUR-ORG.github.io',
+  baseUrl: '/YOUR-REPOSITORY/',
+  organizationName: 'YOUR-ORG',
+  projectName: 'YOUR-REPOSITORY',
+  trailingSlash: false,
+};
+```
+
+### Common base-path defects
+
+| Symptom | Likely cause | Corrective action |
+|---|---|---|
+| CSS and JavaScript return 404 | base path omitted or hard-coded root paths | configure generator base URL and use internal link helpers |
+| Home page works but deep link fails | single-page route not represented as static output | generate static routes or implement a controlled 404 fallback |
+| Images work locally but not on Pages | path or filename case mismatch | correct case and use base-aware asset paths |
+| Build works locally but fails in Actions | uncommitted dependency or platform difference | use lockfile, supported Node version and clean install |
+
+## Applied exercise and assessment evidence
+
+**Task.** Implement the example workflow in a throwaway repository. Run validation on a feature branch, capture a successful Actions artifact, then deliberately introduce a broken baseUrl and record the browser Network errors before fixing it.
+
+**What to submit.** An evidence pack containing the configuration or plan, a short annotated diagram, command or workflow outputs where applicable, sanitized screenshots or illustrative figures explicitly labeled as simulations, and a one-paragraph reflection on failures or operational risks.
+
+**Acceptance criteria.** A reviewer can reproduce the build, identify the deployed commit SHA, inspect validation logs and load both the landing and one deep link.
+
+**Assessor checkpoints.** Confirm technical correctness; verify that screenshots and logs identify the environment and date; ensure commands are reproducible; and confirm no credentials, personal data, private courseware or customer secrets are included.
+
+:::note Evidence and privacy
+GitHub Pages hosts publicly downloadable build artifacts. This training interface can hide lessons behind a browser access check, but does not make embedded static lesson content private. Submit confidential work to an approved authenticated LMS or evidence repository, not to a public Pages artifact.
+:::
+
+</EnrollmentGate>
+
+<GitHubPagesModuleNav current={2} />

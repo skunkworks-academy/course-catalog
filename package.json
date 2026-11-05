@@ -12,7 +12,11 @@
     "swizzle": "docusaurus swizzle",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "validate:content": "node scripts/validate-course-content.mjs && node scripts/validate-generated-catalog.mjs && node scripts/validate-deployment-config.mjs"
+    "validate:content": "node scripts/validate-course-content.mjs && node scripts/validate-generated-catalog.mjs && node scripts/validate-deployment-config.mjs && node scripts/build-ai-master-catalog.mjs --check && npm run validate:publication && npm run validate:academic-roles",
+    "generate:ai-catalog": "node scripts/build-ai-master-catalog.mjs --write",
+    "validate:publication": "node scripts/validate-course-publication.mjs",
+    "validate:publication-build": "node scripts/validate-course-publication.mjs --build build",
+    "validate:academic-roles": "python3 scripts/check-academic-roles.py"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

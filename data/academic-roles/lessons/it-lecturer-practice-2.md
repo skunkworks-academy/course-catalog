@@ -1,0 +1,55 @@
+## Outcomes
+
+Prepare a reproducible lab; provide graduated hints without taking over the task; distinguish environment failure from conceptual misunderstanding.
+
+## Explain and demonstrate
+
+A lab has two learning environments: the technical setup and the learner’s current model of the problem. A missing interpreter is not evidence that a learner misunderstands functions. A correct installation is not evidence that they understand validation. Check readiness before the lesson, and keep technical recovery separate from conceptual feedback.
+
+A useful hint ladder reveals progressively more information. Start by asking the learner to compare expected and observed behaviour. Then direct attention to the relevant rule. Only later identify the function or line to inspect. A final worked explanation may be appropriate, but record that the learner received it and provide a fresh transfer task afterwards. Otherwise the assessor may confuse guided completion with independent performance.
+
+### Worked example: graduated support
+
+| Level | Facilitator prompt | Information revealed |
+|---|---|---|
+| 1 | “Which result did you predict?” | Learner’s current model |
+| 2 | “Which column names does the contract require?” | Relevant requirement |
+| 3 | “Compare `rows.fieldnames` with the required set.” | Location and representation |
+| 4 | Demonstrate one corrected header | A solution for one case |
+
+Offer the same conceptual task through readable text, a trace table and a spoken explanation where appropriate. Equivalent access does not mean lowering the criterion. A learner can explain a validation rule orally while still demonstrating the required code behaviour if code execution is part of the outcome.
+
+## Lab — rehearse a safe failure
+
+**Setup:** In a fresh folder, run `python --version` and `python lab.py test`. Six tests should pass. Keep the original file available as a reset point.
+
+1. Prepare a readiness checklist covering interpreter, file location, command, expected result and recovery path.
+2. Ask a peer to change the expected CSV header in a copy, or make the change yourself for a delayed rehearsal.
+3. Use the hint ladder to diagnose the resulting failure. Record the highest hint level used.
+4. Prepare an offline alternative containing the same input and output trace for a learner whose environment cannot be repaired during class.
+5. After recovery, give a fresh fixture and require an independent explanation.
+6. Write feedback in three parts: observed behaviour, relation to the criterion, and the next action.
+
+**Expected observations:** The support record distinguishes independent success from success after a demonstrated solution. **Recovery:** Restore the original file and rerun all six tests. **Evidence:** Readiness checklist, hint log, feedback and transfer response. **Cleanup:** Delete faulty copies that could be mistaken for the final solution; retain anonymized teaching notes only.
+
+## Common pitfalls and teaching decisions
+
+Taking the keyboard away from the learner can fix the machine while losing the learning opportunity. Publicly displaying named errors can discourage participation and expose personal information. Use fictional examples for whole-class feedback. Do not send a learner into a production tenant to compensate for a broken training lab.
+
+## Retrieval and reflection
+
+<details><summary>A learner completed the task after seeing the full solution. What evidence is still needed?</summary>
+
+A new independent task or explanation that demonstrates transfer. Record the assistance already provided.
+
+</details>
+
+<details><summary>How can you preserve the outcome when a learner cannot run the environment?</summary>
+
+Use an equivalent trace or explanation for conceptual outcomes, and reschedule required execution evidence when execution itself is part of the outcome. Do not silently mark an unperformed practical task complete.
+
+</details>
+
+## Official references
+
+[CAST guidelines for action and expression](https://udlguidelines.cast.org/) · [W3C accessible teaching materials](https://www.w3.org/WAI/tips/writing/). Local hint and recovery records are formative teaching aids, not institutional grading records.

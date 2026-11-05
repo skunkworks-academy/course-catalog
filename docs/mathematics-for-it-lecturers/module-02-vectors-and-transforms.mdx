@@ -1,0 +1,82 @@
+---
+id: module-02-vectors-and-transforms
+slug: /mathematics-for-it-lecturers/module-02-vectors-and-transforms
+title: "Module 2 \u2014 Vectors and coordinate transformations"
+sidebar_label: "Module 2 \u2014 Vectors and coordinate transformations"
+description: "Vectors and coordinate transformations: worked examples, a safe practical exercise, evidence and formative feedback for Mathematics for IT Lecturers."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 2 — Vectors and coordinate transformations
+
+**EDU-MAT-201** · Module 2 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** Complete Module 1 or demonstrate its evidence criteria. Use the [course environment and downloads](/courses/mathematics-for-it-lecturers#course-materials).
+
+<RoleCourseNav courseId="EDU-MAT-201" current={2} />
+
+## Outcomes
+
+Apply a two-dimensional rotation; identify coordinate conventions; verify a geometric invariant and diagnose a sign error.
+
+## Explain and demonstrate
+
+A vector records magnitude and direction relative to a coordinate system. The ordered pair (2, 1) is meaningful only after declaring what x and y represent, their units and the direction of positive axes. In this lesson x points right, y points up and positive rotation is counterclockwise. These conventions differ from many image grids, where row values increase downward.
+
+A 90-degree counterclockwise rotation maps (x, y) to (−y, x). Applying it to (2, 1) gives (−1, 2). The squared length before rotation is 2² + 1² = 5; afterwards it is (−1)² + 2² = 5. Length preservation is an invariant of this rotation. It provides a check independent of the exact expected coordinate pair, although it cannot detect every wrong transformation: a reflection also preserves length.
+
+### Worked example: independent checks
+
+| Input | Correct rotated point | Squared length | Check purpose |
+|---|---|---|---|
+| (1, 0) | (0, 1) | 1 | Confirms rotation direction |
+| (0, 1) | (−1, 0) | 1 | Confirms sign and axis exchange |
+| (2, 1) | (−1, 2) | 5 | Checks a non-axis example |
+| (0, 0) | (0, 0) | 0 | Checks the origin |
+
+Two successive quarter-turns produce (−x, −y); four return the original point. This composition check reveals how repeated operations relate to a larger transformation. Translation is different: adding an offset changes position, while a direction vector does not receive the same translation treatment in geometric models.
+
+## Lab — teach a transformation through evidence
+
+**Setup:** Use graph paper or the supplied `lab.py`; keep all quantities dimensionless for this fixture.
+
+1. Plot (2, 1), predict its rotated location and draw both position vectors.
+2. Run `python lab.py vectors`. Expect `(-1, 2) squared length: 5`.
+3. Apply `rotate` four times to each point in the table. Check that the original point returns.
+4. Replace the mapping with `(y, x)` in a copy. Show that the length check and the (1, 0) example both pass, but the (0, 1) example fails. Use both basis vectors to distinguish the reflection from the intended rotation.
+5. Write a two-minute explanation of why one invariant is insufficient. Include the two basis-vector tests.
+
+**Expected observations:** The swap-only function reflects across y = x; it is not a quarter-turn rotation. **Recovery:** Restore `(-point[1], point[0])` and rerun the checks.
+
+**Evidence:** Annotated plots, the convention statement, test results and the explanation. **Cleanup:** Keep corrected code and label the faulty example as a teaching counterexample.
+
+## Common pitfalls and teaching decisions
+
+Mixing degrees and radians creates numerical errors in later trigonometric code. A correct formula under one axis convention can look reversed under another. Ask learners to annotate axes before calculating. Offer an equivalent coordinate table for learners who cannot interpret the plotted arrows.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why can a length-preserving result still be wrong?</summary>
+
+Reflection preserves length too. Verify orientation and known points as well as length.
+
+</details>
+
+<details>
+<summary>What should be declared before comparing two coordinate implementations?</summary>
+
+Axis directions, units, origin and angle convention. Resolve these assumptions before diagnosing a formula defect.
+
+</details>
+
+## Official references
+
+[OpenStax Precalculus: rotation of axes](https://openstax.org/books/precalculus-2e/pages/10-4-rotation-of-axes) · [Python mathematics functions](https://docs.python.org/3.14/library/math.html). This lesson rotates a vector in fixed axes; the source also discusses rotating axes, which is a distinct convention to compare deliberately.
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-MAT-201)
+
+<RoleCourseNav courseId="EDU-MAT-201" current={2} />

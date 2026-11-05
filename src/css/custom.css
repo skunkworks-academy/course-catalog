@@ -140,6 +140,16 @@ body section[class*='hero'] a[class*='primaryButton'] {
   text-decoration: none;
 }
 .cardButtonPrimary { background: var(--skw-blue); border-color: var(--skw-blue); color: #fff; }
+/* The composed Academy theme applies !important colours to ordinary links.
+   These anchors are filled action buttons, so retain a white label in both
+   themes and all interaction states (5.16:1 on the Academy blue surface). */
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:visited,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:hover,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:focus,
+html[data-theme] body main .accessGate .accessGateActions a.cardButton.cardButtonPrimary:active {
+  color: #ffffff !important;
+}
 .cardButton:hover { text-decoration: none; }
 
 .accessGate {
@@ -204,4 +214,124 @@ body section[class*='hero'] a[class*='primaryButton'] {
 @media print {
   .accessGateActions, .recordActions, .theme-doc-sidebar-container, .pagination-nav, footer { display: none !important; }
   .main-wrapper { padding-top: 0; }
+}
+
+/* GHP-DOM-101: reusable course pathway, light/dark Academy tokens only. */
+.ghp-course-navigation {
+  margin: 2rem 0;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: var(--skw-panel);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--skw-line);
+  border-radius: 1.25rem;
+}
+.ghp-course-navigation__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  padding-bottom: .85rem;
+}
+.ghp-course-navigation__heading span { color: var(--skw-slate); }
+.ghp-course-navigation__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: .6rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ghp-course-navigation__grid li { margin: 0; }
+.ghp-course-navigation__grid a {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: .7rem;
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  border: 1px solid var(--skw-line);
+  border-radius: .7rem;
+  padding: .7rem;
+  background: var(--ifm-background-color);
+}
+.ghp-course-navigation__grid a:hover,
+.ghp-course-navigation__grid a:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 1px;
+}
+.ghp-course-navigation__grid a.ghp-course-navigation__active {
+  border: 2px solid var(--ifm-color-primary);
+  font-weight: 800;
+}
+.ghp-course-navigation__number {
+  font-size: .8rem;
+  font-weight: 900;
+  border: 1px solid currentColor;
+  border-radius: .45rem;
+  padding: .25rem .4rem;
+}
+.ghp-course-navigation__paging {
+  margin-top: 1rem;
+  padding-top: .9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .75rem;
+  border-top: 1px solid var(--skw-line);
+}
+.ghp-figure {
+  margin: 1.5rem 0 2rem;
+  padding: .7rem;
+  background: var(--skw-panel);
+  border: 1px solid var(--skw-line);
+  border-radius: 1.1rem;
+}
+.ghp-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: .75rem;
+}
+.ghp-figure figcaption {
+  font-size: .9rem;
+  padding: .7rem .25rem .25rem;
+  color: var(--skw-slate);
+}
+.ghp-lesson-summary {
+  margin: 1rem 0;
+  border-left: 4px solid var(--ifm-color-primary);
+  background: var(--skw-panel);
+  border-radius: .5rem;
+  padding: 1rem 1.2rem;
+}
+@media (max-width: 600px) {
+  .ghp-course-navigation__grid { grid-template-columns: minmax(0, 1fr); }
+  .ghp-course-navigation__paging a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+/* WCAG 2.2 AA rendered contrast corrections confirmed by Chromium + axe.
+   Light breadcrumbs had a 4.39:1 ratio against #ebedef; the active
+   breadcrumb now uses dark navy. Dark-mode .eyebrow labels previously used
+   #1e6bd0 against dark surfaces (2.97:1 to 3.63:1); they now use a pale
+   accessible foreground without changing primary button backgrounds. */
+html:not([data-theme='dark']) .breadcrumbs__item--active > .breadcrumbs__link {
+  color: #174d9a !important;
+}
+html[data-theme='dark'] .breadcrumbs__item--active > .breadcrumbs__link {
+  color: #c2d9ff !important;
+}
+html[data-theme='dark'] .eyebrow {
+  color: #a8c9ff !important;
+}
+
+/* Preserve keyboard access to Infima's scrollable native tables. */
+.theme-doc-markdown table:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+/* Inline references remain identifiable without relying on link colour. */
+.theme-doc-markdown p a {
+  text-decoration: underline;
+  text-underline-offset: .16em;
 }

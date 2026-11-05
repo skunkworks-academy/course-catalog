@@ -35,8 +35,24 @@ for (const file of requiredFiles) {
 for (const course of courses) {
   const path = join(root, course.file);
   if (!existsSync(path)) continue;
-  const content = readFileSync(path, 'utf8');
-  const moduleCount = (content.match(/^## Module /gm) || []).length;
+  let content = readFileSync(path, 'utf8');
+  if (course.id === 'GHP-DOM-101') {
+    const slugNames = [
+      'deployment-model', 'actions-deployment', 'custom-domain-dns',
+      'https-security', 'troubleshooting', 'operations', 'capstone'
+    ];
+    const lessonFiles = slugNames.map((slug, index) =>
+      join(root, 'docs', 'github-pages-setup', `module-${String(index + 1).padStart(2, '0')}-${slug}.mdx`)
+    );
+    for (const lesson of lessonFiles) {
+      if (!existsSync(lesson)) {
+        errors.push(`GHP-DOM-101: missing required module: ${lesson}`);
+        continue;
+      }
+      content += '\n' + readFileSync(lesson, 'utf8');
+    }
+  }
+  const moduleCount = (content.match(course.id === 'GHP-DOM-101' ? /^# Module [0-9]+/gm : /^## Module /gm) || []).length;
   const labCount = (content.match(/^## Practical Lab /gm) || []).length;
 
   if (!content.includes(`courseId="${course.id}"`)) errors.push(`${course.file}: missing course ID ${course.id}`);

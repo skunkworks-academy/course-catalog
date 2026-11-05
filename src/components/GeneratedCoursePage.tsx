@@ -135,7 +135,11 @@ export default function GeneratedCoursePage({course}: GeneratedCoursePageProps):
             <span>{course.courseId}</span><span>{course.level}</span><span>{course.estimatedEffort}</span>
           </div>
           <div className="heroActions">
-            <a className="heroButton heroButtonPrimary" href={`https://portal.skunkworksacademy.com/checkout/?courseId=${encodeURIComponent(course.courseId)}`}>Register or enrol</a>
+            {['SHP-UPA-101', 'GHP-DOM-101', 'M365-LIC-101'].includes(course.courseId) ? (
+              <a className="heroButton heroButtonPrimary" href={`https://portal.skunkworksacademy.com/checkout/?courseId=${encodeURIComponent(course.courseId)}`}>Register or enrol</a>
+            ) : (
+              <a className="heroButton heroButtonPrimary" href={`mailto:training@skunkworks.africa?subject=${encodeURIComponent('Course enquiry: ' + course.title + ' (' + course.courseId + ')')}`}>Enquire about this course</a>
+            )}
             <a className="heroButton" href="https://portal.skunkworksacademy.com/signin">Learner sign in</a>
             <a className="heroButton" href={catalogueUrl}>Return to catalogue</a>
           </div>

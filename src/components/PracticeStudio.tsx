@@ -22,16 +22,22 @@ export default function PracticeStudio({
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [recording, setRecording] = useState(false);
+  const [starting, setStarting] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [audioUrl, setAudioUrl] = useState('');
+  const audioUrlRef = useRef('');
+  const startedAtRef = useRef(0);
+  const [recordedMimeType, setRecordedMimeType] = useState('audio/webm');
   const [transcript, setTranscript] = useState('');
   const [status, setStatus] = useState('Ready. Recording stays on this device unless you export and submit it.');
 
   useEffect(() => () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
-  }, [audioUrl]);
+    if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+  }, []);
+
 
   const metrics = useMemo(() => {
     const words = transcript.trim() ? transcript.trim().split(/\s+/).length : 0;
@@ -57,8 +63,11 @@ export default function PracticeStudio({
     }
 
     try {
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
+      setStarting(true);
+      setStatus('Requesting microphone permission…');
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+        audioUrlRef.current = '';
         setAudioUrl('');
       }
       const stream = await navigator.mediaDevices.getUserMedia({audio: true});
@@ -70,19 +79,28 @@ export default function PracticeStudio({
         if (event.data.size > 0) chunksRef.current.push(event.data);
       };
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, {type: recorder.mimeType || 'audio/webm'});
-        setAudioUrl(URL.createObjectURL(blob));
+        const mimeType = recorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunksRef.current, {type: mimeType});
+        setRecordedMimeType(mimeType);
+        const nextUrl = URL.createObjectURL(blob);
+        audioUrlRef.current = nextUrl;
+        setAudioUrl(nextUrl);
         stream.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
         setStatus('Recording complete. Review the playback, add a transcript and export the practice record.');
       };
       setSeconds(0);
-      setRecording(true);
       recorder.start();
+      startedAtRef.current = Date.now();
+      setRecording(true);
       timerRef.current = setInterval(() => setSeconds((current) => current + 1), 1000);
       setStatus('Recording. Speak naturally and complete the prompt without reading every word.');
     } catch {
-      setStatus('Microphone access was unavailable or denied. Check browser permissions or use an external recorder.');
+      streamRef.current?.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+      setStatus('Microphone access was unavailable or denied. Open this HTTPS page in Safari, allow microphone permission, and retry.');
+    } finally {
+      setStarting(false);
     }
   }
 
@@ -91,6 +109,7 @@ export default function PracticeStudio({
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+    setSeconds(Math.max(1, Math.round((Date.now()-startedAtRef.current)/1000)));
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
     setRecording(false);
   }
@@ -114,8 +133,10 @@ export default function PracticeStudio({
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = `${courseId.toLowerCase()}-${exerciseId.toLowerCase()}-practice.json`;
+    document.body.appendChild(anchor);
     anchor.click();
-    URL.revokeObjectURL(url);
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
     setStatus('Practice metrics exported. Save the audio separately where required by the assessment brief.');
   }
 
@@ -126,13 +147,14 @@ export default function PracticeStudio({
       <p><strong>Prompt:</strong> {prompt}</p>
       <p className="accessStatus">Target duration: {Math.round(targetSeconds / 60)} minute(s). Microphone audio is processed locally by the browser.</p>
 
+      <p role="status" aria-live="polite">{recording ? 'Recording in progress — microphone active' : audioUrl ? 'Recording saved on this device — ready to replay' : 'Microphone ready'}</p>
       <div className="studioTimer" aria-live="polite">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div>
       <div className="recordActions">
-        <button className="recordButton recordButtonPrimary" type="button" onClick={startRecording} disabled={recording}>Start recording</button>
+        <button className="recordButton recordButtonPrimary" type="button" onClick={startRecording} disabled={recording || starting}>{starting ? "Requesting microphone…" : "Start recording"}</button>
         <button className="recordButton recordButtonSecondary" type="button" onClick={stopRecording} disabled={!recording}>Stop recording</button>
       </div>
 
-      {audioUrl && <audio className="studioAudio" controls src={audioUrl}>Your browser does not support audio playback.</audio>}
+      {audioUrl && <div><audio className="studioAudio" controls src={audioUrl}>Your browser does not support audio playback.</audio><p><a href={audioUrl} download={`${courseId.toLowerCase()}-${exerciseId}-recording.${recordedMimeType.includes('mp4') ? 'm4a' : recordedMimeType.includes('ogg') ? 'ogg' : 'webm'}`}>Download audio recording</a></p></div>}
 
       <label className="studioLabel" htmlFor={`${exerciseId}-transcript`}>Paste or type your transcript</label>
       <textarea
@@ -154,7 +176,7 @@ export default function PracticeStudio({
         {metrics.fillers.length ? ` Detected fillers: ${metrics.fillers.join(', ')}.` : ' No listed filler words detected in the transcript.'}
       </p>
 
-      <button className="recordButton recordButtonPrimary" type="button" onClick={exportRecord} disabled={!transcript.trim()}>Export practice record</button>
+      <button className="recordButton recordButtonPrimary" type="button" onClick={exportRecord} disabled={!transcript.trim() && !audioUrl}>Export practice record</button>
       <p className="accessStatus" role="status" aria-live="polite">{status}</p>
     </section>
   );

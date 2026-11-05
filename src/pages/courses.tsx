@@ -22,6 +22,7 @@ type CatalogCourse = {
   description: string;
   route: string;
   contentStatus?: string;
+  registrationPath?: string;
   source?: 'published' | 'generated';
 };
 
@@ -111,6 +112,158 @@ const deliveryStyles = [
 ];
 
 const publishedCourses: CatalogCourse[] = [
+  {
+    courseId: 'EDU-SWE-201',
+    title: "Software Engineering Lecturer Practice",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Teach requirements, testable software design and digital image processing through a reproducible classroom project.",
+    route: '/courses/software-engineering-lecturer',
+    registrationPath: '/course-registration/?course=EDU-SWE-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-MAT-201',
+    title: "Mathematics for IT Lecturers",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Make discrete logic, vectors and conditional probability teachable through worked computing examples and misconception-led feedback.",
+    route: '/courses/mathematics-for-it-lecturers',
+    registrationPath: '/course-registration/?course=EDU-MAT-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-EDT-201',
+    title: "Academic Copy Editing and Source Verification",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Copy edit academic material with an explicit style sheet, claim checks, accessible structures and controlled editorial handover.",
+    route: '/courses/academic-copy-editing',
+    registrationPath: '/course-registration/?course=EDU-EDT-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-ITL-201',
+    title: "IT Lecturer Practice and Assessment",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Plan aligned IT lessons, facilitate safe labs and produce defensible assessment and moderation evidence.",
+    route: '/courses/it-lecturer-practice',
+    registrationPath: '/course-registration/?course=EDU-ITL-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-ROB-201',
+    title: "Robotics Lecturer Practice",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Teach robot motion, feedback control and fail-safe state machines using deterministic software simulations.",
+    route: '/courses/robotics-lecturer-practice',
+    registrationPath: '/course-registration/?course=EDU-ROB-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-NET-201',
+    title: "Security and Network Engineering Lecturer Practice",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Teach subnet planning, access decisions and evidence-led incident diagnosis in isolated fictional networks.",
+    route: '/courses/security-network-engineering-lecturer',
+    registrationPath: '/course-registration/?course=EDU-NET-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-HWS-201',
+    title: "IT Hardware and Software Lecturer Practice",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Connect computer architecture, operating-system troubleshooting and Java data structures to measurable classroom demonstrations.",
+    route: '/courses/hardware-software-lecturer',
+    registrationPath: '/course-registration/?course=EDU-HWS-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'EDU-PYT-201',
+    title: "Python Programming Lecturer Practice",
+    deliveryMode: 'Self-Paced',
+    category: 'Academic Teaching & Editorial Practice',
+    level: 'Intermediate',
+    estimatedEffort: '10 hours (estimated)',
+    description: "Teach Python through execution tracing, explicit contracts, robust file handling and reproducible tests.",
+    route: '/courses/python-programming-lecturer',
+    registrationPath: '/course-registration/?course=EDU-PYT-201',
+    contentStatus: 'Public pilot; independent subject review pending',
+    source: 'published',
+  },
+  {
+    courseId: 'DAT-OUT-101',
+    title: 'Understanding Outliers in Data Files',
+    deliveryMode: 'Self-Paced',
+    category: 'Data Analytics',
+    level: 'Foundation to intermediate',
+    estimatedEffort: '24–30 hours',
+    description: 'Investigate anomalous values in CSV and spreadsheet data with robust analysis, reproducible checks, and evidence-based reporting.',
+    route: '/courses/data-outlier-analysis',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
+  },
+  {
+    courseId: 'EFL-DOM-101',
+    title: 'EasyFile Domain Setup and Production Launch',
+    deliveryMode: 'Self-Paced',
+    category: 'Web Deployment',
+    level: 'Intermediate',
+    estimatedEffort: '22–28 hours',
+    description: 'Configure and validate production DNS, TLS, email, cutover, monitoring, and rollback controls for EasyFile.',
+    route: '/courses/easyfile-domain-setup',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
+  },
+  {
+    courseId: 'PYE-101',
+    title: 'Python Certification Preparation',
+    deliveryMode: 'Self-Paced',
+    category: 'Programming and Certification',
+    level: 'Beginner',
+    estimatedEffort: '30–36 hours',
+    description: 'Develop introductory Python capability through deliberate code practice, debugging, mock tasks, and a portfolio capstone.',
+    route: '/courses/python-certification-prep',
+    contentStatus: 'Published evidence-led learning journey',
+    source: 'published',
+  },
+  {
+    courseId: 'ART-101',
+    title: 'Professional Articulation and Executive Communication',
+    deliveryMode: 'Self-Paced',
+    category: 'Professional & Business Skills',
+    level: 'Foundation to advanced',
+    estimatedEffort: '36–40 hours',
+    description: 'Build confident communication, clear articulation, storytelling, and presentation skills using assessed practice and feedback.',
+    route: '/courses/professional-articulation',
+    contentStatus: 'Public lessons with portal-based registration for formal assessment',
+    source: 'published',
+  },
   {
     courseId: 'AFF-FND-101',
     title: 'Affiliate Marketing Foundations: Platforms, Offers and Trust',
@@ -582,9 +735,9 @@ export default function CoursesLandingPage(): React.JSX.Element {
                             <Link className={styles.cardLink} to={course.route}>Open course</Link>
                             <a
                               className={styles.enrolLink}
-                              href={`https://portal.skunkworksacademy.com/checkout/?courseId=${encodeURIComponent(course.courseId)}`}
+                              href={course.registrationPath || `https://portal.skunkworksacademy.com/checkout/?courseId=${encodeURIComponent(course.courseId)}`}
                             >
-                              Register / enrol
+                              {course.registrationPath ? 'Enquire about facilitation' : 'Register / enrol'}
                             </a>
                           </div>
                         </article>

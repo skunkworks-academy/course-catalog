@@ -1,0 +1,60 @@
+## Outcomes
+
+Represent a grayscale image as a matrix; calculate a local mean filter; distinguish border handling, numerical precision and visual interpretation.
+
+## Explain and demonstrate
+
+A grayscale image can be modelled as a grid of intensity values. Filtering replaces each output position with a calculation over a neighbourhood. A 3 by 3 mean filter assigns equal weight to nine values. The weights sum to one, so a constant patch retains its value away from borders. A single bright impulse is spread across neighbouring outputs, illustrating the tradeoff between noise reduction and lost detail.
+
+Before demonstrating a library call, declare the border policy. This lab uses only valid 3 by 3 windows: a 5 by 5 input produces a 3 by 3 output. It does not pad the input. Another implementation might pad with zeros or reflect the edge and retain the original dimensions. Different results near an edge can therefore be legitimate policy differences rather than defects.
+
+### Worked example: an impulse image
+
+| Row | Five input intensities |
+|---|---|
+| 1 | 0, 0, 0, 0, 0 |
+| 2 | 0, 0, 0, 0, 0 |
+| 3 | 0, 0, 90, 0, 0 |
+| 4 | 0, 0, 0, 0, 0 |
+| 5 | 0, 0, 0, 0, 0 |
+
+Every valid 3 by 3 window in this particular image contains the central 90. Its mean is 90 / 9 = 10. The result is a 3 by 3 grid of 10. This pattern depends on both the input size and the position of the impulse; it is not a general property of image blurring.
+
+Keeping floating-point values avoids silently discarding fractions. Casting to integer is a separate decision that needs a stated rounding rule. OpenCV’s filtering interface offers more options, but the matrix calculation remains the conceptual oracle. This course does not require OpenCV installation.
+
+## Lab — build a numerical image explanation
+
+**Setup:** Use the supplied `lab.py`; the image is generated in memory and contains no personal or copyrighted material.
+
+1. Before execution, draw the nine valid windows and predict their means.
+2. Run `python lab.py image`. Expect three rows of `[10.0, 10.0, 10.0]`.
+3. Change the central impulse from 90 to 45 in a working copy. Predict and check a grid of 5.
+4. Move the impulse to the top-left corner. Identify which valid window includes it; the top-left output is 10 and the other outputs are zero when the impulse is 90.
+5. Write a separate test for output dimensions and a test for numerical values. Explain why a single screenshot cannot replace either check.
+6. Prepare a handout with the input matrix, one highlighted window, the arithmetic and a text explanation suitable for someone who cannot see colour highlights.
+
+**Fault injection:** Change division by 9 to division by 8 and use the constant or impulse test to identify the incorrect normalization. Restore division by 9.
+
+**Evidence:** Submit predictions, actual matrices, tests and the accessible handout. **Cleanup:** Retain only synthetic fixtures and your corrected source; no installed dependency needs removal.
+
+## Common pitfalls and teaching decisions
+
+Do not confuse image coordinates with Cartesian axes: array rows normally increase down the displayed image. Avoid claiming all smoothing preserves edges. A filter is not automatically an improvement; its suitability depends on the task. Ask learners what information the filter removes and when that would be harmful.
+
+## Retrieval and reflection
+
+<details><summary>Why is the output smaller than the input?</summary>
+
+Only full 3 by 3 windows are evaluated, with no padding. Each dimension loses two positions. Revisit the border policy before comparing library outputs.
+
+</details>
+
+<details><summary>Would all outputs remain 10 after moving the bright pixel to a corner?</summary>
+
+No. Only the valid window containing that corner receives its contribution. Trace window membership before calculating the mean.
+
+</details>
+
+## Official references
+
+[OpenCV 4.13 smoothing and filtering](https://docs.opencv.org/4.13.0/d4/d13/tutorial_py_filtering.html) · [Python list comprehensions](https://docs.python.org/3.14/tutorial/datastructures.html#list-comprehensions). The fixture is an original scalar demonstration, not an OpenCV screenshot or performance claim.

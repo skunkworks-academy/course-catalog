@@ -1,0 +1,56 @@
+## Outcomes
+
+Trace names and objects; distinguish mutation from rebinding; explain when a shallow copy does and does not isolate changes.
+
+## Explain and demonstrate
+
+Python names refer to objects. Assigning one list variable to another does not copy the list; it creates another reference to the same object. Mutating the object through either name is therefore visible through both. Rebinding a name to a different object is a different operation. These distinctions explain many beginner bugs more effectively than saying that a variable is simply a box containing a value.
+
+In the fixture, `original = [1, 2]`, `alias = original` and `copied = original.copy()`. Appending 3 through `alias` changes `original`, while `copied` remains `[1, 2]`. The shallow copy creates a new outer list. If the list contains nested mutable objects, those inner references may still be shared; a shallow copy does not recursively duplicate everything.
+
+### Worked example: execution trace
+
+| Step | original | alias | copied |
+|---|---|---|---|
+| Create original | List A: [1, 2] | Unbound | Unbound |
+| Assign alias | List A | List A | Unbound |
+| Copy outer list | List A | List A | List B: [1, 2] |
+| Append through alias | List A: [1, 2, 3] | List A: [1, 2, 3] | List B: [1, 2] |
+
+The labels A and B are conceptual identifiers, not actual memory addresses. A trace table makes the reference relationship accessible without requiring a diagram. Ask learners to predict before execution and explain any discrepancy after it.
+
+## Lab — diagnose an aliasing misconception
+
+**Setup:** Download `lab.py`; use Python 3.12 or later. No packages or network connection are required.
+
+1. Run `python lab.py alias`. Expect `original [1, 2, 3] copy [1, 2]`.
+2. Recreate the trace table without looking at the output.
+3. Replace `alias.append(3)` with `alias = alias + [3]` in a copy. Explain why rebinding changes which object the alias names while leaving the original list unchanged.
+4. Repeat with a nested list and an outer shallow copy. Mutate an inner list and record the shared effect.
+5. Write a formative question that distinguishes shallow copying from recursively copying nested objects. Provide feedback for the misconception, not just the answer.
+
+**Fault injection:** Replace `.copy()` with a direct assignment while keeping the “independent copy” claim. Use the mutation observation to expose the false claim. **Recovery:** Restore the shallow copy and state its limits.
+
+**Expected observations:** Assignment, mutation and shallow copying produce different relationships. **Evidence:** Two trace tables, predictions and feedback. **Cleanup:** Retain synthetic objects only; remove exploratory variants that are not clearly labelled.
+
+## Common pitfalls and teaching decisions
+
+A printed value alone does not reveal whether two names share an object. Do not teach `is` as a replacement for value equality. Use `==` for intended value comparison and discuss identity only when the relationship matters. Keep examples small enough that every step can be reasoned about.
+
+## Retrieval and reflection
+
+<details><summary>Why does appending through alias change original?</summary>
+
+Both names refer to the same mutable list. The operation changes that object rather than assigning a new one.
+
+</details>
+
+<details><summary>Does a shallow copy isolate changes to every nested object?</summary>
+
+No. It copies the outer container, while nested references can remain shared. Trace the inner objects separately.
+
+</details>
+
+## Official references
+
+[Python data structures](https://docs.python.org/3.14/tutorial/datastructures.html) · [Python copy module and shallow/deep copying](https://docs.python.org/3.14/library/copy.html).

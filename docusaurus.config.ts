@@ -4,7 +4,6 @@ import type * as Preset from '@docusaurus/preset-classic';
 const GLOBAL_SHELL_LOADER_URL = 'https://skunkworksacademy.com/assets/academy-navigation.js?v=2026.09.08.2';
 
 const config: Config = {
-  favicon: 'images/favicon-search.png',
   title: 'Skunkworks Academy Course Catalog',
   tagline: 'Practical, evidence-led technology learning journeys',
   url: 'https://www.skunkworksacademy.com',
@@ -28,6 +27,18 @@ const config: Config = {
       src: GLOBAL_SHELL_LOADER_URL,
       defer: true,
       'data-skunkworks-global-nav': 'v10',
+    },
+    // The compatibility loader intentionally skips React-owned /courses routes.
+    // Load canonical, hydration-safe header and footer runtimes directly here.
+    {
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-ui.js?v=2026.09.08.3',
+      defer: true,
+      'data-skunkworks-ui': 'canonical',
+    },
+    {
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-footer.js?v=2026.09.08.4',
+      defer: true,
+      'data-skunkworks-global-footer': 'canonical',
     },
   ],
   customFields: {
@@ -62,6 +73,12 @@ const config: Config = {
     ],
   ],
   themeConfig: {
+    // The shared Academy shell suppresses the Docusaurus navbar. Avoid
+    // scroll-spy reading document.querySelector('.navbar').clientHeight when
+    // there is no framework navbar in the composed static site.
+    navbar: {
+      hideOnScroll: true,
+    },
     image: 'img/skunkworks-academy-course-catalog.svg',
     metadata: [
       {name: 'author', content: 'Skunkworks Academy'},

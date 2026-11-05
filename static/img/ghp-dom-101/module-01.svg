@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="330" viewBox="0 0 1100 330" role="img" aria-labelledby="title desc">
+<title id="title">From repository to published site</title>
+<desc id="desc">Git repository then Review + CI then Pages artifact then GitHub Pages then Custom domain. Conceptual deployment architecture — not a screenshot</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1e6bd0"/></marker></defs>
+<rect width="1100" height="330" rx="24" fill="#f7f9fc"/>
+<path d="M 26 94 H 1070" stroke="#c0cfdf" stroke-width="2"/>
+<text x="28" y="53" fill="#03033a" font-family="Arial, sans-serif" font-size="27" font-weight="700">From repository to published site</text>
+<text x="28" y="77" fill="#526477" font-family="Arial, sans-serif" font-size="15">Skunkworks Academy · GHP-DOM-101 · Module 1</text>
+<path d="M 214 180 L 239 180" stroke="#1e6bd0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 428 180 L 453 180" stroke="#1e6bd0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 642 180 L 667 180" stroke="#1e6bd0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 856 180 L 881 180" stroke="#1e6bd0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<g><rect x="28" y="126" rx="16" width="185" height="108" fill="#eff6ff" stroke="#c0cfdf" stroke-width="2"/><rect x="44" y="147" rx="5" width="34" height="7" fill="#1e6bd0"/><text x="120" y="192" text-anchor="middle" fill="#03033a" font-family="Arial, sans-serif" font-size="16" font-weight="700">Git repository</text><text x="120" y="213" text-anchor="middle" fill="#425466" font-family="Arial, sans-serif" font-size="12">Step 1</text></g>
+<g><rect x="242" y="126" rx="16" width="185" height="108" fill="#ffffff" stroke="#c0cfdf" stroke-width="2"/><rect x="258" y="147" rx="5" width="34" height="7" fill="#1e6bd0"/><text x="334" y="192" text-anchor="middle" fill="#03033a" font-family="Arial, sans-serif" font-size="16" font-weight="700">Review + CI</text><text x="334" y="213" text-anchor="middle" fill="#425466" font-family="Arial, sans-serif" font-size="12">Step 2</text></g>
+<g><rect x="456" y="126" rx="16" width="185" height="108" fill="#eff6ff" stroke="#c0cfdf" stroke-width="2"/><rect x="472" y="147" rx="5" width="34" height="7" fill="#1e6bd0"/><text x="548" y="192" text-anchor="middle" fill="#03033a" font-family="Arial, sans-serif" font-size="16" font-weight="700">Pages artifact</text><text x="548" y="213" text-anchor="middle" fill="#425466" font-family="Arial, sans-serif" font-size="12">Step 3</text></g>
+<g><rect x="670" y="126" rx="16" width="185" height="108" fill="#ffffff" stroke="#c0cfdf" stroke-width="2"/><rect x="686" y="147" rx="5" width="34" height="7" fill="#1e6bd0"/><text x="762" y="192" text-anchor="middle" fill="#03033a" font-family="Arial, sans-serif" font-size="16" font-weight="700">GitHub Pages</text><text x="762" y="213" text-anchor="middle" fill="#425466" font-family="Arial, sans-serif" font-size="12">Step 4</text></g>
+<g><rect x="884" y="126" rx="16" width="185" height="108" fill="#eff6ff" stroke="#c0cfdf" stroke-width="2"/><rect x="900" y="147" rx="5" width="34" height="7" fill="#f24208"/><text x="976" y="192" text-anchor="middle" fill="#03033a" font-family="Arial, sans-serif" font-size="16" font-weight="700">Custom domain</text><text x="976" y="213" text-anchor="middle" fill="#425466" font-family="Arial, sans-serif" font-size="12">Step 5</text></g>
+<rect x="28" y="270" width="1044" height="41" rx="10" fill="#e8f1ff"/>
+<text x="48" y="297" fill="#263a54" font-family="Arial, sans-serif" font-size="16" font-weight="600">Conceptual deployment architecture — not a screenshot</text>
+</svg>

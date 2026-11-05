@@ -1,0 +1,84 @@
+---
+id: module-02-contracts-and-errors
+slug: /python-programming-lecturer/module-02-contracts-and-errors
+title: "Module 2 \u2014 Functions, contracts and errors"
+sidebar_label: "Module 2 \u2014 Functions, contracts and errors"
+description: "Functions, contracts and errors: worked examples, a safe practical exercise, evidence and formative feedback for Python Programming Lecturer Practice."
+hide_title: true
+---
+
+import RoleCourseNav from '@site/src/components/RoleCourseNav';
+
+# Module 2 — Functions, contracts and errors
+
+**EDU-PYT-201** · Module 2 of 4 · Estimated effort: 2 hours including practice
+
+**Before you begin:** Complete Module 1 or demonstrate its evidence criteria. Use the [course environment and downloads](/courses/python-programming-lecturer#course-materials).
+
+<RoleCourseNav courseId="EDU-PYT-201" current={2} />
+
+## Outcomes
+
+Define a function contract; validate numerical boundaries; handle errors without silently changing the meaning of input.
+
+## Explain and demonstrate
+
+A small validation function is a good teaching unit because its behaviour can be stated precisely. The supplied `score` function converts a value to a floating-point number and accepts only values from 0 through 100 inclusive. Values outside the range and nonnumeric strings are rejected. The special value NaN also fails the bounded comparison. A missing or incompatible object can raise a type error, which a caller must handle deliberately.
+
+Returning zero for every invalid value is tempting because it lets processing continue, but it changes the data. A learner who typed “eighty” would be recorded as scoring zero. Error handling should preserve the distinction between a legitimate zero and an invalid record. Decide whether the application stops, reports the row or collects errors; do not let a broad exception handler choose the policy accidentally.
+
+### Worked example: boundary classes
+
+| Input | Expected behaviour | Why it matters |
+|---|---|---|
+| "0" | 0.0 | Lower boundary is valid |
+| "100" | 100.0 | Upper boundary is valid |
+| "101" | ValueError | Above the permitted range |
+| "oops" | ValueError | Cannot represent a number |
+| "nan" | ValueError | Not a usable bounded score |
+
+A contract must also state what it does not promise. This fixture accepts decimal scores and numeric strings. An institution requiring integer marks or locale-specific decimal notation would need a different documented rule. Do not claim the example implements an unknown institution’s marking policy.
+
+## Lab — make rejection teachable
+
+**Setup:** Use the course `lab.py` in a local folder. All data are fictional.
+
+1. Run `python lab.py contracts`; expect `0.0 100.0`.
+2. Run `python lab.py test`; six tests should pass.
+3. Add cases immediately below and above the boundaries, and explain whether decimal values are permitted by this contract.
+4. Write a caller that catches a validation error and records a neutral message identifying the failed field. Avoid printing confidential raw data.
+5. Explain why `except Exception: return 0` is inappropriate here.
+6. Design a hint ladder for a learner who rejects 100 because they used a strict upper-bound comparison.
+
+**Fault injection:** Replace `<= 100` with `< 100` in a copy and show that the upper-bound test fails. **Recovery:** Restore the inclusive comparison and rerun the suite.
+
+**Expected observations:** A valid zero remains distinguishable from invalid input. **Evidence:** Contract, boundary cases, failure/recovery record and feedback. **Cleanup:** Remove the mutant copy; retain the corrected function and synthetic test inputs.
+
+## Common pitfalls and teaching decisions
+
+Checking only one typical value misses the boundaries. Catching too broad an exception can hide programming defects. A user-friendly message should not erase the exception’s cause from authorized diagnostic evidence. Discuss which information belongs in learner-facing feedback and which belongs in a restricted technical log.
+
+## Retrieval and reflection
+
+<details>
+<summary>Why is converting invalid input to zero a data-quality problem?</summary>
+
+It makes an invalid record indistinguishable from a genuine zero and may alter an assessment outcome.
+
+</details>
+
+<details>
+<summary>Does this function enforce integer-only marking?</summary>
+
+No. It accepts decimal numeric values within the range. A different policy needs an explicit contract and tests.
+
+</details>
+
+## Official references
+
+[Python errors and exceptions](https://docs.python.org/3.14/tutorial/errors.html) · [Python floating-point arithmetic](https://docs.python.org/3.14/tutorial/floatingpoint.html) · [Python built-in float](https://docs.python.org/3.14/library/functions.html#float).
+
+
+[Ask about facilitated enrolment](https://www.skunkworksacademy.com/course-registration/?course=EDU-PYT-201)
+
+<RoleCourseNav courseId="EDU-PYT-201" current={2} />
