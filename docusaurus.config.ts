@@ -32,14 +32,19 @@ const config: Config = {
     // The compatibility loader intentionally skips React-owned /courses routes.
     // Load canonical, hydration-safe header and footer runtimes directly here.
     {
-      src: 'https://www.skunkworksacademy.com/assets/skunkworks-ui.js?v=2026.09.08.3',
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-ui.js?v=2026.09.08.3&rev=2026.11.20.1',
       defer: true,
       'data-skunkworks-ui': 'canonical',
     },
     {
-      src: 'https://www.skunkworksacademy.com/assets/skunkworks-footer.js?v=2026.09.08.4',
+      src: 'https://www.skunkworksacademy.com/assets/skunkworks-footer.js?v=2026.09.08.4&rev=2026.11.20.1',
       defer: true,
       'data-skunkworks-global-footer': 'canonical',
+    },
+    {
+      src: 'https://www.skunkworksacademy.com/assets/academy-navigation-v11.js?v=2026.09.08.3&nav=2026.11.20.1',
+      defer: true,
+      'data-skunkworks-react-safe': 'true',
     },
   ],
   customFields: {
@@ -92,3 +97,4 @@ const config: Config = {
 };
 
 export default config;
+
